@@ -1,0 +1,5 @@
+test
+*.si4project
+tags
+cscope.*
+*.swp
