@@ -232,11 +232,11 @@ sudo ln -s /bin/bash /bin/sh
 
 3. 确定Python-3.8.5安装好后，运行"which python3.8"，将回显路径链接到"/usr/bin/python"，示例：
 
-        "cd /usr/bin && sudo rm python && sudo ln -s /usr/local/bin/python3.8 python && python --version"
+        "cd /usr/bin && sudo rm python && sudo ln -s /usr/bin/python3.8 python && python --version"
 
         若系统存在python3，通过"python3 --version"指令查询版本，若不是3.7以上版本，则还需要执行下面指令
 
-        "cd /usr/bin && sudo rm python3 && sudo ln -s /usr/local/bin/python3.8 python3 && python3 --version"
+        "cd /usr/bin && sudo rm python3 && sudo ln -s /usr/bin/python3.8 python3 && python3 --version"
 
 
 4. 安装Python包管理工具，运行“sudo apt-get install python3-setuptools python3-pip -y”命令。（需root/sudo权限安装），升级pip3运行"sudo pip3 install --upgrade pip"。
