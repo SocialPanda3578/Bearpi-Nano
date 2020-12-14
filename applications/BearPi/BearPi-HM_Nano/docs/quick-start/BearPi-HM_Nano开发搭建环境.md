@@ -223,7 +223,7 @@ sudo ln -s /bin/bash /bin/sh
 
         "tar -xvzf Python-3.8.5.tgz && cd Python-3.8.5 && sudo ./configure && make && sudo make install"
 
-        3. 确定Python-3.8.5安装好后，运行"which python3.8"，将回显路径链接到"/usr/bin/python"，示例：
+3. 确定Python-3.8.5安装好后，运行"which python3.8"，将回显路径链接到"/usr/bin/python"，示例：
 
         "cd /usr/bin && rm python && ln -s /usr/local/bin/python3.8 python && python --version"
 
@@ -232,13 +232,13 @@ sudo ln -s /bin/bash /bin/sh
         "cd /usr/bin && sudo rm python3 && sudo ln -s /usr/local/bin/python3.8 python3 && python3 --version"
 
 
-    -   安装Python包管理工具，运行“sudo apt-get install python3-setuptools python3-pip -y”命令。（需root/sudo权限安装），升级pip3运行"sudo pip3 install --upgrade pip"。
+4. 安装Python包管理工具，运行“sudo apt-get install python3-setuptools python3-pip -y”命令。（需root/sudo权限安装），升级pip3运行"sudo pip3 install --upgrade pip"。
 
         或按官网方式安装Python包管理工具：下载"curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py"后，再执行"python get-pip.py"
 
 
-3.  安装python模块setuptools，运行"pip3 install setuptools"
-4.  运行“sudo pip3 install kconfiglib”命令，安装GUI menuconfig工具，建议安装Kconfiglib 13.2.0+版本。（需root/sudo权限安装）。
+5.  安装python模块setuptools，运行"pip3 install setuptools"
+6.  运行“sudo pip3 install kconfiglib”命令，安装GUI menuconfig工具，建议安装Kconfiglib 13.2.0+版本。（需root/sudo权限安装）。
 
     或者按以下方法安装Kconfiglib 13.2.0+。
 
@@ -250,7 +250,7 @@ sudo ln -s /bin/bash /bin/sh
     1.  运行“sudo pip3 install kconfiglib-xxx.whl”命令（例如：sudo pip3 install kconfiglib-13.2.0-py2.py3-none-any.whl），安装.whl文件（需root/sudo权限安装）。
     2.  可能会遇到错误："subprocess.CalledProcessError: Command '\('lsb\_release', '-a'\)' returned non-zero exit status 1."，解决方法："find / -name lsb\_release"，找到lsb\_release位置并删除，如："rm -rf /usr/bin/lsb\_release"
 
-5.  安装pycryptodome。运行“sudo pip3 install pycryptodome”命令，或者按照以下方式安装：
+7.  安装pycryptodome。运行“sudo pip3 install pycryptodome”命令，或者按照以下方式安装：
 
     >![](public_sys-resources/icon-note.gif) **说明：** 
     >-   安装升级文件签名依赖的Python组件包，包括：pycryptodome、six、ecdsa。
@@ -265,7 +265,7 @@ sudo ln -s /bin/bash /bin/sh
 
     安装完成后界面会提示“Successfully installed pycryptodome-3.7.3”。
 
-6.  安装six。运行"sudo pip3 install six --upgrade --ignore-installed six"或者按照以下方式安装：
+8.  安装six。运行"sudo pip3 install six --upgrade --ignore-installed six"或者按照以下方式安装：
 
     1.  下载.whl文件（例如：six-1.12.0-py2.py3-none-any.whl）。
 
@@ -276,7 +276,7 @@ sudo ln -s /bin/bash /bin/sh
 
     安装完成后界面会提示“Successfully installed six-1.12.0”。
 
-7.  安装ecdsa。运行"sudo pip3 install ecdsa"或者按照以下方式安装：
+9.  安装ecdsa。运行"sudo pip3 install ecdsa"或者按照以下方式安装：
 
     1.  下载.whl文件（例如：ecdsa-0.14.1-py2.py3-none-any.whl）。
 
