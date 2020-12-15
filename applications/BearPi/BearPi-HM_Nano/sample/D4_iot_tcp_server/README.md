@@ -205,7 +205,7 @@ start accept
 ```
 使用 Socket tool 创建客户端用于测试。
 
-![创建TCP_Clien](/applications/BearPi/BearPi-HM_Nano/docs/figures/20_iot_tcp_server/创建TCP_Clien.png)
+![创建TCP_Clien](/applications/BearPi/BearPi-HM_Nano/docs/figures/D4_iot_tcp_server/创建TCP_Clien.png)
 
 在创建客户端后点击“连接”，在数据发送窗口输入要发送的数据，点击发送后服务端会回复固定消息，且开发板收到消息后会通过日志打印出来。
 
@@ -215,4 +215,4 @@ accept addr
 recv :Hello! BearPi-HM_nano TCP Server!
 ```
 
-![TCP发送数据](/applications/BearPi/BearPi-HM_Nano/docs/figures/20_iot_tcp_server/TCP发送数据.png)
+![TCP发送数据](/applications/BearPi/BearPi-HM_Nano/docs/figures/D4_iot_tcp_server/TCP发送数据.png)
