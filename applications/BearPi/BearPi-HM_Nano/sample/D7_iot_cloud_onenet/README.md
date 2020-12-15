@@ -303,8 +303,8 @@ dp = onenet_get_dp_by_start_end("temperature",1531983000，50，10);
 修改 `applications\BearPi\BearPi-HM_Nano\sample`ifi路径下 BUILD.gn 文件，指定 `onenet_mqtt` 参与编译。
 
 ```r
-#"D1_iot_wifi_scan:wifi_scan",
-#"D2_iot_wifi_connect:wifi_connect",        
+#"D1_iot_wifi_sta:wifi_sta",
+#"D2_iot_wifi_sta_connect:wifi_sta_connect",       
 #"D3_iot_udp_client:udp_client",
 #"D4_iot_tcp_server:tcp_server",
 #"D5_iot_mqtt:iot_mqtt",        

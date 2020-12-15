@@ -6,9 +6,18 @@
 
 ## 编译调试
 
+### 下载MQTT消息代理工具Mosquitto
+
+点击[下载](https://mosquitto.org/download/)Mosquitto 工具
+
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/消息代理.png "消息代理")
+
+下载后双击安装包，安装工具，安装完毕后，打开电脑设备管理器，在“服务”中开启mosquitto服务。
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/启动mosquitto服务.png "启动mosquitto服务")
 
 ### 下载Eclipse Paho MQTT 工具
 点击[下载](https://repo.eclipse.org/content/repositories/paho-releases/org/eclipse/paho/org.eclipse.paho.ui.app/1.1.1/)Eclipse Paho MQTT 工具
+
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/下载客户端.png "下载客户端")
 
@@ -37,8 +46,8 @@
 修改 `applications\sample\BearPi\BearPi-HM_Nano`路径下 BUILD.gn 文件，指定 `iot_mqtt` 参与编译。
 
 ```r
-#"D1_iot_wifi_scan:wifi_scan",
-#"D2_iot_wifi_connect:wifi_connect",        
+#"D1_iot_wifi_sta:wifi_sta",
+#"D2_iot_wifi_sta_connect:wifi_sta_connect",       
 #"D3_iot_udp_client:udp_client",
 #"D4_iot_tcp_server:tcp_server",
 "D5_iot_mqtt:iot_mqtt",        
