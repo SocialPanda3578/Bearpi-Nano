@@ -108,6 +108,25 @@ static void PWMTask(void)
 
 ## 编译调试
 
+### 修改 usr_config.mk文件
+修改`vendor\hisi\hi3861\hi3861\build\config` 路径下 usr_config.mk 文件，定位到第40行，打开PWM驱动使能。
+
+```r
+CONFIG_I2C_SUPPORT=y
+# CONFIG_I2S_SUPPORT is not set
+# CONFIG_SPI_SUPPORT is not set
+# CONFIG_DMA_SUPPORT is not set
+# CONFIG_SDIO_SUPPORT is not set
+# CONFIG_SPI_DMA_SUPPORT is not sety
+# CONFIG_UART_DMA_SUPPORT is not set
+CONFIG_PWM_SUPPORT = y
+# CONFIG_PWM_HOLD_AFTER_REBOOT is not set
+CONFIG_AT_SUPPORT=y
+CONFIG_FILE_SYSTEM_SUPPORT=y
+CONFIG_UART0_SUPPORT=y
+CONFIG_UART1_SUPPORT=y
+```
+
 ### 修改 BUILD.gn 文件
 
 
