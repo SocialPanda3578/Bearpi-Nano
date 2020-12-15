@@ -175,7 +175,7 @@ static void TCPServerTask(void)
 修改 `applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `tcp_server` 参与编译。
 ```r
 #"D1_iot_wifi_sta:wifi_sta",
-#"D2_iot_wifi_sta_connect:wifi_sta_connect",           
+#"D2_iot_wifi_sta_connect:wifi_sta_connect",      
 #"D3_iot_udp_client:udp_client",
 "D4_iot_tcp_server:tcp_server",
 #"D5_iot_mqtt:iot_mqtt",        
