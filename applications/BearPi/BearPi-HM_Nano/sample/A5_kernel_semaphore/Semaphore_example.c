@@ -20,7 +20,6 @@
 #include "ohos_init.h"
 #include "cmsis_os2.h"
 
-
 osSemaphoreId_t sem1;
 
 void Thread_Semaphore1(void)
