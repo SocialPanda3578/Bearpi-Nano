@@ -20,10 +20,10 @@ lite_component("app") {
         #"A3_kernel_event:event_example",
         #"A4_kernel_mutex:mutex_example",
         #"A5_kernel_semaphore:semaphore_example",
-        #"A6_kernel_message:message_example",
+        "A6_kernel_message:message_example",
 
         #"B1_basic_led_blink:led_example",
-        "B2_basic_button:button_example",
+        #"B2_basic_button:button_example",
         #"B3_basic_pwm_led:pwm_example",
         #"B4_basic_adc:adc_example",
         #"B5_basic_i2c_nfc:i2c_example",

@@ -35,7 +35,7 @@ typedef struct
 MSGQUEUE_OBJ_t msg;
 
 //message queue id
-mid_MsgQueue;
+osMessageQueueId_t mid_MsgQueue;   
 
 void Thread_MsgQueue1(void *argument)
 {
