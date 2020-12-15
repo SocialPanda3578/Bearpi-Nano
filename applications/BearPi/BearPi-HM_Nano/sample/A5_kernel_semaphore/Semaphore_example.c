@@ -19,8 +19,7 @@
 
 #include "ohos_init.h"
 #include "cmsis_os2.h"
-#include "wifiiot_gpio.h"
-#include "wifiiot_gpio_ex.h"
+
 
 osSemaphoreId_t sem1;
 

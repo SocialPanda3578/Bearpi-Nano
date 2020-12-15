@@ -37,7 +37,7 @@ void thread2(void)
     int sum = 0;
     while (1)
     {
-        printf("This is BearPi Harmony Thread1----%d\r\n", sum++);
+        printf("This is BearPi Harmony Thread2----%d\r\n", sum++);
         usleep(500000);
     }
 }
