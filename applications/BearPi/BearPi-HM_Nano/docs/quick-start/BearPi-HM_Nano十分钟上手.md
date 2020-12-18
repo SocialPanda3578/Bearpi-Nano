@@ -57,6 +57,20 @@
 
 10. 最小化VMware Workstation，回到Windows桌面上。
 
+11. 附加：如果连不上网络（如果主机网络需要拨号，如`校园网络`、`ADSL拨号`等）
+
+    在VMware Workstation中，点击`虚拟机`>> `设置`
+
+    ![](figures/VMWare设置.png)
+
+    然后在网络适配器中，改成`NET 模式`，点击`确定`
+
+    ![](figures/VMware_net_config.png)
+
+    然后再回复`步骤8`。
+
+    
+
 ## 四、在Windows上远程连接服务器
 
 1. 打开`MobaXterm`工具，并依次点击：`Session`，`SSH` 按钮。
