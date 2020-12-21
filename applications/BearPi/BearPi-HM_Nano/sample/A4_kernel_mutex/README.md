@@ -98,39 +98,39 @@ void LowPrioThread(void)
   }
 }
 
-void Mutex_example (void)
-{ 
-    osThreadAttr_t attr;  
+void Mutex_example(void)
+{
+  osThreadAttr_t attr;
 
-    attr.attr_bits = 0U;
-    attr.cb_mem = NULL;
-    attr.cb_size = 0U;
-    attr.stack_mem = NULL;
-    attr.stack_size = 1024*4;
-    
-    attr.name = "HighPrioThread";
-    attr.priority = 24;
-    if (osThreadNew((osThreadFunc_t)HighPrioThread, NULL, &attr) == NULL) 
-    {
-        printf("Falied to create HighPrioThread!\n");
-    }
-    attr.name = "MidPrioThread";
-    attr.priority = 25;
-    if (osThreadNew((osThreadFunc_t)MidPrioThread, NULL, &attr) == NULL) 
-    {
-        printf("Falied to create MidPrioThread!\n");
-    }
-    attr.name = "LowPrioThread";
-    attr.priority = 26;
-    if (osThreadNew((osThreadFunc_t)LowPrioThread, NULL, &attr) == NULL) 
-    {
-        printf("Falied to create LowPrioThread!\n");
-    }
-    mutex_id = osMutexNew(NULL);  
-    if (mutex_id == NULL) 
-    {
-        printf("Falied to create Mutex!\n");
-    }
+  attr.attr_bits = 0U;
+  attr.cb_mem = NULL;
+  attr.cb_size = 0U;
+  attr.stack_mem = NULL;
+  attr.stack_size = 1024 * 4;
+
+  attr.name = "HighPrioThread";
+  attr.priority = 26;
+  if (osThreadNew((osThreadFunc_t)HighPrioThread, NULL, &attr) == NULL)
+  {
+    printf("Falied to create HighPrioThread!\n");
+  }
+  attr.name = "MidPrioThread";
+  attr.priority = 25;
+  if (osThreadNew((osThreadFunc_t)MidPrioThread, NULL, &attr) == NULL)
+  {
+    printf("Falied to create MidPrioThread!\n");
+  }
+  attr.name = "LowPrioThread";
+  attr.priority = 24;
+  if (osThreadNew((osThreadFunc_t)LowPrioThread, NULL, &attr) == NULL)
+  {
+    printf("Falied to create LowPrioThread!\n");
+  }
+  mutex_id = osMutexNew(NULL);
+  if (mutex_id == NULL)
+  {
+    printf("Falied to create Mutex!\n");
+  }
 }
 ```
 
