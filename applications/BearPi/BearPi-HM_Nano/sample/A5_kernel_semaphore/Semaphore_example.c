@@ -52,7 +52,7 @@ void Thread_Semaphore3(void)
 {
     while (1)
     {
-        //等待sem1信号量
+        //申请sem1信号量
         osSemaphoreAcquire(sem1, osWaitForever);
 
         printf("Thread_Semaphore3 get Semap \n");
