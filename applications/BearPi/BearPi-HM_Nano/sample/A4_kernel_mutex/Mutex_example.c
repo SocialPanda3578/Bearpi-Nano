@@ -74,7 +74,7 @@ void Mutex_example(void)
   attr.stack_size = 1024 * 4;
 
   attr.name = "HighPrioThread";
-  attr.priority = 24;
+  attr.priority = 26;
   if (osThreadNew((osThreadFunc_t)HighPrioThread, NULL, &attr) == NULL)
   {
     printf("Falied to create HighPrioThread!\n");
@@ -86,7 +86,7 @@ void Mutex_example(void)
     printf("Falied to create MidPrioThread!\n");
   }
   attr.name = "LowPrioThread";
-  attr.priority = 26;
+  attr.priority = 24;
   if (osThreadNew((osThreadFunc_t)LowPrioThread, NULL, &attr) == NULL)
   {
     printf("Falied to create LowPrioThread!\n");
