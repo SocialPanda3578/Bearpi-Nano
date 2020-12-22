@@ -48,97 +48,131 @@ WifiErrorCode error;
 
 #define SELECT_WLAN_PORT "wlan0"
 
-#define SELECT_WIFI_SSID "Hold"
-#define SELECT_WIFI_PASSWORD "0987654321"
+#define SELECT_WIFI_SSID "BearPi"
+#define SELECT_WIFI_PASSWORD "BearPi"
 
 static BOOL WifiSTATask(void)
 {
     WifiScanInfo *info = NULL;
     unsigned int size = WIFI_SCAN_HOTSPOT_LIMIT;
     static struct netif *g_lwip_netif = NULL;
+    WifiDeviceConfig select_ap_config = {0};
 
     osDelay(200);
-
     printf("<--System Init-->\r\n");
 
+    //初始化WIFI
     WiFiInit();
 
+    //使能WIFI
     if (EnableWifi() != WIFI_SUCCESS)
     {
         printf("EnableWifi failed, error = %d\n", error);
         return -1;
     }
 
+    //判断WIFI是否激活
     if (IsWifiActive() == 0)
     {
         printf("Wifi station is not actived.\n");
         return -1;
     }
 
+    //分配空间，保存WiFi信息
     info = malloc(sizeof(WifiScanInfo) * WIFI_SCAN_HOTSPOT_LIMIT);
-
     if (info == NULL)
     {
         return -1;
     }
 
-    while (1)
-    {
-        g_staScanSuccess = 0;
+    //轮询查找WiFi列表
+    do{
+        //重置标志位
         ssid_count = 0;
-        error = Scan();
+        g_staScanSuccess = 0;
+
+        //开始扫描
+        Scan();
+
+        //等待扫描结果
         WaitSacnResult();
 
+        //获取扫描列表
         error = GetScanInfoList(info, &size);
 
-        for (uint8_t i = 0; i < ssid_count; i++)
+    }while(g_staScanSuccess != 1);
+
+    //打印WiFi列表
+    printf("********************\r\n");
+    for(uint8_t i = 0; i < ssid_count; i++)
+    {
+        printf("no:%03d, ssid:%-30s, rssi:%5d\r\n", i+1, info[i].ssid, info[i].rssi/100);
+    }
+    printf("********************\r\n");
+
+    
+    //连接指定的WiFi热点
+    for(uint8_t i = 0; i < ssid_count; i++)
+    {
+        if (strcmp(SELECT_WIFI_SSID, info[i].ssid) == 0)
         {
-            if (strcmp(SELECT_WIFI_SSID, info[i].ssid) == 0)
+            int result;
+
+            printf("Select:%3d wireless, Waiting...\r\n", i+1);
+
+            //拷贝要连接的热点信息
+            strcpy(select_ap_config.ssid, info[i].ssid);
+            strcpy(select_ap_config.preSharedKey, SELECT_WIFI_PASSWORD);
+            select_ap_config.securityType = info[i].securityType;
+
+            if (AddDeviceConfig(&select_ap_config, &result) == WIFI_SUCCESS)
             {
-
-                int result;
-                g_ConnectSuccess = 0;
-                
-                //Find Select ssid
-                WifiDeviceConfig select_ap_config = {0};
-                strcpy(select_ap_config.ssid, info[i].ssid);
-                strcpy(select_ap_config.preSharedKey, SELECT_WIFI_PASSWORD);
-                select_ap_config.securityType = info[i].securityType;
-
-                if (AddDeviceConfig(&select_ap_config, &result) == WIFI_SUCCESS)
+                if (ConnectTo(result) == WIFI_SUCCESS && WaitConnectResult() == 1)
                 {
-                    if (ConnectTo(result) == WIFI_SUCCESS && WaitConnectResult() == 1)
-                    {
-                        printf("connect succeed!\r\n");
-                        g_lwip_netif = netifapi_netif_find(SELECT_WLAN_PORT);
-
-                        if (g_lwip_netif)
-                        {
-                            result = netifapi_dhcp_start(g_lwip_netif);
-                            printf("net dhcp start:%d\r\n", result);
-
-                            //等待 DHCP 获取IP
-                            osDelay(200); 
-
-                            netifapi_netif_common(g_lwip_netif, dhcp_clients_info_show, NULL);
-                            while (1)
-                            {
-                                /* code */
-                                osDelay(100);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        printf("connect failed!\r\n");
-                        return 0;
-                    }
+                    printf("WiFi connect succeed!\r\n");
+                    g_lwip_netif = netifapi_netif_find(SELECT_WLAN_PORT);
+                    break;
                 }
-                break;
             }
         }
+
+        if(i == ssid_count-1)
+        {
+            printf("ERROR: No wifi as expected\r\n");
+            while(1) osDelay(100);
+        }
+    }
+
+    //启动DHCP
+    if (g_lwip_netif)
+    {
+        dhcp_start(g_lwip_netif);
+        printf("begain to dhcp");
+    }
+
+
+    //等待DHCP
+    for(;;)
+    {
+        if(dhcp_is_bound(g_lwip_netif) == ERR_OK)
+        {
+            printf("<-- DHCP state:OK -->\r\n");
+
+            //打印获取到的IP信息
+            netifapi_netif_common(g_lwip_netif, dhcp_clients_info_show, NULL);
+            break;
+        }
+
+        printf("<-- DHCP state:Inprogress -->\r\n");
         osDelay(100);
     }
+
+    //执行其他操作
+    for(;;)
+    {
+        osDelay(100);
+    }
+
 }
 
 static void WiFiInit(void)
