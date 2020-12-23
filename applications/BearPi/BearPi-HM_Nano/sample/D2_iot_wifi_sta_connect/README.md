@@ -1,56 +1,118 @@
-/*
- * Copyright (c) 2020 Nanjing Xiaoxiongpai Intelligent Technology Co., Ltd.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+# BearPi-HM_Nano开发板WiFi编程开发——Wifi连接热点
 
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 
-#include "lwip/netif.h"
-#include "lwip/netifapi.h"
-#include "lwip/ip4_addr.h"
-#include "lwip/api_shell.h"
+本示例将演示如何在BearPi-HM_Nano开发板上编写一个Wifi连接热点业务程序
 
-#include "cmsis_os2.h"
-#include "hos_types.h"
-#include "wifi_device.h"
-#include "wifiiot_errno.h"
-#include "ohos_init.h"
+![BearPi-HM_Nano](/applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/BearPi-HM_Nano.png)
+## Wifi API分析
+本案例主要使用了以下几个API完成Wifi联网
+## RegisterWifiEvent()
+```c
+WifiErrorCode RegisterWifiEvent (WifiEvent * event)
+```
+ **描述：**
+为指定的Wi-Fi事件注册回调函数。当WifiEvent中定义的Wi-Fi事件发生时，将调用已注册的回调函数
 
-#define DEF_TIMEOUT 15
-#define ONE_SECOND 1
+**参数：**
 
-static void WiFiInit(void);
-static void WaitSacnResult(void);
-static int WaitConnectResult(void);
-static void OnWifiScanStateChangedHandler(int state, int size);
-static void OnWifiConnectionChangedHandler(int state, WifiLinkedInfo *info);
-static void OnHotspotStaJoinHandler(StationInfo *info);
-static void OnHotspotStateChangedHandler(int state);
-static void OnHotspotStaLeaveHandler(StationInfo *info);
+|名字|描述|
+|:--|:------| 
+| event | 表示要注册回调的事件.  |
 
-static int g_staScanSuccess = 0;
-static int g_ConnectSuccess = 0;
-static int ssid_count = 0;
-WifiEvent g_wifiEventHandler = {0};
-WifiErrorCode error;
 
-#define SELECT_WLAN_PORT "wlan0"
+## EnableWifi()
+```c
+WifiErrorCode EnableWifi (void )
+```
+**描述：**
 
-#define SELECT_WIFI_SSID "ChinaNet-FFCV95"
-#define SELECT_WIFI_PASSWORD "0987654321"
+启用STA模式
 
+## AddDeviceConfig()
+```c
+WifiErrorCode AddDeviceConfig (const WifiDeviceConfig * config, int * result )
+```
+**描述：**
+
+添加用于配置连接到热点信息，此函数生成一个networkId
+
+**参数：**
+
+|名字|描述|
+|:--|:------| 
+| config | 表示要连接的热点信息.  |
+| result | 表示生成的networkId。每个networkId匹配一个热点配置  |
+
+## ConnectTo()
+```c
+WifiErrorCode ConnectTo (int networkId)
+```
+**描述：**
+
+连接到指定networkId的热点
+
+**参数：**
+
+|名字|描述|
+|:--|:------| 
+| networkId | 表示与目标热点匹配的网络id.  |
+
+
+
+
+## netifapi_netif_find()
+```c
+struct netif *netifapi_netif_find(const char *name);
+```
+**描述：**
+
+获取netif用于IP操作
+
+## dhcp_start()
+
+```c
+err_t dhcp_start(n)
+```
+
+**描述：**
+
+启动DHCP, 获取IP
+
+
+## 软件设计
+
+**主要代码分析**
+
+完成Wifi热点的连接需要以下几步
+
+1. 通过 `RegisterWifiEvent` 接口向系统注册扫描状态监听函数，用于接收扫描状态通知，如扫描动作是否完成等
+    
+* `OnWifiConnectionChangedHandler` 用于绑定连接状态监听函数，该回调函数有两个参数 `state` 和 `info` ；
+
+    * state表示扫描状态，取值为0和1，1表示热点连接成功；
+
+    * info表示Wi-Fi连接信息，包含以下参数；
+
+
+        |名字|描述|
+        |:--|:------| 
+        | ssid [WIFI_MAX_SSID_LEN] | 连接的热点名称.  |
+        | bssid [WIFI_MAC_LEN] | MAC地址.  |
+        | rssi | 接收信号强度(RSSI).  |
+        | connState | Wifi连接状态.  |
+        | disconnectedReason | Wi-Fi断开的原因.  |
+
+
+
+
+2. 调用 `EnableWifi` 接口，使能 Wifi。
+3. 调用 `AddDeviceConfig` 接口，配置连接的热点信息。
+4. 调用 `ConnectTo` 接口，连接到指定networkId的热点。
+5. 调用 `WaitConnectResult` 接口等待，该函数中会有15s的时间去轮询连接成功标志位 `g_ConnectSuccess`，当`g_ConnectSuccess` 为 1 时退出等待。
+6. 调用 `netifapi_netif_find` 接口，获取 netif 用于 IP 操作
+7. 调用 `dhcp_start` 接口，启动 DHCP, 获取 IP
+
+```c
 static BOOL WifiSTATask(void)
 {
     WifiScanInfo *info = NULL;
@@ -174,130 +236,63 @@ static BOOL WifiSTATask(void)
     }
 
 }
+```
 
-static void WiFiInit(void)
-{
-    printf("<--Wifi Init-->\r\n");
-    g_wifiEventHandler.OnWifiScanStateChanged = OnWifiScanStateChangedHandler;
-    g_wifiEventHandler.OnWifiConnectionChanged = OnWifiConnectionChangedHandler;
-    g_wifiEventHandler.OnHotspotStaJoin = OnHotspotStaJoinHandler;
-    g_wifiEventHandler.OnHotspotStaLeave = OnHotspotStaLeaveHandler;
-    g_wifiEventHandler.OnHotspotStateChanged = OnHotspotStateChangedHandler;
-    error = RegisterWifiEvent(&g_wifiEventHandler);
-    if (error != WIFI_SUCCESS)
-    {
-        printf("register wifi event fail!\r\n");
-    }
-    else
-    {
-        printf("register wifi event succeed!\r\n");
-    }
-}
+## 编译调试
 
-static void OnWifiScanStateChangedHandler(int state, int size)
-{
-    (void)state;
-    if (size > 0)
-    {
-        ssid_count = size;
-        g_staScanSuccess = 1;
-    }
-    return;
-}
+### 修改 BUILD.gn 文件
 
-static void OnWifiConnectionChangedHandler(int state, WifiLinkedInfo *info)
-{
-    (void)info;
+修改 `applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `wifi_sta_connect` 参与编译。
+```r
+#"D1_iot_wifi_sta:wifi_sta",
+"D2_iot_wifi_sta_connect:wifi_sta_connect",        
+#"D3_iot_udp_client:udp_client",
+#"D4_iot_tcp_server:tcp_server",
+#"D5_iot_mqtt:iot_mqtt",        
+#"D6_iot_cloud_oc:oc_mqtt",
+#"D7_iot_cloud_onenet:onenet_mqtt",
+```  
+    
 
-    if (state > 0)
-    {
-        g_ConnectSuccess = 1;
-        printf("callback function for wifi connect\r\n");
-    }
-    else
-    {
-        printf("connect error,please check password\r\n");
-    }
-    return;
-}
 
-static void OnHotspotStaJoinHandler(StationInfo *info)
-{
-    (void)info;
-    printf("STA join AP\n");
-    return;
-}
+### 运行结果<a name="section18115713118"></a>
 
-static void OnHotspotStaLeaveHandler(StationInfo *info)
-{
-    (void)info;
-    printf("HotspotStaLeave:info is null.\n");
-    return;
-}
+示例代码编译烧录代码后，按下开发板的RESET按键，通过串口助手查看日志，会打印连接到的Wifi热点信息。
+```
+<--System Init-->
 
-static void OnHotspotStateChangedHandler(int state)
-{
-    printf("HotspotStateChanged:state is %d.\n", state);
-    return;
-}
+<--Wifi Init-->
 
-static void WaitSacnResult(void)
-{
-    int scanTimeout = DEF_TIMEOUT;
-    while (scanTimeout > 0)
-    {
-        sleep(ONE_SECOND);
-        scanTimeout--;
-        if (g_staScanSuccess == 1)
-        {
-            printf("WaitSacnResult:wait success[%d]s\n", (DEF_TIMEOUT - scanTimeout));
-            break;
-        }
-    }
-    if (scanTimeout <= 0)
-    {
-        printf("WaitSacnResult:timeout!\n");
-    }
-}
+register wifi event succeed!
 
-static int WaitConnectResult(void)
-{
-    int ConnectTimeout = DEF_TIMEOUT;
-    while (ConnectTimeout > 0)
-    {
-        sleep(1);
-        ConnectTimeout--;
-        if (g_ConnectSuccess == 1)
-        {
-            printf("WaitConnectResult:wait success[%d]s\n", (DEF_TIMEOUT - ConnectTimeout));
-            break;
-        }
-    }
-    if (ConnectTimeout <= 0)
-    {
-        printf("WaitConnectResult:timeout!\n");
-        return 0;
-    }
++NOTICE:SCANFINISH
+WaitSacnResult:wait success[1]s
 
-    return 1;
-}
 
-static void WifiClientSTA(void)
-{
-    osThreadAttr_t attr;
+Select:  2 wireless, Waiting...
 
-    attr.name = "WifiSTATask";
-    attr.attr_bits = 0U;
-    attr.cb_mem = NULL;
-    attr.cb_size = 0U;
-    attr.stack_mem = NULL;
-    attr.stack_size = 10240;
-    attr.priority = 24;
++NOTICE:CONNECTED
+callback function for wifi connect
 
-    if (osThreadNew((osThreadFunc_t)WifiSTATask, NULL, &attr) == NULL)
-    {
-        printf("Falied to create WifiSTATask!\n");
-    }
-}
+WaitConnectResult:wait success[1]s
+WiFi connect succeed!
 
-APP_FEATURE_INIT(WifiClientSTA);
+begain to dhcp
+
+<-- DHCP state:Inprogress -->
+
+<-- DHCP state:OK -->
+
+server :
+	server_id : 192.168.0.1
+	mask : 255.255.255.0, 1
+	gw : 192.168.0.1
+	T0 : 7200
+	T1 : 3600
+	T2 : 6300
+clients <1> :
+	mac_idx mac             addr            state   lease   tries   rto     
+	0       801131801388    192.168.0.151   10      0       1       4       
+
+```
+
