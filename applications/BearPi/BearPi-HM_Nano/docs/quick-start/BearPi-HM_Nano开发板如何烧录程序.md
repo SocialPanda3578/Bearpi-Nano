@@ -16,7 +16,7 @@
     ![](figures/获取到开发板串口号.png)
 
 ## 二，烧录代码
-1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第二-4`看到的COM号
+1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第一-4`看到的COM号
 - Hiburn工具下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&amp;t=downloads 提取码：1234
 
 
