@@ -16,7 +16,7 @@
 
 
 1、文档（Gitee）
-* [VMare 镜像版本：十分钟上手体验](applications\BearPi\BearPi-HM_Nano\docs\quick-start\BearPi-HM_Nano十分钟上手.md)
+* [VMare 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
 
 ## 三、手把手教程系列
 
@@ -167,11 +167,11 @@ BearPi-HM Nano提供多个案例，案例以A、B、C、D进行不同类别进�
 
 ## 六、开发板图片预览[（淘宝链接）](https://item.taobao.com/item.htm?id=633296694816)
 
-[![](applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/BearPi-HM_Nano_Info.png)](https://item.taobao.com/item.htm?id=633296694816)
+[![](/applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/BearPi-HM_Nano_Info.png)](https://item.taobao.com/item.htm?id=633296694816)
 
 
 ## 八、联系我们
 
 * 小熊派开源社区公众号
 
-![](applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/bearpi_club_wechat.png)
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/bearpi_club_wechat.png)
