@@ -1,6 +1,24 @@
 # BearPi-HM_Nano开发板如何烧录程序<a name="ZH-CN_TOPIC_0000001053302600"></a>
-1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第八-4`看到的COM号
+
+## 一，连接开发板
+1. 通过TypeC数据线，把电脑与BearPi-HM Nano链接。
+
+2. 安装CH340驱动。
+
+3. 关闭虚拟机捕获USB功能。（有很多开发者都是因为虚拟机捕获了USB设备，导致本机Windows电脑看不到串口）
+
+    ![](figures/关闭虚拟机捕获USB.png)
+
+    如果上面操作不行，直接关闭VMware Workstation，选择挂起，然后再重新插拔USB。
+
+4. 查看开发板的串口
+
+    ![](figures/获取到开发板串口号.png)
+
+## 二，烧录代码
+1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第二-4`看到的COM号
 - Hiburn工具下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&amp;t=downloads 提取码：1234
+
 
 
     ![](figures/HiBurn主界面.png)
@@ -11,7 +29,7 @@
 
     ![](figures/HiBurn_Comsettings.png)
 
-3. 点击 Hiburn工具中的`Select file`按钮，在弹出的文件框中，选择`七-2` 中对应的路径，并选中：`Hi3861_wifiiot_app_allinone.bin` 文件。
+3. 点击 Hiburn工具中的`Select file`按钮，在弹出的文件框中，选择工程文件`./out/BearPi-HM_Nano/` 路径下的`Hi3861_wifiiot_app_allinone.bin` 文件。
 
     ![](figures/HiBurn_打开文件.png)
 
