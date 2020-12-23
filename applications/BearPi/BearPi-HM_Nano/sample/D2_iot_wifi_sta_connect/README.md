@@ -185,7 +185,7 @@ static BOOL WifiSTATask(void)
             //拷贝要连接的热点信息
             strcpy(select_ap_config.ssid, info[i].ssid);
             strcpy(select_ap_config.preSharedKey, SELECT_WIFI_PASSWORD);
-            select_ap_config.securityType = info[i].securityType;
+            select_ap_config.securityType = SELECT_WIFI_SECURITYTYPE;
 
             if (AddDeviceConfig(&select_ap_config, &result) == WIFI_SUCCESS)
             {
@@ -239,7 +239,12 @@ static BOOL WifiSTATask(void)
 ```
 
 ## 编译调试
-
+### 修改对接热点的账号密码
+修改`wifi_sta_connect.c`第51行和52行的热点账号密码
+```c
+#define SELECT_WIFI_SSID "BearPi"
+#define SELECT_WIFI_PASSWORD "0987654321"
+```
 ### 修改 BUILD.gn 文件
 
 修改 `applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `wifi_sta_connect` 参与编译。

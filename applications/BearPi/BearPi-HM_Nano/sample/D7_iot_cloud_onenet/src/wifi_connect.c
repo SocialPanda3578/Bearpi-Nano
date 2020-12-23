@@ -31,6 +31,8 @@
 #define DEF_TIMEOUT 15
 #define ONE_SECOND 1
 
+#define SELECT_WIFI_SECURITYTYPE WIFI_SEC_TYPE_PSK  
+
 static void WiFiInit(void);
 static void WaitSacnResult(void);
 static int WaitConnectResult(void);
@@ -117,7 +119,7 @@ int WifiConnect(const char *ssid, const char *psk)
             WifiDeviceConfig select_ap_config = {0};
             strcpy(select_ap_config.ssid, info[i].ssid);
             strcpy(select_ap_config.preSharedKey, psk);
-            select_ap_config.securityType = info[i].securityType;
+            select_ap_config.securityType = SELECT_WIFI_SECURITYTYPE;
 
             if (AddDeviceConfig(&select_ap_config, &result) == WIFI_SUCCESS)
             {

@@ -49,7 +49,8 @@ WifiErrorCode error;
 #define SELECT_WLAN_PORT "wlan0"
 
 #define SELECT_WIFI_SSID "BearPi"
-#define SELECT_WIFI_PASSWORD "BearPi"
+#define SELECT_WIFI_PASSWORD "0987654321"
+#define SELECT_WIFI_SECURITYTYPE WIFI_SEC_TYPE_PSK
 
 static BOOL WifiSTATask(void)
 {
@@ -123,7 +124,7 @@ static BOOL WifiSTATask(void)
             //拷贝要连接的热点信息
             strcpy(select_ap_config.ssid, info[i].ssid);
             strcpy(select_ap_config.preSharedKey, SELECT_WIFI_PASSWORD);
-            select_ap_config.securityType = info[i].securityType;
+            select_ap_config.securityType = SELECT_WIFI_SECURITYTYPE;
 
             if (AddDeviceConfig(&select_ap_config, &result) == WIFI_SUCCESS)
             {
