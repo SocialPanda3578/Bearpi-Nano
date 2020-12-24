@@ -189,6 +189,7 @@ int16_t ListAdapter::CalculateItemIndex(int16_t itemIndex) const
 UIView *ListAdapter::GetView(UIView *inView, int16_t index)
 {
     if (index < 0) {
+        HILOG_ERROR(HILOG_MODULE_ACE, "List adapter: GetView function parameter index error!");
         return nullptr;
     }
 
@@ -262,10 +263,7 @@ JSValue ListAdapter::GetElement(int16_t listItemsIndex, int16_t index, bool &isF
 
         // if it is a for+if type list-item, here will ignore if attribure
         if (DescriptorUtils::IsIfDescriptor(nativeElement)) {
-            element = DescriptorUtils::GetDescriptorRendered(nativeElement);
-            if (IS_UNDEFINED(element)) {
-                element = DescriptorUtils::RenderIfDescriptor(nativeElement);
-            }
+            element = DescriptorUtils::RenderIfDescriptor(nativeElement);
             ReleaseJerryValue(nativeElement, VA_ARG_END_FLAG);
             HILOG_ERROR(HILOG_MODULE_ACE, "List_adapter: list-item not support setting if and for attribute at once.");
         } else { // if it is a for type list-item
@@ -273,10 +271,7 @@ JSValue ListAdapter::GetElement(int16_t listItemsIndex, int16_t index, bool &isF
         }
         ReleaseJerryValue(item, itemIdx, renderPropValue, VA_ARG_END_FLAG);
     } else if (DescriptorUtils::IsIfDescriptor(descriptorOrElement)) { // if it is a if type list-item
-        element = DescriptorUtils::GetDescriptorRendered(descriptorOrElement);
-        if (IS_UNDEFINED(element)) {
-            element = DescriptorUtils::RenderIfDescriptor(descriptorOrElement);
-        }
+        element = DescriptorUtils::RenderIfDescriptor(descriptorOrElement);
     } else { // if it is a common list-item
         element = descriptorOrElement;
     }

@@ -31,7 +31,7 @@
 #define CAPABILITY "ddmpCapability"
 #define CAPABILITY_DATA ""
 #define CAPABILITY_DATA_LENGTH 0
-#define MODULE_NAME "dms"
+#define BUNDLE_NAME "dms"
 #define EMPTY_FEATURE_NAME ""
 
 static const char *GetName(Feature *feature);
@@ -82,7 +82,7 @@ static void OnInitialize(Feature *feature, Service *parent, Identity identity)
 
     ((DmsLite*) feature)->identity = identity;
 
-    int32_t ret = PublishService(MODULE_NAME, &g_publishInfo, &g_publishCallback);
+    int32_t ret = PublishService(BUNDLE_NAME, &g_publishInfo, &g_publishCallback);
     if (ret != EC_SUCCESS) {
         HILOGW("[PublishService failed]");
     }

@@ -18,8 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "app_common.h"
-#include "app_verify_hal.h"
 #include "cJSON.h"
+#include "parameter.h"
 #include "securec.h"
 
 static void ProfInit(ProfileProf *pf)
@@ -27,7 +27,9 @@ static void ProfInit(ProfileProf *pf)
     int ret = memset_s(pf, sizeof(ProfileProf), 0, sizeof(ProfileProf));
     if (ret != V_OK) {
         LOG_ERROR("memset failed");
+        return;
     }
+    return;
 }
 
 static char *GetStringTag(const cJSON *root, const char *tag)
@@ -56,7 +58,7 @@ static char *GetStringTag(const cJSON *root, const char *tag)
     return value;
 }
 
-static void FreeStringArray(char **array, int num)
+static void FreeStringAttay(char **array, int num)
 {
     if (array == NULL) {
         return;
@@ -67,6 +69,7 @@ static void FreeStringArray(char **array, int num)
         }
     }
     APPV_FREE(array);
+    return;
 }
 
 static char **GetStringArrayTag(const cJSON *root, const char *tag, int *numReturn)
@@ -97,14 +100,14 @@ static char **GetStringArrayTag(const cJSON *root, const char *tag, int *numRetu
         int ret = strcpy_s(value[i], len + 1, item->valuestring);
         if (ret != V_OK) {
             LOG_ERROR("str cpy error : %d", ret);
-            FreeStringArray(value, num);
+            FreeStringAttay(value, num);
             return NULL;
         }
     }
     *numReturn = num;
     return value;
 EXIT:
-    FreeStringArray(value, num);
+    FreeStringAttay(value, num);
     return NULL;
 }
 
@@ -228,22 +231,25 @@ static void FreeProfBundle(ProfBundleInfo *pfval)
 
 static void FreeProfPerssion(ProfPermission *pfval)
 {
-    FreeStringArray(pfval->permission, pfval->permissionNum);
+    FreeStringAttay(pfval->permission, pfval->permissionNum);
     pfval->permissionNum = 0;
     pfval->permission = NULL;
 
-    FreeStringArray(pfval->restricPermission, pfval->restricNum);
+    FreeStringAttay(pfval->restricPermission, pfval->restricNum);
     pfval->restricNum = 0;
     pfval->restricPermission = NULL;
+    return;
 }
 
 static void FreeProfDebuginfo(ProfDebugInfo *pfval)
 {
     FREE_IF_NOT_NULL(pfval->devIdType);
 
-    FreeStringArray(pfval->deviceId, pfval->devidNum);
+    FreeStringAttay(pfval->deviceId, pfval->devidNum);
     pfval->devidNum = 0;
     pfval->deviceId = NULL;
+
+    return;
 }
 
 void ProfFreeData(ProfileProf *pf)
@@ -260,6 +266,7 @@ void ProfFreeData(ProfileProf *pf)
     FreeProfDebuginfo(&pf->debugInfo);
     FREE_IF_NOT_NULL(pf->issuer);
     FREE_IF_NOT_NULL(pf->appid);
+    return;
 }
 
 /* parse profile */
@@ -358,7 +365,7 @@ static int VerifyUdid(const ProfileProf *pf)
         LOG_ERROR("udid num exceed maximum");
         return V_ERR;
     }
-    char *udid = GetDevUdid();
+    char *udid = GetSerial();
     if (udid == NULL) {
         LOG_ERROR("udid is null");
         return V_ERR;

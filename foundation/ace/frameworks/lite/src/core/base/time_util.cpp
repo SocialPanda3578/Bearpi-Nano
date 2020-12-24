@@ -60,8 +60,7 @@ int32_t ParseToMilliseconds(const char *time)
     }
     if (strncpy_s(buffer, bufSize + 1, time, bufSize) == 0) {
         buffer[bufSize] = '\0';
-        milliseconds = isSecond ? (int32_t)((strtod(buffer, nullptr) * MILLIONS_PER_SECOND)) :
-                                  (int32_t)(strtol(buffer, nullptr, DEC));
+        milliseconds = isSecond ? (strtod(buffer, nullptr) * MILLIONS_PER_SECOND) : strtol(buffer, nullptr, DEC);
     }
     ace_free(buffer);
     buffer = nullptr;

@@ -61,10 +61,8 @@ extern "C" {
  *
  */
 enum IsGranted {
-    /** Not granted */
-    NOT_GRANTED = 0,
-    /** Granted */
-    GRANTED = 1,
+    NOT_GRANTED = 0,  /** Not granted */
+    GRANTED = 1,      /** Granted */
 };
 
 /**
@@ -72,12 +70,9 @@ enum IsGranted {
  *
  */
 typedef struct {
-    /** Permission name. For details about its length, see {@link PERM_NAME_LEN}. */
-    char name[PERM_NAME_LEN];
-    /** Permission description. For details about its length, see {@link PERM_DESC_LEN}. */
-    char desc[PERM_DESC_LEN];
-    /** Whether the permission is granted */
-    enum IsGranted granted;
+    char name[PERM_NAME_LEN];  /** Permission name. For details about its length, see {@link PERM_NAME_LEN}. */
+    char desc[PERM_DESC_LEN];  /** Permission description. For details about its length, see {@link PERM_DESC_LEN}. */
+    enum IsGranted granted;    /** Whether the permission is granted */
 } PermissionSaved;
 
 /**
@@ -85,46 +80,27 @@ typedef struct {
  *
  */
 enum PmsErrorCode {
-    /** Success */
-    PERM_ERRORCODE_SUCCESS = 0,
-    /** Invalid parameters */
-    PERM_ERRORCODE_INVALID_PARAMS = 10,
-    /** Invalid permission name */
-    PERM_ERRORCODE_INVALID_PERMNAME,
-    /** Failed to allocate memory using the <b>malloc</b> function. */
-    PERM_ERRORCODE_MALLOC_FAIL,
-    /** Failed to open the file descriptor. */
-    PERM_ERRORCODE_OPENFD_FAIL,
-    /** Failed to read the file descriptor. */
-    PERM_ERRORCODE_READFD_FAIL,
-    /** Failed to write the file descriptor. */
-    PERM_ERRORCODE_WRITEFD_FAIL,
-    /** Failed to parse the JSON string. */
-    PERM_ERRORCODE_JSONPARSE_FAIL,
-    /** Failed to copy the string. */
-    PERM_ERRORCODE_COPY_ERROR,
-    /** The permission name or description is too long. */
-    PERM_ERRORCODE_FIELD_TOO_LONG,
-    /** The permission does not exist. */
-    PERM_ERRORCODE_PERM_NOT_EXIST,
-    /** Failed to delete the permission file. */
-    PERM_ERRORCODE_UNLINK_ERROR,
-    /** The file does not exist. */
-    PERM_ERRORCODE_FILE_NOT_EXIST,
-    /** Failed to set memory using the <b>memset</b> function. */
-    PERM_ERRORCODE_MEMSET_FAIL,
-    /** Failed to obtain information about the named file using the <b>stat</b>
-     * function.
-     */
-    PERM_ERRORCODE_STAT_FAIL,
-    /** Invalid path */
-    PERM_ERRORCODE_PATH_INVALID,
-    /** Too many permissions */
-    PERM_ERRORCODE_TOO_MUCH_PERM,
-    /** The process ID does not exist. */
-    PERM_ERRORCODE_TASKID_NOT_EXIST,
-    /** Abnormal number of permissions */
-    PERM_ERRORCODE_PERM_NUM_ERROR,
+    PERM_ERRORCODE_SUCCESS = 0,           /** Success */
+    PERM_ERRORCODE_INVALID_PARAMS = 10,   /** Invalid parameters */
+    PERM_ERRORCODE_INVALID_PERMNAME,      /** Invalid permission name */
+    PERM_ERRORCODE_MALLOC_FAIL,           /** Failed to allocate memory using the <b>malloc</b> function. */
+    PERM_ERRORCODE_OPENFD_FAIL,           /** Failed to open the file descriptor. */
+    PERM_ERRORCODE_READFD_FAIL,           /** Failed to read the file descriptor. */
+    PERM_ERRORCODE_WRITEFD_FAIL,          /** Failed to write the file descriptor. */
+    PERM_ERRORCODE_JSONPARSE_FAIL,        /** Failed to parse the JSON string. */
+    PERM_ERRORCODE_COPY_ERROR,            /** Failed to copy the string. */
+    PERM_ERRORCODE_FIELD_TOO_LONG,        /** The permission name or description is too long. */
+    PERM_ERRORCODE_PERM_NOT_EXIST,        /** The permission does not exist. */
+    PERM_ERRORCODE_UNLINK_ERROR,          /** Failed to delete the permission file. */
+    PERM_ERRORCODE_FILE_NOT_EXIST,        /** The file does not exist. */
+    PERM_ERRORCODE_MEMSET_FAIL,           /** Failed to set memory using the <b>memset</b> function. */
+    PERM_ERRORCODE_STAT_FAIL,             /** Failed to obtain information about the named file using the <b>stat</b>
+                                           * function.
+                                           */
+    PERM_ERRORCODE_PATH_INVALID,          /** Invalid path */
+    PERM_ERRORCODE_TOO_MUCH_PERM,         /** Too many permissions */
+    PERM_ERRORCODE_TASKID_NOT_EXIST,      /** The process ID does not exist. */
+    PERM_ERRORCODE_PERM_NUM_ERROR,        /** Abnormal number of permissions */
 };
 
 #ifdef __cplusplus

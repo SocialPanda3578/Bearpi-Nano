@@ -49,7 +49,7 @@
 static pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Supported permissions
-static const PermissionDef g_permissions[] = {
+static PermissionDef g_permissions[] = {
     // appfwk
     {"ohos.permission.LISTEN_BUNDLE_CHANGE",  SYSTEM_GRANT,    NOT_RESTRICTED},
     {"ohos.permission.GET_BUNDLE_INFO",       SYSTEM_GRANT,    NOT_RESTRICTED},
@@ -74,14 +74,14 @@ static const PermissionDef g_permissions[] = {
     {"ohos.permission.WRITE_MEDIA_VIDEO",     USER_GRANT,    NOT_RESTRICTED},
 };
 
-static const unsigned int g_permissionSize = sizeof(g_permissions) / sizeof(PermissionDef);
+static unsigned int g_permissionSize = sizeof(g_permissions) / sizeof(PermissionDef);
 
 // Permission matrix of run-time tasks
 static struct TaskList g_taskList = {
     NULL
 };
 
-// don't forget to call free() afterwards
+// don't forget free() afterwards
 static char *ConcatString(const char *s1, const char *s2)
 {
     unsigned int allocSize = strlen(s1) + strlen(s2) + 1;
@@ -113,17 +113,16 @@ static int WriteString(const char *path, const char *string)
     if (fd < 0) {
         return fd;
     }
-    int stringLength = strlen(string);
-    int writtenLength = write(fd, string, stringLength);
-    close(fd);
-    if (writtenLength != stringLength) {
+    if (write(fd, string, strlen(string)) != strlen(string)) {
+        close(fd);
         unlink(path);
         return PERM_ERRORCODE_WRITEFD_FAIL;
     }
+    close(fd);
     return PERM_ERRORCODE_SUCCESS;
 }
 
-// don't forget to call free() afterwards
+// don't forget free() afterwards
 static char *ReadString(const char *path, int *errcode)
 {
     char resolvedPath[PATH_MAX + 1] = {0x0};
@@ -144,8 +143,8 @@ static char *ReadString(const char *path, int *errcode)
         *errcode = PERM_ERRORCODE_MALLOC_FAIL;
         return NULL;
     }
-  
-    if (memset_s(rst, readSize, 0x0, readSize) != EOK) {
+    errno_t err = memset_s(rst, readSize, 0x0, readSize);
+    if (err != EOK) {
         free(rst);
         *errcode = PERM_ERRORCODE_MEMSET_FAIL;
         return NULL;
@@ -158,13 +157,14 @@ static char *ReadString(const char *path, int *errcode)
         return NULL;
     }
 
-    int ret = read(fd, rst, readSize);
-    close(fd);
-    if (ret < 0) {
+    if (read(fd, rst, readSize) < 0) {
         free(rst);
+        close(fd);
         *errcode = PERM_ERRORCODE_READFD_FAIL;
         return NULL;
     }
+
+    close(fd);
     return rst;
 }
 
@@ -313,7 +313,11 @@ char *QueryPermissionString(const char *identifier, int *errCode)
 
     jsonStr = ReadString(path, errCode);
     free(path);
-    return (*errCode) ? NULL : jsonStr;
+    if (*errCode) {
+        return NULL;
+    }
+
+    return jsonStr;
 }
 
 int QueryPermission(const char *identifier, PermissionSaved **permissions, int *permNum)
@@ -465,8 +469,13 @@ int DeletePermissions(const char *identifier)
     }
 
     ret = unlink(path);
+    if (ret != 0) {
+        free(path);
+        return PERM_ERRORCODE_UNLINK_ERROR;
+    }
+
     free(path);
-    return (ret != 0) ? PERM_ERRORCODE_UNLINK_ERROR : PERM_ERRORCODE_SUCCESS;
+    return PERM_ERRORCODE_SUCCESS;
 }
 
 int IsPermissionValid(const char *permissionName)

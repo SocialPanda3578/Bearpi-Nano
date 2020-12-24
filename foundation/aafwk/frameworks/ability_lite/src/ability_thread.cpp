@@ -46,9 +46,11 @@ namespace {
 constexpr static char PATH_SEPARATOR[] = "/";
 constexpr static char LIB_PREFIX[] = "/lib";
 constexpr static char LIB_SUFFIX[] = ".so";
+constexpr static char ACE_LIB_PATH[] = "/usr/lib/libace_lite.so";
 constexpr static char ACE_ABILITY_NAME[] = "AceAbility";
 #ifdef ABILITY_WINDOW_SUPPORT
 constexpr static char FONT_PATH[] = "/storage/data/";
+constexpr static char FONT_NAME[] = "SourceHanSansSC-Regular.otf";
 constexpr static int UI_TASK_HANDLER_PERIOD = 10 * 1000; // UI task sleep period is 10ms
 constexpr static char UI_TASK_THREAD_NAME[] = "UITaskPost";
 static uint32_t g_fontPsramBaseAddr[MIN_FONT_PSRAM_LENGTH / 4];
@@ -113,7 +115,7 @@ void AbilityThread::InitUITaskEnv()
     HILOG_INFO(HILOG_MODULE_APP, "Hal and UI init");
     GraphicStartUp::Init();
     GraphicStartUp::InitFontEngine(reinterpret_cast<uintptr_t>(g_fontPsramBaseAddr), MIN_FONT_PSRAM_LENGTH,
-        const_cast<char *>(FONT_PATH), DEFAULT_VECTOR_FONT_FILENAME);
+        const_cast<char *>(FONT_PATH), const_cast<char *>(FONT_NAME));
     auto screenDevice = new ScreenDevice();
     ScreenDeviceProxy::GetInstance()->SetDevice(screenDevice);
 
@@ -171,13 +173,16 @@ void AbilityThread::PerformAppInit(const AppInfo &appInfo)
             if (realpath(modulePath.c_str(), realPath) == nullptr) {
                 continue;
             }
-            void *handle = dlopen(static_cast<char *>(realPath), RTLD_NOW | RTLD_GLOBAL);
-            if (handle == nullptr) {
-                HILOG_ERROR(HILOG_MODULE_APP, "Fail to dlopen %{public}s, [%{public}s]", modulePath.c_str(), dlerror());
-                exit(-1);
-            }
-            handle_.emplace_front(handle);
+            modulePath = realPath;
+        } else {
+            modulePath = ACE_LIB_PATH;
         }
+        void *handle = dlopen(modulePath.c_str(), RTLD_NOW | RTLD_GLOBAL);
+        if (handle == nullptr) {
+            HILOG_ERROR(HILOG_MODULE_APP, "Fail to dlopen %{public}s, [%{public}s]", modulePath.c_str(), dlerror());
+            exit(-1);
+        }
+        handle_.emplace_front(handle);
     }
 
     int ret = UtilsSetEnv(GetDataPath());
@@ -355,7 +360,7 @@ void AbilityThread::AttachBundle(uint64_t token)
         HILOG_ERROR(HILOG_MODULE_APP, "ams identity is null");
         return;
     }
-    int32_t ret = RegisterIpcCallback(AbilityScheduler::AmsCallback, 0, IPC_WAIT_FOREVER, identity_, abilityScheduler_);
+    int32_t ret = RegisteIpcCallback(AbilityScheduler::AmsCallback, 0, IPC_WAIT_FOREVER, identity_, abilityScheduler_);
     if (ret != 0) {
         HILOG_ERROR(HILOG_MODULE_APP, "RegisterIpcCallback failed");
         AdapterFree(identity_);

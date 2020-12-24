@@ -408,15 +408,7 @@ private:
      */
     void ReleaseCommonEventListeners();
     void AppendDescriptorOrElements(UIViewGroup *viewGroup, const JSValue descriptorOrElements);
-    /**
-     * @brief For some situations, if the component's rect(position, width, height and so on) area is changed, need
-     * to force the parent container to relayout all children, and need to invalided self before the changes are
-     * applied.
-     *
-     * @param attrKeyId which attribute or style is being changing
-     * @param invalidateSelf true for just invaliding self, false for to relayout parent, default is false.
-     */
-    void InvalidateIfNeeded(uint16_t attrKeyId, bool invalidateSelf = false) const;
+    void ReLayoutChildrenIfNeeded(uint16_t attrKeyId) const;
     void AddAnimationToList(const TransitionImpl *transitionImpl) const;
 
     AppStyleManager *styleManager_;

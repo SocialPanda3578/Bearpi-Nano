@@ -263,7 +263,7 @@ enum AppexecfwkErrors {
     /** Failed to initialize the extractor. */
     ERR_APPEXECFWK_INSTALL_FAILED_EXTRACTOR_NOT_INIT,
 
-    /** Failed to extract information from the HAP package.*/
+    /** Failed to extract hap. */
     ERR_APPEXECFWK_INSTALL_FAILED_EXTRACT_HAP_ERROR,
 
     /** Failed to parse the JavaScript path. This error code is available only to basic watches. */

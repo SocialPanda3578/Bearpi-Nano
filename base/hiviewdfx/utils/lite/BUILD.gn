@@ -12,18 +12,18 @@
 # limitations under the License.
 
 static_library("common_lite") {
-  sources = [
-    "hiview_cache.c",
-    "hiview_config.c",
-    "hiview_file.c",
-    "hiview_util.c",
-  ]
-  cflags = [ "-Wall" ]
-  include_dirs = [
-    "//base/hiviewdfx/interfaces/kits/hilog_lite",
-    "//base/hiviewdfx/services/hiview_lite",
-    "//kernel/liteos_m/kal",
-    "//vendor/hisi/hi3861/hi3861/platform/os/Huawei_LiteOS/components/lib/libc/musl/include",
-    "//utils/native/lite/include",
-  ]
+    sources = [
+        "hiview_config.c",
+        "hiview_cache.c",
+        "hiview_file.c",
+        "hiview_util.c",
+    ]
+    cflags = [ "-Wall" ]
+    include_dirs = [
+        "//base/hiviewdfx/interfaces/kits/hilog_lite",
+        "//base/hiviewdfx/services/hiview_lite",
+        "//kernel/liteos_m/components/cmsis",
+        "//vendor/hisi/hi3861/hi3861/platform/os/Huawei_LiteOS/components/lib/libc/musl/include",
+        "//utils/native/lite/include",
+    ]
 }

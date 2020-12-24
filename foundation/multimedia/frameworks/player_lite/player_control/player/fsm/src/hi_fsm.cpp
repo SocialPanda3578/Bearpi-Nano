@@ -111,6 +111,7 @@ int32_t HI_FSM_Create(void **stateMachine, uint32_t maxQueueSize, uint32_t msgPa
         MEDIA_ERR_LOG("malloc FsmInstanceCtx failed");
         return HI_FAILURE;
     }
+    fsmInstance->stateMachine = nullptr;
 
     fsmInstance->stateMachine = new (std::nothrow) HiStateMachine();
     if (fsmInstance->stateMachine == nullptr) {

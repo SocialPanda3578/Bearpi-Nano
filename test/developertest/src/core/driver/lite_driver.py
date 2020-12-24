@@ -55,7 +55,7 @@ class LiteUnitTest(IDriver):
         1. check serial protocol
         2. login device
         3. NFS is available
-        :param config: serial device
+        :param config:包含serial_protocol，serial_device，nfs_operation
         :return:
         """
         cls.log.error("Lite driver check config:{}".format(config))

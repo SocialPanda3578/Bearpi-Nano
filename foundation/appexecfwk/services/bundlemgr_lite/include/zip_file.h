@@ -16,11 +16,11 @@
 #ifndef OHOS_BUNDLE_ZIP_FILE_H
 #define OHOS_BUNDLE_ZIP_FILE_H
 
-#include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
 
+#include "stdint.h"
 #include "unzip.h"
 
 namespace OHOS {

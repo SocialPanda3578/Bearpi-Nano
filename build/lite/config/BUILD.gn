@@ -52,6 +52,11 @@ config("kernel_macros") {
             "__LITEOS__",
             "__LITEOS_M__"
         ]
+    } else if (ohos_kernel_type == "liteos_riscv") {
+        defines = [
+            "__LITEOS__",
+            "__LITEOS_RISCV__"
+        ]
     } else if (ohos_kernel_type == "linux") {
         defines = [ "__LINUX__" ]
     }
@@ -67,7 +72,7 @@ config("werror") {
 config("common") {
     defines = [ "_XOPEN_SOURCE=700" ]
     cflags = [
-        "-nostdlib",
+        #"-nostdlib",
         "-fno-common",
         "-fno-builtin",
         "-fno-strict-aliasing",
@@ -143,6 +148,7 @@ config("clang") {
         "-L${ohos_build_compiler_dir}/lib/arm-liteos/c++",
         "-L${ohos_root_path}prebuilts/lite/sysroot/usr/lib/arm-liteos",
         "-L${ohos_build_compiler_dir}/lib/clang/9.0.0/lib/arm-liteos",
+        "-L${ohos_build_compiler_dir}/lib/arm-liteos/c++",
         "-lclang_rt.builtins",
         "-lc++",
         "-lc++abi"
@@ -198,7 +204,7 @@ config("liteos_a") {
     }
 }
 
-config("liteos_m") {
+config("liteos_riscv") {
     configs = [
         ":common",
         ":werror",

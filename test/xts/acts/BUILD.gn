@@ -18,13 +18,9 @@ lite_component("acts_compoment") {
     all_features = []
     features = []
     if (ohos_xts_test_args != "") {
-        args = [
-            "--method_name", "get_target_modules",
-            "--arguments",   "all_features=${ohos_xts_test_args}"
-        ]
-        all_features += exec_script(rebase_path("//test/xts/tools/build/utils.py"), args, "list lines")
+         all_features += [ ohos_xts_test_args ]
     } else {
-        if(ohos_kernel_type == "liteos_m") {
+        if(ohos_kernel_type == "liteos_riscv") {
             all_features += [
                 "//test/xts/acts/communication_lite/lwip_hal:ActsLwipTest",
                 "//test/xts/acts/communication_lite/softbus_hal:ActsSoftBusTest",
@@ -33,6 +29,7 @@ lite_component("acts_compoment") {
                 "//test/xts/acts/utils_lite/parameter_hal:ActsParameterTest",
                 "//test/xts/acts/iot_hardware_lite/wifiiot_hal:ActsWifiIotTest",
                 "//test/xts/acts/kernel_lite/kernelcmsis_hal:ActsCMSISTest",
+                "//test/xts/acts/kernel_lite/kernelkal_hal:ActsKalTest",
                 "//test/xts/acts/hiviewdfx_lite/dfx_hal:ActsDfxFuncTest",
                 "//test/xts/acts/utils_lite/kvstore_hal:ActsKvStoreTest",
                 "//test/xts/acts/security_lite/datahuks_hal:ActsSecurityDataTest",

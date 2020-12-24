@@ -24,19 +24,18 @@
 namespace OHOS {
 class BundleDaemonHandler : public NoCopyable {
 public:
-    int32_t ExtractHap(const char *hapPath, const char *codePath);
-    int32_t RenameFile(const char *oldFile, const char *newFile);
-    int32_t CreatePermissionDir();
-    int32_t CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown);
-    int32_t StoreContentToFile(const char *filePath, const void *buffer, uint32_t size);
-    int32_t MoveFile(const char *oldFile, const char *newFile);
-    int32_t RemoveFile(const char *file);
-    int32_t RemoveInstallDirectory(const char *codePath, const char *dataPath);
+    int32 ExtractHap(const char *hapPath, const char *codePath);
+    int32 RenameFile(const char *oldFile, const char *newFile);
+    int32 CreatePermissionDir();
+    int32 CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown);
+    int32 StoreContentToFile(const char *filePath, const void *buffer, uint32_t size);
+    int32 RemoveFile(const char *file);
+    int32 RemoveInstallDirectory(const char *codePath, const char *dataPath);
 private:
-    bool IsValidCodePath(const char *codePath);
-    bool IsValidDataPath(const char *codePath);
-    bool IsValidJsonPath(const char *jsonPath);
-    bool IsValidSystemPath(const char *jsonPath);
+    bool IsValideCodePath(const char *codePath);
+    bool IsValideDataPath(const char *codePath);
+    bool IsValideJsonPath(const char *jsonPath);
+    bool IsValideSystemPath(const char *jsonPath);
 };
 } // OHOS
 #endif // OHOS_BUNDLE_DAEMON_HANDLER_H

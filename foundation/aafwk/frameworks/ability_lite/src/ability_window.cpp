@@ -42,12 +42,12 @@ void AbilityWindow::SetRootView(RootView *rootView, int16_t x, int16_t y)
     window_->BindRootView(rootView);
     rootView->Invalidate();
 
-    isWindowAttached_ = true;
+    isWindowAttached = true;
 }
 
 void AbilityWindow::EnsureLatestUIAttached() const
 {
-    if (!isWindowAttached_ || (window_ == nullptr)) {
+    if (!isWindowAttached || (window_ == nullptr)) {
         HILOG_ERROR(HILOG_MODULE_APP, "Should SetUIContent before slice active");
         exit(-1);
     }

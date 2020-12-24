@@ -73,8 +73,8 @@ int32_t BundleDaemonClient::DeathCallback(const IpcContext* context, void* ipcMs
 BundleDaemonClient::~BundleDaemonClient()
 {
     if (initialized_) {
-        UnregisterIpcCallback(svcIdentity_);
-        UnregisterDeathCallback(bdsSvcIdentity_, cbid_);
+        UnRegisteIpcCallback(svcIdentity_);
+        UnRegisteDeathCallback(bdsSvcIdentity_, cbid_);
         bdsClient_->Release(reinterpret_cast<IUnknown *>(bdsClient_));
         bdsClient_ = nullptr;
         sem_destroy(&sem_);
@@ -103,7 +103,7 @@ bool BundleDaemonClient::Initialize()
     }
 
     // register bundle_daemon callback
-    int32_t ret = RegisterIpcCallback(
+    int32_t ret = RegisteIpcCallback(
         BundleDaemonClient::BundleDaemonCallback, 0, IPC_WAIT_FOREVER, &svcIdentity_, this);
     if (ret != EC_SUCCESS || RegisterCallback() != LITEIPC_OK) {
         PRINTE("BundleDaemonClient", "register bundle_daemon callback fail");
@@ -113,7 +113,7 @@ bool BundleDaemonClient::Initialize()
 
     // register bundle_daemon death callback
     bdsSvcIdentity_ = SAMGR_GetRemoteIdentity(BDS_SERVICE, nullptr);
-    if (::RegisterDeathCallback(nullptr, bdsSvcIdentity_, &BundleDaemonClient::DeathCallback, this, &cbid_) !=
+    if (RegisteDeathCallback(nullptr, bdsSvcIdentity_, &BundleDaemonClient::DeathCallback, this, &cbid_) !=
         LITEIPC_OK) {
         PRINTW("BundleDaemonClient", "register bundle_daemon death callback fail");
         // Keep running if register death callback fail
@@ -139,13 +139,13 @@ void *BundleDaemonClient::RegisterDeathCallback(void *arg)
     Lock<Mutex> lock(client->mutex_);
     client->RegisterCallback();
 
-    UnregisterDeathCallback(client->bdsSvcIdentity_, client->cbid_);
+    UnRegisteDeathCallback(client->bdsSvcIdentity_, client->cbid_);
     client->cbid_ = INVALID_INDEX;
     client->bdsSvcIdentity_.handle = INVALID_INDEX;
     client->bdsSvcIdentity_.token = INVALID_INDEX;
 
     client->bdsSvcIdentity_ = SAMGR_GetRemoteIdentity(BDS_SERVICE, nullptr);
-    if (::RegisterDeathCallback(nullptr, client->bdsSvcIdentity_, &BundleDaemonClient::DeathCallback,
+    if (RegisteDeathCallback(nullptr, client->bdsSvcIdentity_, &BundleDaemonClient::DeathCallback,
         client, &client->cbid_) != LITEIPC_OK) {
         PRINTW("BundleDeamonClient", "register death callback fail");
         // Keep running if register death callback fail
@@ -154,7 +154,7 @@ void *BundleDaemonClient::RegisterDeathCallback(void *arg)
     return nullptr;
 }
 
-int32_t BundleDaemonClient::WaitResultSync(int32_t result)
+int32 BundleDaemonClient::WaitResultSync(int32 result)
 {
     if (result == EC_SUCCESS) {
         sem_wait(&sem_);
@@ -164,7 +164,7 @@ int32_t BundleDaemonClient::WaitResultSync(int32_t result)
     return result;
 }
 
-int32_t BundleDaemonClient::RegisterCallback()
+int32 BundleDaemonClient::RegisterCallback()
 {
     IpcIo request;
     char data[IPC_IO_DATA_MAX];
@@ -178,7 +178,7 @@ int32_t BundleDaemonClient::RegisterCallback()
     return WaitResultSync(EC_SUCCESS);
 }
 
-int32_t BundleDaemonClient::ExtractHap(const char *hapFile, const char *codePath)
+int32 BundleDaemonClient::ExtractHap(const char *hapFile, const char *codePath)
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -197,7 +197,7 @@ int32_t BundleDaemonClient::ExtractHap(const char *hapFile, const char *codePath
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, EXTRACT_HAP, &request, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::RenameFile(const char *oldFile, const char *newFile)
+int32 BundleDaemonClient::RenameFile(const char *oldFile, const char *newFile)
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -216,7 +216,7 @@ int32_t BundleDaemonClient::RenameFile(const char *oldFile, const char *newFile)
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, RENAME_DIR, &request, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::CreatePermissionDir()
+int32 BundleDaemonClient::CreatePermissionDir()
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -225,7 +225,7 @@ int32_t BundleDaemonClient::CreatePermissionDir()
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, CREATE_PERMISSION_DIR, nullptr, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown)
+int32 BundleDaemonClient::CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown)
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -246,7 +246,7 @@ int32_t BundleDaemonClient::CreateDataDirectory(const char *dataPath, int32_t ui
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, CREATE_DATA_DIRECTORY, &request, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::StoreContentToFile(const char *file, const void *buffer, uint32_t size)
+int32 BundleDaemonClient::StoreContentToFile(const char *file, const void *buffer, uint32_t size)
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -269,26 +269,7 @@ int32_t BundleDaemonClient::StoreContentToFile(const char *file, const void *buf
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, STORE_CONTENT_TO_FILE, &request, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::MoveFile(const char *oldFile, const char *newFile)
-{
-    if (!initialized_) {
-        return EC_NOINIT;
-    }
-    if ((oldFile == nullptr) || (newFile == nullptr)) {
-        PRINTE("BundleDaemonClient", "invalid params");
-        return EC_INVALID;
-    }
-    IpcIo request;
-    char data[IPC_IO_DATA_MAX];
-    IpcIoInit(&request, data, IPC_IO_DATA_MAX, 0);
-    IpcIoPushString(&request, oldFile);
-    IpcIoPushString(&request, newFile);
-
-    Lock<Mutex> lock(mutex_);
-    return WaitResultSync(bdsClient_->Invoke(bdsClient_, MOVE_FILE, &request, nullptr, nullptr));
-}
-
-int32_t BundleDaemonClient::RemoveFile(const char *file)
+int32 BundleDaemonClient::RemoveFile(const char *file)
 {
     if (!initialized_) {
         return EC_NOINIT;
@@ -306,7 +287,7 @@ int32_t BundleDaemonClient::RemoveFile(const char *file)
     return WaitResultSync(bdsClient_->Invoke(bdsClient_, REMOVE_FILE, &request, nullptr, nullptr));
 }
 
-int32_t BundleDaemonClient::RemoveInstallDirectory(const char *codePath, const char *dataPath)
+int32 BundleDaemonClient::RemoveInstallDirectory(const char *codePath, const char *dataPath)
 {
     if (!initialized_) {
         return EC_NOINIT;

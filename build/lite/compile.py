@@ -27,12 +27,10 @@ def add_options(parser):
     parser.add_argument('-b', '--build_type', help='release or debug version.',
                         nargs=1, default=['release'])
     parser.add_argument('-t', '--test', help='Compile test suit', nargs='*')
-    parser.add_argument('-T', '--target', help='Compile single target',
-                        nargs=1, default=[''])
     parser.add_argument('-n', '--ndk', help='Compile ndk', action='store_true')
 
 
-def exec_command(args, parser):
+def exec_command(args):
     callback_dict = CallbackDict()
 
     # parse product
@@ -45,5 +43,4 @@ def exec_command(args, parser):
                              config=config,
                              args=args)
     else:
-        parser.print_help()
         raise Exception("Error: product not found.")

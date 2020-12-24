@@ -63,16 +63,7 @@ public:
 private:
     struct CallbackNode : public MemoryHeap {
         ACE_DISALLOW_COPY_AND_MOVE(CallbackNode);
-        CallbackNode() : moduleName(nullptr), callback(nullptr), callbackHandler(nullptr), next(nullptr) {}
-        ~CallbackNode()
-        {
-            if (moduleName != nullptr) {
-                ace_free(moduleName);
-                moduleName = nullptr;
-            }
-        }
-
-        char *moduleName;
+        CallbackNode() : callback(nullptr), callbackHandler(nullptr), next(nullptr) {}
         NativeCallback callback;
         JsiCallback callbackHandler;
         struct CallbackNode *next;
@@ -111,8 +102,7 @@ private:
     // *resPtr should be freed by caller when it's not nullptr and won't be used any more
     bool CreateString(const char * const srcStr, char** resPtr) const;
 
-    void InsertCallback(CallbackNode *&head, NativeCallback callback,
-        JsiCallback callbackHandler, const char * const moduleName = nullptr) const;
+    void InsertCallback(CallbackNode *&head, NativeCallback callback, JsiCallback callbackHandler) const;
     void InsertTerminateCallback(const char * const name, const JSIValue& moduleObj);
     void InvokeCallbacks(CallbackNode *&head) const;
     void* GetObjectPointer(JSIValue object) const;
@@ -126,6 +116,9 @@ private:
 
     // JS object for caching modules
     static JSIValue requiredSystemModules;
+
+    // JS object for required history modules before ability terminating
+    static JSIValue requiredHistoryModules;
 
     CallbackNode *onDestroyHead_;
     CallbackNode *onTerminateHead_;

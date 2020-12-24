@@ -33,14 +33,13 @@ public:
         return instance;
     }
     bool Initialize();
-    int32_t ExtractHap(const char *hapFile, const char *codePath);
-    int32_t RenameFile(const char *oldFile, const char *newFile);
-    int32_t CreatePermissionDir();
-    int32_t CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown);
-    int32_t StoreContentToFile(const char *file, const void *buffer, uint32_t size);
-    int32_t MoveFile(const char *oldFile, const char *newFile);
-    int32_t RemoveFile(const char *file);
-    int32_t RemoveInstallDirectory(const char *codePath, const char *dataPath);
+    int32 ExtractHap(const char *hapFile, const char *codePath);
+    int32 RenameFile(const char *oldFile, const char *newFile);
+    int32 CreatePermissionDir();
+    int32 CreateDataDirectory(const char *dataPath, int32_t uid, int32_t gid, bool isChown);
+    int32 StoreContentToFile(const char *file, const void *buffer, uint32_t size);
+    int32 RemoveFile(const char *file);
+    int32 RemoveInstallDirectory(const char *codePath, const char *dataPath);
     static int32_t BundleDaemonCallback(const IpcContext* context, void *ipcMsg, IpcIo *io, void *arg);
     static int32_t DeathCallback(const IpcContext* context, void* ipcMsg, IpcIo* data, void* arg);
 private:
@@ -53,12 +52,12 @@ private:
     uint32_t cbid_ = INVALID_INDEX;
     sem_t sem_;
     Mutex mutex_;
-    int32_t result_ = EC_FAILURE;
+    int32 result_ = EC_FAILURE;
     bool initialized_ = false;
 
     static void *RegisterDeathCallback(void *);
-    int32_t RegisterCallback();
-    int32_t WaitResultSync(int32 result);
+    int32 RegisterCallback();
+    int32 WaitResultSync(int32 result);
 };
 } // namespace OHOS
 #endif // OHOS_BUNLDE_DAEMON_CLIENT_H

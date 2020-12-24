@@ -30,80 +30,171 @@ static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
 static const char OHOS_ABI_LIST[] = {"****"};
 static const char OHOS_SERIAL[] = {"1234567890"};  // provided by OEM.
 
-static char* HalGetSysParam(const char* paramType, size_t paramSize)
-{
-    char* param = (char*)malloc(paramSize);
-    if (param == NULL) {
-        return NULL;
-    }
-    if (strcpy_s(param, paramSize, paramType) != EOK) {
-        free(param);
-        return NULL;
-    }
-    return param;
-}
-
 char* HalGetProductType(void)
 {
-    return HalGetSysParam(OHOS_PRODUCT_TYPE, sizeof(OHOS_PRODUCT_TYPE));
+    char* value = (char*)malloc(strlen(OHOS_PRODUCT_TYPE) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_PRODUCT_TYPE) + 1, OHOS_PRODUCT_TYPE) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetManufacture(void)
 {
-    return HalGetSysParam(OHOS_MANUFACTURE, sizeof(OHOS_MANUFACTURE));
+    char* value = (char*)malloc(strlen(OHOS_MANUFACTURE) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_MANUFACTURE) + 1, OHOS_MANUFACTURE) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetBrand(void)
 {
-    return HalGetSysParam(OHOS_BRAND, sizeof(OHOS_BRAND));
+    char* value = (char*)malloc(strlen(OHOS_BRAND) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_BRAND) + 1, OHOS_BRAND) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetMarketName(void)
 {
-    return HalGetSysParam(OHOS_MARKET_NAME, sizeof(OHOS_MARKET_NAME));
+    char* value = (char*)malloc(strlen(OHOS_MARKET_NAME) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_MARKET_NAME) + 1, OHOS_MARKET_NAME) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetProductSeries(void)
 {
-    return HalGetSysParam(OHOS_PRODUCT_SERIES, sizeof(OHOS_PRODUCT_SERIES));
+    char* value = (char*)malloc(strlen(OHOS_PRODUCT_SERIES) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_PRODUCT_SERIES) + 1, OHOS_PRODUCT_SERIES) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetProductModel(void)
 {
-    return HalGetSysParam(OHOS_PRODUCT_MODEL, sizeof(OHOS_PRODUCT_MODEL));
+    char* value = (char*)malloc(strlen(OHOS_PRODUCT_MODEL) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_PRODUCT_MODEL) + 1, OHOS_PRODUCT_MODEL) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetSoftwareModel(void)
 {
-    return HalGetSysParam(OHOS_SOFTWARE_MODEL, sizeof(OHOS_SOFTWARE_MODEL));
+    char* value = (char*)malloc(strlen(OHOS_SOFTWARE_MODEL) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_SOFTWARE_MODEL) + 1, OHOS_SOFTWARE_MODEL) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetHardwareModel(void)
 {
-    return HalGetSysParam(OHOS_HARDWARE_MODEL, sizeof(OHOS_HARDWARE_MODEL));
+    char* value = (char*)malloc(strlen(OHOS_HARDWARE_MODEL) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_HARDWARE_MODEL) + 1, OHOS_HARDWARE_MODEL) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetHardwareProfile(void)
 {
-    return HalGetSysParam(OHOS_HARDWARE_PROFILE, sizeof(OHOS_HARDWARE_PROFILE));
+    char* value = (char*)malloc(strlen(OHOS_HARDWARE_PROFILE) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_HARDWARE_PROFILE) + 1, OHOS_HARDWARE_PROFILE) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetSerial(void)
 {
-    return HalGetSysParam(OHOS_SERIAL, sizeof(OHOS_SERIAL));
+    char* value = (char*)malloc(strlen(OHOS_SERIAL) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_SERIAL) + 1, OHOS_SERIAL) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetBootloaderVersion(void)
 {
-    return HalGetSysParam(OHOS_BOOTLOADER_VERSION, sizeof(OHOS_BOOTLOADER_VERSION));
+    char* value = (char*)malloc(strlen(OHOS_BOOTLOADER_VERSION) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_BOOTLOADER_VERSION) + 1, OHOS_BOOTLOADER_VERSION) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetSecurityPatchTag(void)
 {
-    return HalGetSysParam(OHOS_SECURITY_PATCH_TAG, sizeof(OHOS_SECURITY_PATCH_TAG));
+    char* value = (char*)malloc(strlen(OHOS_SECURITY_PATCH_TAG) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_SECURITY_PATCH_TAG) + 1, OHOS_SECURITY_PATCH_TAG) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }
 
 char* HalGetAbiList(void)
 {
-    return HalGetSysParam(OHOS_ABI_LIST, sizeof(OHOS_ABI_LIST));
+    char* value = (char*)malloc(strlen(OHOS_ABI_LIST) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(OHOS_ABI_LIST) + 1, OHOS_ABI_LIST) != 0) {
+        free(value);
+        return NULL;
+    }
+    return value;
 }

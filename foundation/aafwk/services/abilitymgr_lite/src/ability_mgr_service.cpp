@@ -40,7 +40,7 @@ static void Init()
     SamgrLite *sm = SAMGR_GetInstance();
     CHECK_NULLPTR_RETURN(sm, "AbilityManagerService", "get samgr error");
     BOOL result = sm->RegisterService(AbilityMgrService::GetInstance());
-    PRINTI("AbilityManagerService", "ams starts %{public}s", result ? "successfully" : "unsuccessfully");
+    PRINTI("AbilityManagerService", "ams start result is %{public}s", result ? "successfully" : "failure");
 }
 SYSEX_SERVICE_INIT(Init);
 

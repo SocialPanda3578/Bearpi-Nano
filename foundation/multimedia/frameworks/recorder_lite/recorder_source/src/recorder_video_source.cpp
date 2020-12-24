@@ -18,11 +18,8 @@
 
 namespace OHOS {
 namespace Media {
-namespace {
 constexpr int32_t KEY_IS_SYNC_FRAME = 1; // "is-sync-frame"
 constexpr int32_t KEY_TIME_US = 2;       // "timeUs"
-}
-
 RecorderVideoSource::RecorderVideoSource()
     : surface_(nullptr),
       frameAvailableCount_(0),
@@ -90,7 +87,7 @@ int32_t RecorderVideoSource::AcquireBuffer(RecorderSourceBuffer &buffer, bool is
     }
     acquireBuffer_ = surface_->AcquireBuffer();
     if (acquireBuffer_ == nullptr) {
-        MEDIA_ERR_LOG("Acquire buffer failed");
+        MEDIA_ERR_LOG("Acquire buffer failed.");
         return ERR_READ_BUFFER;
     }
     void *pBase = acquireBuffer_->GetVirAddr();
@@ -106,7 +103,7 @@ int32_t RecorderVideoSource::AcquireBuffer(RecorderSourceBuffer &buffer, bool is
 
     int32_t value = 0;
     acquireBuffer_->GetInt32(KEY_IS_SYNC_FRAME, value);
-    buffer.keyFrameFlag = (value == 1);
+    buffer.keyFrameFlag = (value == 1) ? true : false;
     return SUCCESS;
 }
 

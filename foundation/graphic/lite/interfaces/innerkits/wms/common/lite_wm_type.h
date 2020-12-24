@@ -48,8 +48,7 @@ typedef enum {
     LiteWMS_CreateWindow,
     LiteWMS_RemoveWindow,
     LiteWMS_GetEventData,
-    LiteWMS_Screenshot,
-    LiteWMS_ClientRegister
+    LiteWMS_Screenshot
 } LiteWMSCall;
 
 struct CallBackPara {
@@ -57,14 +56,7 @@ struct CallBackPara {
     void* data;
 };
 
-#ifdef LAYER_PF_ARGB1555
-typedef uint16_t LayerColorType;
-#elif defined LAYER_PF_ARGB8888
-typedef uint32_t LayerColorType;
-#endif
-
 const char SERVICE_NAME[] = "WMS";
 const int INVALID_WINDOW_ID = -1;
-const int INVALID_PID = -1;
 }
 #endif

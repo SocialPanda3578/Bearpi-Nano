@@ -15,10 +15,9 @@
 
 #include "client/lite_wm_requestor.h"
 #include "client/lite_wms_client.h"
-#include "common/screen_device_proxy.h"
 #include "graphic_log.h"
 #include "input_event_info.h"
-#include "pixel_format_utils.h"
+#include "common/screen_device_proxy.h"
 #include "surface_impl.h"
 
 namespace OHOS {
@@ -64,30 +63,6 @@ int LiteWMRequestor::Callback(void* owner, int code, IpcIo* reply)
             break;
     }
     return 0;
-}
-
-int32_t LiteWMRequestor::WmsMsgHandler(const IpcContext* context, void* ipcMsg, IpcIo* io, void* arg)
-{
-    // It's not used yet
-    return 0;
-}
-
-void LiteWMRequestor::ClientRegister()
-{
-    IpcIo io;
-    uint8_t tmpData[DEFAULT_IPC_SIZE];
-    IpcIoInit(&io, tmpData, DEFAULT_IPC_SIZE, 1);
-
-    SvcIdentity svc;
-    if (RegisterIpcCallback(WmsMsgHandler, 0, IPC_WAIT_FOREVER, &svc, NULL) != LITEIPC_OK) {
-        GRAPHIC_LOGE("RegisterIpcCallback failed.");
-        return;
-    }
-    IpcIoPushSvc(&io, &svc);
-    uint32_t ret = proxy_->Invoke(proxy_, LiteWMS_ClientRegister, &io, NULL, Callback);
-    if (ret != 0) {
-        GRAPHIC_LOGE("ClientRegister failed, ret=%d", ret);
-    }
 }
 
 LiteWinRequestor* LiteWMRequestor::CreateWindow(const LiteWinConfig& config)
@@ -150,17 +125,14 @@ void LiteWMRequestor::OnBufferAvailable()
     if (surface_ != nullptr) {
         SurfaceBuffer* buffer = surface_->AcquireBuffer();
         if (buffer != nullptr) {
-            if (listener_ != nullptr) {
-                uint8_t* virAddr = (uint8_t*)buffer->GetVirAddr();
-                int16_t bpp;
-                if (PixelFormatUtils::BppOfPixelFormat(static_cast<ImagePixelFormat>(surface_->GetFormat()), bpp)) {
-                    uint32_t size = surface_->GetWidth() * surface_->GetHeight() * bpp;
-                    listener_->OnScreenshotEnd(virAddr, size);
-                }
+            uint8_t* virAddr = (uint8_t*)buffer->GetVirAddr();
+            uint32_t size = buffer->GetSize();
+            if (listener_ != nullptr && virAddr != nullptr) {
+                listener_->OnScreenshotEnd(virAddr, size);
             }
             surface_->ReleaseBuffer(buffer);
         }
-        UnregisterIpcCallback(sid_);
+        UnRegisteIpcCallback(sid_);
         delete surface_;
         surface_ = nullptr;
     }
@@ -183,9 +155,9 @@ void LiteWMRequestor::Screenshot()
     surface_->SetUsage(1);
     surface_->RegisterConsumerListener(*this);
 
-    int32_t ret = RegisterIpcCallback(SurfaceRequestHandler, 0, IPC_WAIT_FOREVER, &sid_, surface_);
+    int32_t ret = RegisteIpcCallback(SurfaceRequestHandler, 0, IPC_WAIT_FOREVER, &sid_, surface_);
     if (ret != LITEIPC_OK) {
-        GRAPHIC_LOGE("CalculatorGetAnonymousFunc, RegisterIpcCallback failed.");
+        GRAPHIC_LOGE("CalculatorGetAnonymousFunc, RegisteIpcCallback failed.");
         delete surface_;
         surface_ = nullptr;
         return;

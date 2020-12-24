@@ -76,9 +76,9 @@ def traverse_subdir(search_dir = '.', full_path = False):
 def scons_env_param_check():
     env_path_param = os.environ['PATH'].split(':')
     for param in env_path_param:
-        compiler = os.path.join(param, 'riscv32-unknown-elf-gcc')
-        if os.path.isfile(compiler):
-            return True
+        if (param.find('gcc_riscv32') >= 0) and ((param.endswith('bin') == True) or (param.endswith(r'bin%s'%os.sep) == True)):
+            compiler = os.path.join(param, 'riscv32-unknown-elf-gcc')
+            return os.path.isfile(compiler)
     return False
 
 #settings check

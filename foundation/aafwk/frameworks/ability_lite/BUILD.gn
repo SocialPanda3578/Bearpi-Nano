@@ -40,7 +40,6 @@ lite_library("ability") {
         "src/ability_loader.cpp",
         "src/ability_scheduler.cpp",
         "src/ability_thread.cpp",
-        "src/ability_main.cpp",
     ]
 
     if (enable_ohos_appexecfwk_feature_ability == true) {
@@ -78,7 +77,6 @@ lite_library("ability") {
         "//foundation/graphic/lite/hals/include",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-        "//foundation/communication/frameworks/ipc_lite/liteipc/include",
         "//kernel/liteos_a/kernel/include",
         "//kernel/liteos_a/kernel/common",
         "//third_party/bounds_checking_function/include",
@@ -117,6 +115,71 @@ config("abilitykit_config") {
     ldflags = [
         "-lstdc++",
         "-Wl,-rpath-link=$ohos_root_path/$root_out_dir",
+    ]
+}
+
+executable("abilityMain") {
+    sources = [
+        "src/main.cpp",
+    ]
+
+    ldflags = [
+        "-lstdc++",
+        "-ldl",
+    ]
+
+    cflags = [
+        "-Wall",
+        "-Wno-format",
+        "-Wno-format-extra-args",
+    ]
+    cflags_cc = cflags
+
+    deps = [
+        "//base/hiviewdfx/frameworks/hilog_lite/featured:hilog_shared",
+        "//third_party/cJSON:cjson_shared",
+        "//foundation/aafwk/frameworks/ability_lite:aafwk_abilitykit_lite",
+        "//foundation/appexecfwk/frameworks/bundle_lite:bundle",
+        "//foundation/communication/frameworks/ipc_lite:liteipc_adapter",
+        "//foundation/distributedschedule/services/samgr_lite/samgr:samgr",
+        "//third_party/bounds_checking_function:libsec_shared",
+        "//utils/native/lite/kv_store:kv_store",
+    ]
+
+    if (enable_ohos_appexecfwk_feature_ability == true) {
+        deps += [
+            "//foundation/graphic/lite/frameworks/ui:ui",
+            "//foundation/graphic/lite/utils:graphic_utils",
+            "//foundation/graphic/lite/frameworks/surface",
+        ]
+    }
+
+    include_dirs = [
+        "//foundation/aafwk/frameworks/abilitymgr_lite/include",
+        "//foundation/aafwk/interfaces/innerkits/abilitymgr_lite",
+        "//foundation/aafwk/interfaces/kits/ability_lite",
+        "//foundation/aafwk/interfaces/kits/want_lite",
+        "//foundation/aafwk/frameworks/ability_lite/include",
+        "//foundation/appexecfwk/interfaces/kits/bundle_lite",
+        "//foundation/appexecfwk/utils/bundle_lite",
+        "//foundation/graphic/lite/interfaces/kits/ui",
+        "//foundation/graphic/lite/interfaces/kits/utils",
+        "//foundation/graphic/lite/interfaces/innerkits",
+        "//foundation/graphic/lite/config",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//kernel/liteos_a/kernel/include",
+        "//kernel/liteos_a/kernel/common",
+        "//third_party/bounds_checking_function/include",
+        "//third_party/cJSON",
+        "//utils/native/lite/include",
+        "//utils/native/lite/memory",
+    ]
+}
+
+lite_component("aafwk_abilityMain_lite") {
+    features = [
+        ":abilityMain",
     ]
 }
 

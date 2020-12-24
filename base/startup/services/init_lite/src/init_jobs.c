@@ -12,14 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "init_jobs.h"
-
 #include <stdio.h>
 #include <string.h>
-
 #include "init_cmds.h"
 #include "securec.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif
 
 #define JOBS_ARR_NAME_IN_JSON "jobs"
 #define CMDS_ARR_NAME_IN_JSON "cmds"
@@ -73,7 +76,7 @@ static void ParseJob(const cJSON* jobItem, Job* resJob)
     }
 
     if (cmdLinesCnt > MAX_CMD_CNT_IN_ONE_JOB) {
-        printf("[Init] ParseAllJobs, too many cmds[cnt %d] in one job, it should not exceed %d.\n",
+        printf("[Init] ParseAllJobs, too many cmds[cnt %d] in one job, it should not exceed %d.\n",\
             cmdLinesCnt, MAX_CMD_CNT_IN_ONE_JOB);
         return;
     }
@@ -110,7 +113,7 @@ void ParseAllJobs(const cJSON* fileRoot)
     }
 
     if (jobArrSize <= 0 || jobArrSize > MAX_JOBS_COUNT) {
-        printf("[Init] ParseAllJobs, jobs count %d is invalid, should be positive and not exceeding %d.\n",
+        printf("[Init] ParseAllJobs, jobs count %d is invalid, should be positive and not exceeding %d.\n",\
             jobArrSize, MAX_JOBS_COUNT);
         return;
     }
@@ -172,3 +175,9 @@ void ReleaseAllJobs()
     g_jobs = NULL;
     g_jobCnt = 0;
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif
+#endif

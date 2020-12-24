@@ -739,8 +739,19 @@ void ManagerService::RecycleUid(const char *bundleName)
     return;
 }
 
+std::string ManagerService::GetSharedLibPath() const
+{
+    return sharedLibPath_;
+}
+
+void ManagerService::SetSharedLibPath(const std::string &sharedLibPath)
+{
+    sharedLibPath_ = sharedLibPath;
+}
+
 void ManagerService::ScanSharedLibPath()
 {
+    sharedLibPath_ = "";
     BundleInfo *bundleInfos = nullptr;
     int32_t len = 0;
     if (bundleMap_->GetBundleInfos(1, &bundleInfos, &len) != ERR_OK) {
@@ -757,15 +768,22 @@ void ManagerService::ScanSharedLibPath()
         }
         std::string path = (bundleInfos + index)->codePath;
         path = path + PATH_SEPARATOR + (bundleInfos + index)->moduleInfos[0].moduleName + PATH_SEPARATOR +
-               SHARED_LIB_NAME;
+               SHARED_LIB_PATH;
         if (!BundleUtil::IsDir(path.c_str())) {
             continue;
         }
-
-        if (BundleDaemonClient::GetInstance().MoveFile(path.c_str(), SHARED_LIB_PATH) != EC_SUCCESS) {
-            HILOG_WARN(HILOG_MODULE_APP, "ScanSharedLibPath move file to share library failed");
+        if (sharedLibPath_.empty()) {
+            sharedLibPath_ = path;
+        } else {
+            sharedLibPath_ += SEPARATOR + path;
         }
     }
+    for (int32_t index = 0; index < len; ++index) {
+        BundleInfo *bundleInfo = bundleMap_->Get((bundleInfos + index)->bundleName);
+        BundleInfoUtils::SetBundleInfoSharedLibPath(bundleInfo, sharedLibPath_.c_str());
+        ClearBundleInfo(bundleInfos + index);
+    }
+    AdapterFree(bundleInfos);
 }
 
 void ManagerService::RestoreUidAndGidMap()

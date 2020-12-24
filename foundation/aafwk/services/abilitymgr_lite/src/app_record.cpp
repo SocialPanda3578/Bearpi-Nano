@@ -83,7 +83,7 @@ AbilityMsStatus AppRecord::AbilityTransaction(const TransactionState &state,
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->AbilityTransaction(state, want, abilityType);
     }
-    return AbilityMsStatus::AppTransanctStatus("life cycle ability thread client not exist");
+    return AbilityMsStatus::AppTransanctStatus("life cycle ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::AppInitTransaction() const
@@ -91,7 +91,7 @@ AbilityMsStatus AppRecord::AppInitTransaction() const
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->AppInitTransaction(bundleInfo_);
     }
-    return AbilityMsStatus::AppTransanctStatus("app init ability thread client not exist");
+    return AbilityMsStatus::AppTransanctStatus("app init ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::AppExitTransaction() const
@@ -99,7 +99,7 @@ AbilityMsStatus AppRecord::AppExitTransaction() const
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->AppExitTransaction();
     }
-    return AbilityMsStatus::AppTransanctStatus("app exit ability thread client not exist");
+    return AbilityMsStatus::AppTransanctStatus("app exit ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::DumpAbilityTransaction(const Want &want, uint64_t token) const
@@ -107,7 +107,7 @@ AbilityMsStatus AppRecord::DumpAbilityTransaction(const Want &want, uint64_t tok
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->DumpAbilityTransaction(want, token);
     }
-    return AbilityMsStatus::AppTransanctStatus("dump ability ability thread client not exist");
+    return AbilityMsStatus::AppTransanctStatus("dump ability ability thread client not exsit");
 }
 
 void AppRecord::SetPendingAbility(PageAbilityRecord *abilityRecord)
@@ -128,7 +128,7 @@ AbilityMsStatus AppRecord::LaunchPendingAbility()
         pendingAbilityRecord_ = nullptr;
         return status;
     }
-    return AbilityMsStatus::LifeCycleStatus("pending ability not exist");
+    return AbilityMsStatus::LifeCycleStatus("pending ability not exsit");
 }
 
 AbilityMsStatus AppRecord::ConnectTransaction(const Want &want, uint64_t token) const
@@ -136,7 +136,7 @@ AbilityMsStatus AppRecord::ConnectTransaction(const Want &want, uint64_t token) 
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->ConnectAbility(want, token);
     }
-    return AbilityMsStatus::TaskStatus("connectAbility", "app exit ability thread client not exist");
+    return AbilityMsStatus::TaskStatus("connectAbility", "app exit ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::DisconnectTransaction(const Want &want, uint64_t token) const
@@ -144,7 +144,7 @@ AbilityMsStatus AppRecord::DisconnectTransaction(const Want &want, uint64_t toke
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->DisconnectAbility(want, token);
     }
-    return AbilityMsStatus::TaskStatus("disconnectAbility", "app exit ability thread client not exist");
+    return AbilityMsStatus::TaskStatus("disconnectAbility", "app exit ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::ConnectDoneTransaction(const Want &want, const SvcIdentity &serviceSid,
@@ -153,7 +153,7 @@ AbilityMsStatus AppRecord::ConnectDoneTransaction(const Want &want, const SvcIde
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->ConnectAbilityDone(want, serviceSid, connectSid);
     }
-    return AbilityMsStatus::TaskStatus("connectAbilityDone", "app exit ability thread client not exist");
+    return AbilityMsStatus::TaskStatus("connectAbilityDone", "app exit ability thread client not exsit");
 }
 
 AbilityMsStatus AppRecord::DisconnectDoneTransaction(const Want &want, const SvcIdentity &connectSid) const
@@ -161,7 +161,7 @@ AbilityMsStatus AppRecord::DisconnectDoneTransaction(const Want &want, const Svc
     if (abilityThreadClient_ != nullptr) {
         return abilityThreadClient_->DisconnectAbilityDone(want, connectSid);
     }
-    return AbilityMsStatus::TaskStatus("disconnectAbilityDone", "app exit ability thread client not exist");
+    return AbilityMsStatus::TaskStatus("disconnectAbilityDone", "app exit ability thread client not exsit");
 }
 
 void AppRecord::ClearPendingAbility(PageAbilityRecord *abilityRecord)

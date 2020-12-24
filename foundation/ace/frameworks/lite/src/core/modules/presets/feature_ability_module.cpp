@@ -30,7 +30,6 @@ namespace ACELite {
 constexpr char FUNC_SUBSCRIBE[] = "subscribeMsg";
 constexpr char FUNC_UNSUBSCRIBE[] = "unsubscribeMsg";
 constexpr char FUNC_SEND_MSG[] = "sendMsg";
-constexpr char FUNC_DETECT[] = "detect";
 constexpr char ATTR_DEVICE_ID[] = "deviceId";
 constexpr char ATTR_BUNDLE_NAME[] = "bundleName";
 constexpr char ATTR_ABILITY_NAME[] = "abilityName";
@@ -45,28 +44,14 @@ jerry_value_t FeatureAbilityModule::callbackContext_;
 jerry_value_t FeatureAbilityModule::successCallback_;
 jerry_value_t FeatureAbilityModule::failCallback_;
 bool FeatureAbilityModule::registed = false;
-jerry_value_t FeatureAbilityModule::sendMsgCallbackContext_;
-jerry_value_t FeatureAbilityModule::sendMsgSuccessCallback_;
-jerry_value_t FeatureAbilityModule::sendMsgFailCallback_;
-jerry_value_t FeatureAbilityModule::detectCallbackContext_;
-jerry_value_t FeatureAbilityModule::detectSuccessCallback_;
-jerry_value_t FeatureAbilityModule::detectFailCallback_;
-
 void FeatureAbilityModule::Init()
 {
     callbackContext_ = UNDEFINED;
     successCallback_ = UNDEFINED;
     failCallback_ = UNDEFINED;
-    sendMsgCallbackContext_ = UNDEFINED;
-    sendMsgSuccessCallback_ = UNDEFINED;
-    sendMsgFailCallback_ = UNDEFINED;
-    detectCallbackContext_ = UNDEFINED;
-    detectSuccessCallback_ = UNDEFINED;
-    detectFailCallback_ = UNDEFINED;
     CreateNamedFunction(FUNC_SUBSCRIBE, SubscribeMessage);
     CreateNamedFunction(FUNC_UNSUBSCRIBE, UnsubscribeMessage);
     CreateNamedFunction(FUNC_SEND_MSG, SendMsgToPeer);
-    CreateNamedFunction(FUNC_DETECT, Detect);
 }
 
 void FeatureAbilityModule::Release()
@@ -77,8 +62,6 @@ void FeatureAbilityModule::Release()
         AbilityKit::UnregisterReceiver(bundleName);
         registed = false;
     }
-    ReleaseDetectJsValue();
-    ReleaseSendMsgJsValue();
 }
 
 void FeatureAbilityModule::SyncFailCallback(jerry_value_t &failCb,
@@ -104,7 +87,13 @@ void FeatureAbilityModule::SyncSendMsgCallback(const jerry_value_t &arg,
                                                const uint16_t errCode,
                                                bool success)
 {
-    if (!success) {
+    if (success) {
+        jerry_value_t successCbValue = jerryx_get_property_str(arg, ATTR_SUCCESS);
+        if (jerry_value_is_function(successCbValue)) {
+            CallJSFunctionAutoRelease(successCbValue, context, nullptr, 0);
+        }
+        jerry_release_value(successCbValue);
+    } else {
         jerry_value_t failCbValue = jerryx_get_property_str(arg, ATTR_FAIL);
         if (jerry_value_is_function(failCbValue)) {
             SyncFailCallback(failCbValue, context, errMsg, errCode);
@@ -119,60 +108,6 @@ void FeatureAbilityModule::SyncSendMsgCallback(const jerry_value_t &arg,
     jerry_release_value(cmpltCbValue);
 }
 
-jerry_value_t FeatureAbilityModule::Detect(const jerry_value_t func,
-                                           const jerry_value_t context,
-                                           const jerry_value_t args[],
-                                           const jerry_length_t length)
-{
-    if (length <= 0) {
-        return UNDEFINED;
-    }
-
-    ReleaseDetectJsValue();
-
-    detectCallbackContext_ = jerry_acquire_value(context);
-
-    jerry_value_t options = args[0];
-    jerry_value_t successCallback = jerryx_get_property_str(options, ATTR_SUCCESS);
-    if (!jerry_value_is_undefined(successCallback)) {
-        if (!jerry_value_is_function(successCallback)) {
-            HILOG_ERROR(HILOG_MODULE_ACE, "the success callback for detect should be a function.");
-        } else {
-            detectSuccessCallback_ = jerry_acquire_value(successCallback);
-        }
-    }
-    jerry_release_value(successCallback);
-
-    jerry_value_t failCallback = jerryx_get_property_str(options, ATTR_FAIL);
-    if (!jerry_value_is_undefined(failCallback)) {
-        if (!jerry_value_is_function(failCallback)) {
-            HILOG_ERROR(HILOG_MODULE_ACE, "the fail callback for detect should be a function.");
-        } else {
-            detectFailCallback_ = jerry_acquire_value(failCallback);
-        }
-    }
-    jerry_release_value(failCallback);
-
-    jerry_value_t nameValue = jerryx_get_property_str(args[0], ATTR_BUNDLE_NAME);
-    char *dstAbilityName = MallocStringOf(nameValue);
-    if (dstAbilityName == nullptr) {
-        SyncFailCallback(detectFailCallback_, context, ERR_MESSAGE, ERR_CODE_INVALID_PARAMETER);
-        ReleaseJerryValue(nameValue, VA_ARG_END_FLAG);
-        return UNDEFINED;
-    }
-
-    char *bundleName = const_cast<char *>(JsAppContext::GetInstance()->GetCurrentBundleName());
-    int32_t ret = AbilityKit::DetectPhoneApp(bundleName, dstAbilityName,
-        detectSuccessCallback_, detectFailCallback_, detectCallbackContext_);
-    if (ret != 0) {
-        SyncFailCallback(detectFailCallback_, context, ERR_SEND_FAIL, ERR_CODE_SEND_MSG_FAILED);
-    }
-
-    ReleaseJerryValue(nameValue, VA_ARG_END_FLAG);
-    ace_free(dstAbilityName);
-    return UNDEFINED;
-}
-
 jerry_value_t FeatureAbilityModule::SendMsgToPeer(const jerry_value_t func,
                                                   const jerry_value_t context,
                                                   const jerry_value_t args[],
@@ -181,31 +116,15 @@ jerry_value_t FeatureAbilityModule::SendMsgToPeer(const jerry_value_t func,
     if (length <= 0) {
         return UNDEFINED;
     }
-    ReleaseSendMsgJsValue();
-
-    sendMsgCallbackContext_ = jerry_acquire_value(context);
-    jerry_value_t options = args[0];
-    jerry_value_t successCallback = jerryx_get_property_str(options, ATTR_SUCCESS);
-    if ((!jerry_value_is_undefined(successCallback)) && (!jerry_value_is_function(successCallback))) {
-        sendMsgSuccessCallback_ = jerry_acquire_value(successCallback);
-    } else {
-        HILOG_ERROR(HILOG_MODULE_ACE, "the success callback for sendMsg should be a function.");
-    }
-    jerry_release_value(successCallback);
-    jerry_value_t failCallback = jerryx_get_property_str(options, ATTR_FAIL);
-    if ((!jerry_value_is_undefined(failCallback)) && (!jerry_value_is_function(failCallback))) {
-        sendMsgFailCallback_ = jerry_acquire_value(failCallback);
-    } else {
-        HILOG_ERROR(HILOG_MODULE_ACE, "the fail callback for sendMsg should be a function.");
-    }
-    jerry_release_value(failCallback);
 
     uint16_t nameLength = 0;
     jerry_value_t nameValue = jerryx_get_property_str(args[0], ATTR_BUNDLE_NAME);
     char *dstBundleName = MallocStringOf(nameValue, &nameLength);
+
     uint16_t msgLength = 0;
     jerry_value_t msgValue = jerryx_get_property_str(args[0], ATTR_MESSAGE);
     char *message = MallocStringOf(msgValue, &msgLength);
+
     uint16_t idLength = 0;
     jerry_value_t devIdValue = jerryx_get_property_str(args[0], ATTR_DEVICE_ID);
     char *deviceId = MallocStringOf(devIdValue, &idLength);
@@ -215,11 +134,10 @@ jerry_value_t FeatureAbilityModule::SendMsgToPeer(const jerry_value_t func,
     } else {
         char *bundleName = const_cast<char *>(JsAppContext::GetInstance()->GetCurrentBundleName());
         int32_t ret = AbilityKit::SendMsgToPeerApp((idLength == 0), bundleName, dstBundleName,
-                                                   (reinterpret_cast<const uint8_t *>(message)), strlen(message),
-                                                   sendMsgSuccessCallback_, sendMsgFailCallback_,
-                                                   sendMsgCallbackContext_);
-        // if the message is sent out successfully, do not invoke user's callback until the peer result back
-        if (ret != 0) {
+                                                   (reinterpret_cast<const uint8_t *>(message)), strlen(message));
+        if (ret == 0) {
+            SyncSendMsgCallback(args[0], context, nullptr, 0, true);
+        } else {
             SyncSendMsgCallback(args[0], context, ERR_SEND_FAIL, ERR_CODE_SEND_MSG_FAILED, false);
         }
     }
@@ -264,8 +182,7 @@ jerry_value_t FeatureAbilityModule::SubscribeMessage(const jerry_value_t func,
 
     if (!registed) {
         char *bundleName = const_cast<char *>(JsAppContext::GetInstance()->GetCurrentBundleName());
-        AbilityKit::RegisterReceiver(bundleName, MessageSuccessCallback, MessageFailCallback, successCallback_,
-            failCallback_, callbackContext_);
+        AbilityKit::RegisterReceiver(bundleName, MessageSuccessCallback, MessageFailCallback);
         registed = true;
     }
 
@@ -282,7 +199,7 @@ jerry_value_t FeatureAbilityModule::UnsubscribeMessage(const jerry_value_t func,
     return UNDEFINED;
 }
 
-int32_t FeatureAbilityModule::MessageSuccessCallback(const void *data)
+int32_t FeatureAbilityModule::MessageSuccessCallback(void *data)
 {
     if (FatalHandler::GetInstance().IsFatalErrorHitted()) {
         HILOG_ERROR(HILOG_MODULE_ACE, "drop message as handling fatal error");
@@ -293,7 +210,7 @@ int32_t FeatureAbilityModule::MessageSuccessCallback(const void *data)
         return -1;
     } else {
         ACE_FEATURE_EVENT_PRINT(MT_ACE_FEATUREABILITY, MT_ACE_FEATUREABILITY_SUBSCRIBEMSG, 0);
-        const FeatureAbilityDataInfo *origin = static_cast<const FeatureAbilityDataInfo *>(data);
+        FeatureAbilityDataInfo *origin = static_cast<FeatureAbilityDataInfo *>(data);
         FeatureAbilityDataInfo *target =
             static_cast<FeatureAbilityDataInfo *>(ace_malloc(sizeof(FeatureAbilityDataInfo)));
         if (target == nullptr) {
@@ -325,7 +242,7 @@ int32_t FeatureAbilityModule::MessageSuccessCallback(const void *data)
 
     return 0;
 }
-void FeatureAbilityModule::CopySuccessMessage(const FeatureAbilityDataInfo *origin, FeatureAbilityDataInfo *&target)
+void FeatureAbilityModule::CopySuccessMessage(FeatureAbilityDataInfo *origin, FeatureAbilityDataInfo *&target)
 {
     size_t bufSize = 0;
     if (origin->deviceID != nullptr) {
@@ -380,7 +297,7 @@ void FeatureAbilityModule::CopySuccessMessage(const FeatureAbilityDataInfo *orig
         }
     }
 }
-int32_t FeatureAbilityModule::MessageFailCallback(const void *data, uint16_t dataLength, uint16_t errorCode)
+int32_t FeatureAbilityModule::MessageFailCallback(void *data, uint16_t dataLength, uint16_t errorCode)
 {
     if (FatalHandler::GetInstance().IsFatalErrorHitted()) {
         HILOG_ERROR(HILOG_MODULE_ACE, "drop message as handling fatal error");
@@ -485,24 +402,6 @@ void FeatureAbilityModule::ReleaseJsValue(jerry_value_t &value)
         jerry_release_value(value);
         value = UNDEFINED;
     }
-}
-
-void FeatureAbilityModule::ReleaseDetectJsValue()
-{
-    ReleaseJsValue(detectCallbackContext_);
-    ReleaseJsValue(detectSuccessCallback_);
-    ReleaseJsValue(detectFailCallback_);
-
-    AbilityKit::DetectResourceRelease();
-}
-
-void FeatureAbilityModule::ReleaseSendMsgJsValue()
-{
-    ReleaseJsValue(sendMsgCallbackContext_);
-    ReleaseJsValue(sendMsgSuccessCallback_);
-    ReleaseJsValue(sendMsgFailCallback_);
-
-    AbilityKit::SendMsgResourceRelease();
 }
 } // namespace ACELite
 } // namespace OHOS

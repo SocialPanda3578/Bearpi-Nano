@@ -71,7 +71,7 @@ void GpioCntlrRemove(struct GpioCntlr *cntlr)
     }
 
     if (cntlr->device == NULL) {
-        HDF_LOGE("GpioCntlrRemove: no device associated!");
+        HDF_LOGE("GpioCntlrRemove: no device associated!\n");
         return;
     }
 

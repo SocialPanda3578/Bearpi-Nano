@@ -32,12 +32,12 @@ AbilityMsStatus AppRestartTask::Execute()
         return AbilityMsStatus::TaskStatus("app terminate", "invalid argument");
     }
 
-    // Step1: Clear app MissionStack and AbilityRecord
+    // Step1: Remove app record
+    AppManager::GetInstance().RemoveAppRecord(bundleInfo_->bundleName);
+
+    // Step2: Clear app MissionStack and AbilityRecord
     AbilityStackManager &stackManager = AbilityStackManager::GetInstance();
     stackManager.ClearAbilityStack(bundleInfo_->bundleName, *abilityMgrContext_);
-
-    // Step2: Remove app record
-    AppManager::GetInstance().RemoveAppRecord(bundleInfo_->bundleName);
 
     // Step3: Get top page ability
     auto topRecord = const_cast<PageAbilityRecord *>(stackManager.GetTopPageAbility(*abilityMgrContext_));

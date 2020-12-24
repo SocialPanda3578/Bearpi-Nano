@@ -197,11 +197,13 @@ static bool CheckHcsBlobLength(const char *start, uint32_t length, struct HbcHea
     if (header->totalSize >= 0) {
         blobLength = HBC_HEADER_LENGTH + header->totalSize;
         g_byteAlign = false;
-        HDF_LOGI("%s: the blobLength: %u, byteAlign: %d", __func__, blobLength, g_byteAlign);
+        HDF_LOGE("%s: the blobLength: %u, byteAlign: %d, totalSize: %d", __func__, blobLength,
+            g_byteAlign, header->totalSize);
     } else {
         blobLength = HBC_HEADER_LENGTH - header->totalSize;
         g_byteAlign = true;
-        HDF_LOGI("%s: the blobLength: %u, byteAlign: %d", __func__, blobLength, g_byteAlign);
+        HDF_LOGE("%s: the blobLength: %u, byteAlign: %d, totalSize: %d", __func__, blobLength,
+            g_byteAlign, header->totalSize);
     }
     if ((length != blobLength) || (blobLength < minLength)) {
         HDF_LOGE("%s failed, Hcsblob file length is %u, But the length of calculation is %u",

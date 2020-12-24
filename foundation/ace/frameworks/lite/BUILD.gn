@@ -49,8 +49,7 @@ config("ace_lite_config") {
     "//foundation/ace/lite/tools/simulator/config",
   ]
 
-  include_dirs += [
-    "//third_party/bounds_checking_function/include",
+  include_dirs += ["//third_party/bounds_checking_function/include",
     "//foundation/ace/interfaces/innerkits/builtin/async",
     "//foundation/ace/interfaces/innerkits/builtin/base",
     "//foundation/ace/interfaces/innerkits/builtin/jsi",
@@ -80,15 +79,18 @@ config("ace_lite_config") {
     "//utils/native/lite/timer_task/include/",
     "//third_party/freetype/include",
   ]
-  if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "liteos_m") {
+  if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "liteos_m" ||
+      ohos_kernel_type == "liteos_riscv") {
     include_dirs += [ "targets/liteos_a" ]
   } else if (ohos_kernel_type == "linux") {
-    include_dirs += [ "targets/linux" ]
+    include_dirs += [
+        "targets/linux",
+    ]
   }
 
-  ldflags = [ "-lstdc++" ]
-  ldflags += [ "-lpthread" ]
-  ldflags += [ "-Wl,-rpath-link=$ohos_root_path/$root_out_dir" ]
+  ldflags = ["-lstdc++"]
+  ldflags += ["-lpthread"]
+  ldflags += ["-Wl,-rpath-link=$ohos_root_path/$root_out_dir"]
 }
 
 shared_library("ace_lite") {
@@ -100,7 +102,7 @@ shared_library("ace_lite") {
   ]
   cflags_cc = [ "-std=c++14" ]
   cflags_cc += cflags
-  configs += [ ":ace_lite_config" ]
+  configs += [":ace_lite_config"]
 
   sources = [
     "src/core/animation/transition_impl.cpp",
@@ -108,11 +110,12 @@ shared_library("ace_lite") {
     "src/core/async/message_queue_utils.cpp",
     "src/core/base/ace_log.cpp",
     "src/core/base/ace_mem_base.cpp",
-    "src/core/base/js_debugger_config.cpp",
     "src/core/base/js_fwk_common.cpp",
     "src/core/base/key_parser.cpp",
-    "src/core/base/memory_heap.cpp",
     "src/core/base/time_util.cpp",
+    "src/core/base/js_debugger_config.cpp",
+    "src/core/base/memory_heap.cpp",
+    "src/core/components/video_view.cpp",
     "src/core/components/analog_clock_component.cpp",
     "src/core/components/camera_component.cpp",
     "src/core/components/canvas_component.cpp",
@@ -140,7 +143,6 @@ shared_library("ace_lite") {
     "src/core/components/tabs_component.cpp",
     "src/core/components/text_component.cpp",
     "src/core/components/video_component.cpp",
-    "src/core/components/video_view.cpp",
     "src/core/context/ace_ability.cpp",
     "src/core/context/ace_event_error_code.cpp",
     "src/core/context/fatal_handler.cpp",
@@ -154,27 +156,25 @@ shared_library("ace_lite") {
     "src/core/directive/descriptor_utils.cpp",
     "src/core/directive/directive_watcher_callback.cpp",
     "src/core/jsi/jsi.cpp",
+    #"src/core/modules/presets/jstest_module.cpp",
+    "src/core/modules/presets/timer_module.cpp",
     "src/core/modules/app_module.cpp",
-    "src/core/modules/dfx_module.cpp",
     "src/core/modules/module_manager.cpp",
     "src/core/modules/presets/cjson_parser.cpp",
     "src/core/modules/presets/console_log_impl.cpp",
     "src/core/modules/presets/console_module.cpp",
     "src/core/modules/presets/localization_module.cpp",
-
     #"src/core/modules/presets/feature_ability_module.cpp",
     "src/core/modules/presets/preset_module.cpp",
     "src/core/modules/presets/profiler_module.cpp",
     "src/core/modules/presets/render_module.cpp",
     "src/core/modules/presets/require_module.cpp",
-
-    #"src/core/modules/presets/jstest_module.cpp",
-    "src/core/modules/presets/timer_module.cpp",
     "src/core/modules/presets/version_module.cpp",
     "src/core/modules/router_module.cpp",
+    "src/core/modules/dfx_module.cpp",
     "src/core/modules/sample_module.cpp",
-    "src/core/resource/video_muted_image_res.cpp",
     "src/core/resource/video_play_image_res.cpp",
+    "src/core/resource/video_muted_image_res.cpp",
     "src/core/router/js_page_state.cpp",
     "src/core/router/js_page_state_machine.cpp",
     "src/core/router/js_router.cpp",
@@ -188,34 +188,42 @@ shared_library("ace_lite") {
   ]
 
   public_deps = [
-    "//base/security/frameworks/crypto_lite/js/builtin:ace_kit_cipher",
-    "//foundation/graphic/lite/frameworks/surface:surface",
-    "//foundation/multimedia/frameworks/camera_lite:camera",
-    "//foundation/multimedia/frameworks/player_lite:player",
-    "//foundation/multimedia/interfaces/kits/player_lite/js/builtin:audio_api",
-    "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/cJSON:cjson_shared",
+    "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/jerryscript/jerry-core:jerry-core_shared",
     "//third_party/jerryscript/jerry-ext:jerry-ext_shared",
     "//third_party/jerryscript/jerry-libm:jerry-libm_shared",
     "//third_party/jerryscript/jerry-port/default:jerry-port-default_shared",
+    "//base/security/frameworks/crypto_lite/js/builtin:ace_kit_cipher",
     "//utils/native/lite/js/builtin:ace_utils_kits",
     "//utils/native/lite/timer_task:ace_kit_timer",
+    "//foundation/multimedia/frameworks/camera_lite:camera",
+    "//foundation/multimedia/frameworks/player_lite:player",
+    "//foundation/multimedia/interfaces/kits/player_lite/js/builtin:audio_api",
+    "//foundation/graphic/lite/frameworks/surface:surface",
   ]
 
   defines = []
 
   if (ohos_build_type == "debug") {
-    defines += [ "JS_PROFILER=1" ]
+    defines += [
+      "JS_PROFILER=1"
+    ]
   } else {
-    defines += [ "JS_PROFILER=0" ]
+    defines += [
+      "JS_PROFILER=0"
+    ]
   }
 
   if (LOSCFG_TEST_JS_BUILD) {
-    defines += [ "JSFWK_TEST" ]
+    defines += [
+      "JSFWK_TEST"
+    ]
   }
 
   if (enable_ohos_appexecfwk_feature_ability == true) {
-    defines += [ "ABILITY_WINDOW_SUPPORT" ]
+      defines += [
+          "ABILITY_WINDOW_SUPPORT"
+      ]
   }
 }

@@ -22,10 +22,16 @@
 #include "ohos_errno.h"
 #include "securec.h"
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
+
 static const size_t MAX_BUNDLE_NAME_LEN = 127;
 static const size_t MIN_BUNDLE_NAME_LEN = 7;
-static const size_t MAX_IDENTITY_ID_LEN = 24;
-static const size_t MIN_IDENTITY_ID_LEN = 1;
+static const size_t MAX_SHARED_LIB_PATH_LEN = 2048;
+static const size_t MIN_SHARED_LIB_PATH_LEN = 0;
 
 void FreeMessageSt(MessageSt* targetSt)
 {
@@ -35,11 +41,12 @@ void FreeMessageSt(MessageSt* targetSt)
             targetSt->bundleName = NULL;
         }
 
-        if (targetSt->identityID != NULL) {
-            free(targetSt->identityID);
-            targetSt->identityID = NULL;
+        if (targetSt->sharedLibPaths != NULL) {
+            free(targetSt->sharedLibPaths);
+            targetSt->sharedLibPaths = NULL;
         }
 
+        targetSt->identityID = 0;
         targetSt->uID = -1;
         targetSt->gID = -1;
     }
@@ -104,23 +111,33 @@ int SplitMessage(const char* msg, unsigned int msgLen, MessageSt* msgSt)
         return ret;
     }
 
-    cJSON* identityIDItem = cJSON_GetObjectItem(rootJ, "identityID");
-    ret = ReadStringItem(identityIDItem, &(msgSt->identityID), MAX_IDENTITY_ID_LEN, MIN_IDENTITY_ID_LEN);
+    cJSON* libPathsItem = cJSON_GetObjectItem(rootJ, "sharedLibPaths");
+    ret = ReadStringItem(libPathsItem, &(msgSt->sharedLibPaths), MAX_SHARED_LIB_PATH_LEN, MIN_SHARED_LIB_PATH_LEN);
     if (ret != EC_SUCCESS) {
         FreeMessageSt(msgSt);
         cJSON_Delete(rootJ);
         return ret;
     }
 
+    cJSON* identityIDItem = cJSON_GetObjectItem(rootJ, "identityID");
     cJSON* uIDItem = cJSON_GetObjectItem(rootJ, "uID");
     cJSON* gIDItem = cJSON_GetObjectItem(rootJ, "gID");
+
+    msgSt->identityID = (unsigned long long)ReadNumberItem(identityIDItem);
     msgSt->uID = (int)ReadNumberItem(uIDItem);
     msgSt->gID = (int)ReadNumberItem(gIDItem);
     cJSON_Delete(rootJ);
 
-    if (msgSt->uID <= 0 || msgSt->gID <= 0 || msgSt->uID == INT_MAX || msgSt->gID == INT_MAX) {
+    if (msgSt->identityID == 0 || msgSt->uID <= 0 || msgSt->gID <= 0 ||
+        msgSt->identityID == ULLONG_MAX || msgSt->uID == INT_MAX || msgSt->gID == INT_MAX) {
         FreeMessageSt(msgSt);
         return EC_PROTOCOL;
     }
     return EC_SUCCESS;
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

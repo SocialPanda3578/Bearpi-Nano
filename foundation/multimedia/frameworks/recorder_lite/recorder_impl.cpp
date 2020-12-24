@@ -200,7 +200,6 @@ int32_t Recorder::RecorderImpl::SetVideoSize(int32_t sourceId, int32_t width, in
     MEDIA_INFO_LOG("Video Size width:%d height:%d", width, height);
     return SUCCESS;
 }
-
 int32_t Recorder::RecorderImpl::SetVideoFrameRate(int32_t sourceId, int32_t frameRate)
 {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -414,7 +413,7 @@ int32_t Recorder::RecorderImpl::SetOutputFormat(OutputFormatType format)
     return recorderSink_->SetOutputFormat(outPutFormat);
 }
 
-int32_t Recorder::RecorderImpl::SetOutputPath(const std::string &path)
+int32_t Recorder::RecorderImpl::SetOutputPath(const string &path)
 {
     std::lock_guard<std::mutex> lock(mutex_);
     CHECK_MEMBER_PTR_RETURN(recorderSink_);
@@ -672,7 +671,7 @@ int32_t Recorder::RecorderImpl::Prepare()
         MEDIA_ERR_LOG("PrepareAudioSource  failed Ret: %d", ret);
         return ret;
     }
-    status_ = PREPARED;
+    status_ = PREPPARED;
     MEDIA_INFO_LOG("Prepare SUCCESS");
     return SUCCESS;
 }
@@ -801,6 +800,7 @@ void VideoSourceProcess(const SourceManager *videoSourceManager, const RecorderS
     MEDIA_INFO_LOG("videoSourceManager:%p over", videoSourceManager);
 }
 
+
 int32_t Recorder::RecorderImpl::StartVideoSource()
 {
     int32_t ret = 0;
@@ -842,7 +842,7 @@ int32_t Recorder::RecorderImpl::StopVideoSource()
 int32_t Recorder::RecorderImpl::Start()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (status_ != PREPARED &&
+    if (status_ != PREPPARED &&
         status_ != PAUSED &&
         status_ != STOPPED) {
         MEDIA_ERR_LOG("Start ILLEGAL_STATE  status:%u", status_);
@@ -1046,7 +1046,7 @@ int32_t Recorder::RecorderImpl::Reset()
         MEDIA_ERR_LOG(" ResetConfig err:0x%x", ret);
         return ret;
     }
-    status_ = RESETTING;
+    status_ = RESETED;
     MEDIA_INFO_LOG("Reset Recorder SUCCESS");
     return SUCCESS;
 }

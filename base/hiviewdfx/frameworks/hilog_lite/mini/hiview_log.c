@@ -74,12 +74,12 @@ boolean HiLogRegisterModule(uint16 id, const char *name)
         return FALSE;
     }
 
-    uint32 len = (uint32)strnlen(name, LOG_MODULE_NAME_LEN);
-    if (len >= LOG_MODULE_NAME_LEN - 1) {
+    uint32 len = (uint32)strnlen(name, LOG_MODULE_NAME_LEN + 1);
+    if (len >= LOG_MODULE_NAME_LEN) {
         return FALSE;
     }
     uint32 i = 0;
-    while (i < len && name[i] != 0) {
+    while (name[i] != 0 && i < len) {
         if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z'))) {
             return FALSE;
         }

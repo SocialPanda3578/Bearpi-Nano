@@ -465,27 +465,39 @@ STATIC INT32 OsFindAndInsertToHash(FutexNode *node)
     return ret;
 }
 
-STATIC INT32 OsFutexWaitParamCheck(const UINT32 *userVaddr, UINT32 flags, UINT32 absTime)
+STATIC INT32 OsFutexWaitParmaCheck(const UINT32 *userVaddr, UINT32 flags, UINT32 val, UINT32 absTime)
 {
     UINTPTR futexKey = (UINTPTR)userVaddr;
+    UINT32 lockVal;
+    INT32 ret;
 
     if (OS_INT_ACTIVE) {
         return LOS_EINTR;
     }
 
     if (flags) {
-        PRINT_ERR("Futex wait param check failed! error flags: 0x%x\n", flags);
+        PRINT_ERR("Futex wait parma check failed! error flags: 0x%x\n", flags);
         return LOS_EINVAL;
     }
 
     if ((futexKey % sizeof(INT32)) || (futexKey < OS_FUTEX_KEY_BASE) || (futexKey >= OS_FUTEX_KEY_MAX)) {
-        PRINT_ERR("Futex wait param check failed! error futex key: 0x%x\n", futexKey);
+        PRINT_ERR("Futex wait parma check failed! error futex key: 0x%x\n", futexKey);
         return LOS_EINVAL;
     }
 
     if (!absTime) {
-        PRINT_ERR("Futex wait param check failed! error absTime: %u\n", absTime);
+        PRINT_ERR("Futex wait parma check failed! error absTime: %u\n", absTime);
         return LOS_EINVAL;
+    }
+
+    ret = LOS_ArchCopyFromUser(&lockVal, userVaddr, sizeof(UINT32));
+    if (ret) {
+        PRINT_ERR("Futex wait parma check failed! copy from user failed!\n");
+        return LOS_EINVAL;
+    }
+
+    if (lockVal != val) {
+        return LOS_EBADF;
     }
 
     return LOS_OK;
@@ -530,10 +542,10 @@ STATIC INT32 OsFutexInserTaskToHash(LosTaskCB **taskCB, FutexNode **node, const 
     return LOS_OK;
 }
 
-STATIC INT32 OsFutexWaitTask(const UINT32 timeOut, const UINT32 *userVaddr, UINT32 val)
+STATIC INT32 OsFutexWaitTask(const UINT32 timeOut, const UINT32 *userVaddr)
 {
     INT32 futexRet;
-    UINT32 intSave, lockVal;
+    UINT32 intSave;
     LosTaskCB *taskCB = NULL;
     FutexNode *node = NULL;
     UINTPTR futexKey = (UINTPTR)userVaddr;
@@ -544,25 +556,17 @@ STATIC INT32 OsFutexWaitTask(const UINT32 timeOut, const UINT32 *userVaddr, UINT
         return LOS_EINVAL;
     }
 
-    if (LOS_ArchCopyFromUser(&lockVal, userVaddr, sizeof(UINT32))) {
-        PRINT_ERR("Futex wait param check failed! copy from user failed!\n");
-        futexRet = LOS_EINVAL;
-        goto EXIT_ERR;
-    }
-
-    if (lockVal != val) {
-        futexRet = LOS_EBADF;
-        goto EXIT_ERR;
-    }
-
     if (OsFutexInserTaskToHash(&taskCB, &node, futexKey)) {
-        futexRet = LOS_NOK;
         goto EXIT_ERR;
     }
     SCHEDULER_LOCK(intSave);
     OsTaskWait(&(node->pendList), timeOut, FALSE);
     OsPercpuGet()->taskLockCnt++;
     LOS_SpinUnlock(&g_taskSpin);
+
+#ifdef LOS_FUTEX_DEBUG
+    OsFutexHashShow();
+#endif
 
     futexRet = OsFutexUnlock(&hashNode->listLock);
     if (futexRet) {
@@ -590,9 +594,12 @@ STATIC INT32 OsFutexWaitTask(const UINT32 timeOut, const UINT32 *userVaddr, UINT
     return LOS_OK;
 
 EXIT_ERR:
-    (VOID)OsFutexUnlock(&hashNode->listLock);
+    futexRet = OsFutexUnlock(&hashNode->listLock);
 EXIT_UNLOCK_ERR:
-    return futexRet;
+    if (futexRet) {
+        return futexRet;
+    }
+    return LOS_NOK;
 }
 
 INT32 OsFutexWait(const UINT32 *userVaddr, UINT32 flags, UINT32 val, UINT32 absTime)
@@ -600,7 +607,7 @@ INT32 OsFutexWait(const UINT32 *userVaddr, UINT32 flags, UINT32 val, UINT32 absT
     INT32 ret;
     UINT32 timeOut = LOS_WAIT_FOREVER;
 
-    ret = OsFutexWaitParamCheck(userVaddr, flags, absTime);
+    ret = OsFutexWaitParmaCheck(userVaddr, flags, val, absTime);
     if (ret) {
         return ret;
     }
@@ -608,7 +615,7 @@ INT32 OsFutexWait(const UINT32 *userVaddr, UINT32 flags, UINT32 val, UINT32 absT
         timeOut = OsFutexGetTick(absTime);
     }
 
-    return OsFutexWaitTask(timeOut, userVaddr, val);
+    return OsFutexWaitTask(timeOut, userVaddr);
 }
 
 /* Check to see if the task to be awakened has timed out

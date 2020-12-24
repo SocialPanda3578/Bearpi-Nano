@@ -983,7 +983,6 @@ STATIC VOID OsFlushAspace(ELFLoadInfo *loadInfo)
     processCB->vmSpace->heapBase += OsGetRndOffset(loadInfo);
     processCB->vmSpace->heapNow = processCB->vmSpace->heapBase;
     processCB->vmSpace->mapBase += OsGetRndOffset(loadInfo);
-    processCB->vmSpace->mapSize = loadInfo->stackBase - processCB->vmSpace->mapBase;
     LOS_ArchMmuContextSwitch(&OsCurrProcessGet()->vmSpace->archMmu);
 }
 

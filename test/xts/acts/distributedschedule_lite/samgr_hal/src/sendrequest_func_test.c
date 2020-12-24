@@ -150,24 +150,7 @@ static BOOL FEATURE_OnMessage(Feature *feature, Request *request)
     int32 returnCode = 0;;
     DemoFeature *demoFeature = (DemoFeature *)feature;
     demoFeature->featureCalledCount++;
-
-    if (demoFeature->latestRequest != NULL) {
-        free(demoFeature->latestRequest);
-    }
-    int requestLen;
-    if (request->len > 0) {
-        requestLen = request->len;
-    } else {
-        requestLen = strlen((char *)request->data) + 1;
-    }
-    demoFeature->latestRequest = (char *)malloc(requestLen * sizeof(char));
-    if (demoFeature->latestRequest == NULL) {
-        TEST_FAIL();
-    }
-    errno_t error = strcpy_s(demoFeature->latestRequest, requestLen, (char *)request->data);
-    if (error != EOK) {
-        TEST_FAIL();
-    }
+    demoFeature->latestRequest = (char *)request->data;
 
     switch (request->msgId) {
         case MSG_NO:
@@ -197,24 +180,7 @@ static BOOL FEATURE_OnMessage02(Feature *feature, Request *request)
     int32 returnCode = 0;
     DemoFeature *demoFeature = (DemoFeature *)feature;
     demoFeature->featureCalledCount++;
-
-    if (demoFeature->latestRequest != NULL) {
-        free(demoFeature->latestRequest);
-    }
-    int requestLen;
-    if (request->len > 0) {
-        requestLen = request->len;
-    } else {
-        requestLen = strlen((char *)request->data) + 1;
-    }
-    demoFeature->latestRequest = (char *)malloc(requestLen * sizeof(char));
-    if (demoFeature->latestRequest == NULL) {
-        TEST_FAIL();
-    }
-    errno_t error = strcpy_s(demoFeature->latestRequest, requestLen, (char *)request->data);
-    if (error != EOK) {
-        TEST_FAIL();
-    }
+    demoFeature->latestRequest = (char *)request->data;
 
     switch (request->msgId) {
         case MSG_NO:
@@ -244,24 +210,7 @@ static BOOL FEATURE_OnMessage03(Feature *feature, Request *request)
     int32 returnCode = 0;
     DemoFeature *demoFeature = (DemoFeature *)feature;
     demoFeature->featureCalledCount++;
-
-    if (demoFeature->latestRequest != NULL) {
-        free(demoFeature->latestRequest);
-    }
-    int requestLen;
-    if (request->len > 0) {
-        requestLen = request->len;
-    } else {
-        requestLen = strlen((char *)request->data) + 1;
-    }
-    demoFeature->latestRequest = (char *)malloc(requestLen * sizeof(char));
-    if (demoFeature->latestRequest == NULL) {
-        TEST_FAIL();
-    }
-    errno_t error = strcpy_s(demoFeature->latestRequest, requestLen, (char *)request->data);
-    if (error != EOK) {
-        TEST_FAIL();
-    }
+    demoFeature->latestRequest = (char *)request->data;
 
     switch (request->msgId) {
         case MSG_NO:
@@ -564,7 +513,7 @@ LITE_TEST_CASE(SendRequestTestSuite, testSendRequest0040, LEVEL2)
     }
     Request request = {.msgId = MSG_RT, .msgValue = 0};
     request.len = 0;
-    request.data = "I wanna async call good result!";
+    request.data = NULL;
 
     IUnknown *iUnknown = SAMGR_GetInstance()->GetFeatureApi("serviceName501", "featureName503");
     DemoFeature *feature = GET_OBJECT(iUnknown, DemoFeature, iUnknown);
@@ -633,7 +582,7 @@ LITE_TEST_CASE(SendRequestTestSuite, testSendRequest0060, LEVEL2)
     Request request = {.msgId = MSG_NO, .msgValue = 0};
     char *body = "I wanna async call good result!";
     request.len = 0;
-    request.data = "I wanna async call good result!";
+    request.data = NULL;
     IUnknown *iUnknown = SAMGR_GetInstance()->GetFeatureApi("serviceName501", "featureName503");
     if (iUnknown == NULL) {
         TEST_FAIL();

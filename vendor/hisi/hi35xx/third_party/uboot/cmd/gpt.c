@@ -768,7 +768,7 @@ static int do_rename_gpt_parts(struct blk_desc *dev_desc, char *subcomm,
 	 */
 	if (ret < 0) {
 		del_gpt_info();
-		/*free(partitions_list);*/
+		free(partitions_list);
 		if (ret == -ENOMEM)
 			set_gpt_cleanup(&str_disk_guid, &new_partitions);
 		else

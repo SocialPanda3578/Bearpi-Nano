@@ -15,9 +15,9 @@
 
 #include "timer_module.h"
 #ifdef FEATURE_TIMER_MODULE
-#ifndef TARGET_SIMULATOR
+#if (!defined(_WIN32) && !defined(_WIN64))
 #include "js_async_work.h"
-#endif // TARGET_SIMULATOR
+#endif
 #include "ace_log.h"
 #include "ace_mem_base.h"
 #include "js_fwk_common.h"
@@ -97,7 +97,7 @@ jerry_value_t TimerModule::StartTask(TimerList::Arguments *arguments, jerry_valu
         Task(arguments);
     } else {
         jerry_value_t numProp = jerry_value_to_number(time);
-        int64_t num = (int64_t)(jerry_get_number_value(numProp));
+        int64_t num = jerry_get_number_value(numProp);
         jerry_release_value(numProp);
         if (num <= 0 || num >= UINT32_MAX) {
             retVal = timerList->AddTimer(timerId, arguments);
@@ -152,7 +152,7 @@ void TimerModule::Task(void *arguments)
     if (timerList == nullptr) {
         return;
     }
-#ifndef TARGET_SIMULATOR
+#if (!defined _WIN32) && (!defined _WIN64)
     uint8_t* index = static_cast<uint8_t*>(ace_malloc(sizeof(uint8_t)));
     bool check = true;
     if (index == nullptr) {
@@ -174,17 +174,17 @@ void TimerModule::Task(void *arguments)
 #endif
         timerList->DeleteTimer(arg->index);
     }
-#else // TARGET_SIMULATOR
+#else
     if (jerry_value_is_function(arg->func)) {
         CallJSFunctionAutoRelease(arg->func, arg->context, arg->args, arg->argsNum);
     }
     if (!arg->repeated) {
         timerList->DeleteTimer(arg->index);
     }
-#endif // TARGET_SIMULATOR
+#endif
 }
 
-#ifndef TARGET_SIMULATOR
+#if (!defined(_WIN32) && !defined(_WIN64))
 void TimerModule::Execute(void *data)
 {
     uint8_t* timerId = static_cast<uint8_t*>(data);
@@ -201,9 +201,7 @@ void TimerModule::Execute(void *data)
                 CallJSFunctionAutoRelease(funcArgs->func, funcArgs->context, funcArgs->args, funcArgs->argsNum);
             }
             // if timer is once, release the arguments
-	    // check the timer node is release or not
-	    TimerList::TimerNode* currentTimer = timerList->GetTimer(*timerId);
-            if ((currentTimer != nullptr) && (!funcArgs->repeated)) {
+            if (!funcArgs->repeated) {
 #if defined(__LITEOS__)
                 StopTimerTask(timer->timerId);
 #endif
@@ -213,7 +211,7 @@ void TimerModule::Execute(void *data)
     }
     ACE_FREE(timerId);
 }
-#endif // TARGET_SIMULATOR
+#endif
 } // namespace ACELite
 } // namespace OHOS
 #endif // FEATURE_TIMER_MODULE

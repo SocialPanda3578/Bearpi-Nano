@@ -14,22 +14,27 @@
 import("//build/lite/ndk/ndk.gni")
 
 static_library("hilog_lite") {
-  sources = [
-    "hiview_log.c",
-    "hiview_log_limit.c",
-    "hiview_output_log.c",
-  ]
-  cflags = [ "-Wall" ]
-  include_dirs = [
-    "//kernel/liteos_m/kal",
-    "//base/hiviewdfx/utils/lite",
-    "//base/hiviewdfx/services/hiview_lite",
-    "//base/hiviewdfx/interfaces/kits/hilog_lite",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-  ]
+    sources = [
+        "hiview_log.c",
+        "hiview_log_limit.c",
+        "hiview_output_log.c",
+    ]
+    cflags = [ "-Wall" ]
+    include_dirs = [
+        "//kernel/liteos_m/components/cmsis",
+        "//base/hiviewdfx/utils/lite",
+        "//base/hiviewdfx/services/hiview_lite",
+        "//base/hiviewdfx/interfaces/kits/hilog_lite",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr"
+    ]
+
 }
 
 ndk_lib("hilog_lite_ndk") {
-  deps = [ ":hilog_lite" ]
-  head_files = [ "//base/hiviewdfx/interfaces/kits/hilog_lite" ]
+    deps = [
+        ":hilog_lite"
+    ]
+    head_files = [
+        "//base/hiviewdfx/interfaces/kits/hilog_lite",
+    ]
 }

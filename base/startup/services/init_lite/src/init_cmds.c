@@ -12,21 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "init_cmds.h"
-
 #include <ctype.h>
 #include <errno.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 #include "init_service_manager.h"
 #include "securec.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif
 
 #define MODE_LEN 4   // for chmod mode, format 0xxx
 #define DEFAULT_DIR_MODE 0755  // mkdir, default mode
@@ -43,11 +45,11 @@ static const char* g_supportedCmds[] = {
 
 void ParseCmdLine(const char* cmdStr, CmdLine* resCmd)
 {
-    size_t cmdLineLen = 0;
-    if (cmdStr == NULL || resCmd == NULL || (cmdLineLen = strlen(cmdStr)) == 0) {
+    if (cmdStr == NULL || strlen(cmdStr) == 0 || resCmd == NULL) {
         return;
     }
 
+    size_t cmdLineLen = strlen(cmdStr);
     size_t supportCmdCnt = sizeof(g_supportedCmds) / sizeof(g_supportedCmds[0]);
     int foundAndSucceed = 0;
     for (size_t i = 0; i < supportCmdCnt; ++i) {
@@ -93,7 +95,8 @@ static void DoMkDir(const char* cmdContent)
 static void DoChmod(const char* cmdContent)
 {
     // format: 0xxx /xxx/xxx/xxx
-    if (cmdContent[0] != '0' || cmdContent[MODE_LEN] != ' ' || strlen(cmdContent) <= MODE_LEN + 1) {
+    size_t strLen = strlen(cmdContent);
+    if (strLen <= MODE_LEN + 1 || cmdContent[0] != '0' || cmdContent[MODE_LEN] != ' ') {
         printf("[Init] DoChmod, bad format for %s.\n", cmdContent);
         return;
     }
@@ -119,24 +122,22 @@ static void DoChmod(const char* cmdContent)
 
 static void DoChown(const char* cmdContent)
 {
-    if (*cmdContent == ' ') {
-        printf("[Init] DoChown, bad format for %s.\n", cmdContent);
-        return;
-    }
     // format: owner group /xxx/xxx/xxx
     size_t firstSpace = 0;
     size_t secondSpace = 0;
     size_t strLen = strlen(cmdContent);
     for (size_t i = 0; i < strLen; ++i) {
-        if (cmdContent[i] != ' ') {
-            continue;
-        }
-
-        if (firstSpace == 0) {
-            firstSpace = i;
-        } else {
-            secondSpace = i;
-            break;
+        if (cmdContent[i] == ' ') {
+            if (i == 0) {
+                printf("[Init] DoChown, bad format for %s.\n", cmdContent);
+                return;
+            }
+            if (firstSpace == 0) {
+                firstSpace = i;
+            } else {
+                secondSpace = i;
+                break;
+            }
         }
     }
 
@@ -199,50 +200,51 @@ static int GetMountFlag(unsigned long* mountflags, const char* targetStr)
 
     if (strncmp(targetStr, "nodev", strlen("nodev")) == 0) {
         (*mountflags) |= MS_NODEV;
-    } else if (strncmp(targetStr, "noexec", strlen("noexec")) == 0) {
-        (*mountflags) |= MS_NOEXEC;
-    } else if (strncmp(targetStr, "nosuid", strlen("nosuid")) == 0) {
-        (*mountflags) |= MS_NOSUID;
-    } else if (strncmp(targetStr, "rdonly", strlen("rdonly")) == 0) {
-        (*mountflags) |= MS_RDONLY;
-    } else {
-        return 0;
+        return 1;
     }
-    return 1;
+
+    if (strncmp(targetStr, "noexec", strlen("noexec")) == 0) {
+        (*mountflags) |= MS_NOEXEC;
+        return 1;
+    }
+
+    if (strncmp(targetStr, "nosuid", strlen("nosuid")) == 0) {
+        (*mountflags) |= MS_NOSUID;
+        return 1;
+    }
+
+    if (strncmp(targetStr, "rdonly", strlen("rdonly")) == 0) {
+        (*mountflags) |= MS_RDONLY;
+        return 1;
+    }
+    return 0;
 }
 
 static int CountSpaces(const char* cmdContent, size_t* spaceCnt, size_t* spacePosArr, size_t spacePosArrLen)
 {
-    size_t numSpaces = 0;
-    bool isSpaceTooMany = false;
-    const size_t strLen = strlen(cmdContent);
+    *spaceCnt = 0;
+    size_t strLen = strlen(cmdContent);
     for (size_t i = 0; i < strLen; ++i) {
-        if (cmdContent[i] != ' ') {
-            continue;
+        if (cmdContent[i] == ' ') {
+            ++(*spaceCnt);
+            if ((*spaceCnt) > spacePosArrLen) {
+                printf("[Init] DoMount, too many spaces, bad format for %s.\n", cmdContent);
+                return 0;
+            }
+            spacePosArr[(*spaceCnt) - 1] = i;
         }
-
-        if (++numSpaces > spacePosArrLen) {
-            isSpaceTooMany = true;
-            break;
-        }
-        spacePosArr[numSpaces - 1] = i;
-    }
-    *spaceCnt = numSpaces;
-    if (isSpaceTooMany) {
-        printf("[Init] DoMount, too many spaces, bad format for %s.\n", cmdContent);
-        return 0;
     }
 
-    if (numSpaces < SPACES_CNT_IN_CMD_MIN ||           // spaces count should not less than 2(at least 3 items)
-        spacePosArr[0] == 0 ||                         // should not start with space
-        spacePosArr[numSpaces - 1] == strLen - 1) {    // should not end with space
+    if ((*spaceCnt) < SPACES_CNT_IN_CMD_MIN ||           // spaces count should not less than 2(at least 3 items)
+        spacePosArr[0] == 0 ||                           // should not start with space
+        spacePosArr[(*spaceCnt) - 1] == strLen - 1) {    // should not end with space
         printf("[Init] DoMount, bad format for %s.\n", cmdContent);
         return 0;
     }
 
     // spaces should not be adjacent
-    for (size_t i = 0; i < numSpaces - 1; ++i) {
-        if (spacePosArr[i] == spacePosArr[i] + 1) {
+    for (size_t i = 1; i < (*spaceCnt); ++i) {
+        if (spacePosArr[i] == spacePosArr[i - 1] + 1) {
             printf("[Init] DoMount, bad format for %s.\n", cmdContent);
             return 0;
         }
@@ -252,15 +254,15 @@ static int CountSpaces(const char* cmdContent, size_t* spaceCnt, size_t* spacePo
 
 static void DoMount(const char* cmdContent)
 {
+    // format: fileSystemType source target mountFlag1 mountFlag2... data
+    unsigned long mountflags = 0;
     size_t spaceCnt = 0;
+    size_t strLen = strlen(cmdContent);
     size_t spacePosArr[SPACES_CNT_IN_CMD_MAX] = {0};
     if (!CountSpaces(cmdContent, &spaceCnt, spacePosArr, SPACES_CNT_IN_CMD_MAX)) {
         return;
     }
 
-    // format: fileSystemType source target mountFlag1 mountFlag2... data
-    unsigned long mountflags = 0;
-    size_t strLen = strlen(cmdContent);
     size_t indexOffset = 0;
     char* fileSysType = CopySubStr(cmdContent, 0, spacePosArr[indexOffset]);
     char* source = CopySubStr(cmdContent, spacePosArr[indexOffset] + 1, spacePosArr[indexOffset + 1]);
@@ -327,3 +329,9 @@ void DoCmd(const CmdLine* curCmd)
         printf("[Init] DoCmd, unknown cmd name %s.\n", curCmd->name);
     }
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif
+#endif

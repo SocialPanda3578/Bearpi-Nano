@@ -27,11 +27,11 @@ namespace Media {
 constexpr uint32_t RECORDER_SOURCE_MAX_CNT = 4;
 
 enum RecState {
-    INITIALIZED = 0,
-    PREPARED,
+    INITIALIZED,
+    PREPPARED,
     RECORDING,
     PAUSED,
-    RESETTING,
+    RESETED,
     STOPPED,
     RELEASED
 };
@@ -73,7 +73,7 @@ public:
     int32_t SetLocation(int32_t latitude, int32_t longitude);
     int32_t SetMaxDuration(int32_t duration);
     int32_t SetOutputFormat(OutputFormatType format);
-    int32_t SetOutputPath(const std::string &path);
+    int32_t SetOutputPath(const string &path);
     int32_t SetOutputFile(int32_t fd);
     int32_t SetNextOutputFile(int32_t fd);
     int32_t SetMaxFileSize(int64_t size);

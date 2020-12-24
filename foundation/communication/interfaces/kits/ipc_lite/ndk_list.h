@@ -16,7 +16,7 @@
 #ifndef _NDK_LIST_H
 #define _NDK_LIST_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -53,7 +53,7 @@ static inline void NDK_ListDelete(NDK_DL_LIST *node)
 
 static inline bool NDK_ListEmpty(NDK_DL_LIST *list)
 {
-    return list->pstNext == list;
+    return (bool)(list->pstNext == list);
 }
 #define NDK_OFF_SET_OF(type, member) ((uintptr_t)&((type *)0)->member)
 #define NDK_DL_LIST_ENTRY(item, type, member) \

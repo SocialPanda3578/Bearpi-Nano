@@ -15,7 +15,7 @@
 #ifndef OHOS_META_DATA_H
 #define OHOS_META_DATA_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 #ifdef __cplusplus
 #if __cplusplus

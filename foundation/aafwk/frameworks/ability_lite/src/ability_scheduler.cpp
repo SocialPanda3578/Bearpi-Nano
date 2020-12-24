@@ -51,7 +51,7 @@ int32_t AbilityScheduler::AmsCallback(const IpcContext* context, void *ipcMsg, I
     GetCode(ipcMsg, &funcId);
     switch (funcId) {
         case SCHEDULER_APP_INIT: {
-            AppInfo appInfo = {};
+            AppInfo appInfo;
             char *bundleName = reinterpret_cast<char *>(IpcIoPopString(data, nullptr));
             char *srcPath = reinterpret_cast<char *>(IpcIoPopString(data, nullptr));
             char *dataPath = reinterpret_cast<char *>(IpcIoPopString(data, nullptr));

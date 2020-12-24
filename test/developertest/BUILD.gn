@@ -14,12 +14,13 @@
 import("//build/lite/config/test.gni")
 
 subsystem_test("test") {
-  test_components = []
-  if (ohos_kernel_type == "liteos_m") {
-    features += []
-  } else if (ohos_kernel_type == "liteos_a") {
-    test_components += [
-      "//test/developertest/example/cxx_demo/test/unittest/common:CalcSubTest",
-    ]
-  }
+    test_components = []
+    if(ohos_kernel_type == "liteos_riscv") {
+        features += [
+        ]
+    }else if(ohos_kernel_type == "liteos_a") {
+        test_components += [
+            "//test/developertest/example/cxx_demo/test/unittest/common:CalcSubTest"
+        ]
+    }
 }

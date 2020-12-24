@@ -15,13 +15,19 @@ import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/ndk/ndk.gni")
 
 lite_component("parameter") {
-  features = [ "//base/startup/frameworks/syspara_lite/parameter/src:sysparam" ]
+    features = [
+        "//base/startup/frameworks/syspara_lite/parameter/src:sysparam",
+    ]
 }
 
 ndk_lib("parameter_notes") {
-  if (ohos_kernel_type != "liteos_m") {
-    lib_extension = ".so"
-  }
-  deps = [ "//base/startup/frameworks/syspara_lite/parameter/src:sysparam" ]
-  head_files = [ "//base/startup/interfaces/kits/syspara_lite" ]
+    if (ohos_kernel_type != "liteos_riscv") {
+        lib_extension = ".so"
+    }
+    deps = [
+        "//base/startup/frameworks/syspara_lite/parameter/src:sysparam",
+     ]
+    head_files = [
+        "//base/startup/interfaces/kits/syspara_lite",
+    ]
 }

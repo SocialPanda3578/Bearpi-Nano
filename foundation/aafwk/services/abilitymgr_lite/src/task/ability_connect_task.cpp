@@ -54,7 +54,7 @@ AbilityMsStatus AbilityConnectTask::PerformConnectTask(PageAbilityRecord *servic
     if (connectRecord == nullptr) {
         connectRecord = new AbilityConnectRecord(connectSid_, token_);
         connectRecord->SetStatus(ConnectStatus::CONNECTING);
-        service->PushConnectRecord(connectRecord);
+        service->pushConnectRecord(connectRecord);
     }
     AbilityMsStatus abilityMsStatus = AbilityMsStatus::Ok();
     switch (serviceConnectStatus) {

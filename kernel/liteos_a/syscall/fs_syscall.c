@@ -1342,12 +1342,7 @@ int SysPrctl(int option, ...)
     }
 
     name = va_arg(ap, unsigned long);
-    if (!LOS_IsUserAddress(name)) {
-        err = EFAULT;
-        goto ERROR;
-    }
-
-    err = OsSetTaskName(OsCurrTaskGet(), (const char *)(uintptr_t)name, TRUE);
+    err = OsSetCurrTaskName((const char *)(uintptr_t)name);
     if (err != LOS_OK) {
         goto ERROR;
     }

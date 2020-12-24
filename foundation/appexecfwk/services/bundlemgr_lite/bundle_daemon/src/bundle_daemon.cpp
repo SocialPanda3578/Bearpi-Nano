@@ -97,7 +97,7 @@ BOOL BundleDaemon::ServiceMessageHandle(Service *service, Request *request)
     return TRUE;
 }
 
-int32_t BundleDaemon::Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply)
+int32 BundleDaemon::Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply)
 {
     PRINTI("BundleDaemon", "bundle_daemon invoke start %{public}d", funcId);
     if (origin == nullptr || req == nullptr) {
@@ -117,14 +117,14 @@ int32_t BundleDaemon::Invoke(IServerProxy *iProxy, int funcId, void *origin, Ipc
         PRINTE("BundleDaemon", "bundleMsClient is nullptr");
         return EC_NOINIT;
     }
-    int32_t ret = EC_COMMU;
+    int32 ret = EC_COMMU;
     if (funcId >= EXTRACT_HAP && funcId < BDS_CMD_END) {
         ret = (BundleDaemon::invokeFuncs[funcId])(req);
     }
     return BundleDaemon::GetInstance().bundleMsClient_->SendReply(ret);
 }
 
-int32_t BundleDaemon::RegisterCallbackInvoke(IpcIo *req)
+int32 BundleDaemon::RegisterCallbackInvoke(IpcIo *req)
 {
     SvcIdentity *svcIdentity = IpcIoPopSvc(req);
     if (svcIdentity == nullptr) {
@@ -134,7 +134,7 @@ int32_t BundleDaemon::RegisterCallbackInvoke(IpcIo *req)
     return BundleDaemon::GetInstance().bundleMsClient_->SendReply(EC_SUCCESS);
 }
 
-int32_t BundleDaemon::ExtractHapInvoke(IpcIo *req)
+int32 BundleDaemon::ExtractHapInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *hapPath = reinterpret_cast<char *>(IpcIoPopString(req, &len));
@@ -148,7 +148,7 @@ int32_t BundleDaemon::ExtractHapInvoke(IpcIo *req)
     return BundleDaemon::GetInstance().handler_.ExtractHap(hapPath, codePath);
 }
 
-int32_t BundleDaemon::RenameFileInvoke(IpcIo *req)
+int32 BundleDaemon::RenameFileInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *oldFile = reinterpret_cast<char *>(IpcIoPopString(req, &len));
@@ -162,12 +162,12 @@ int32_t BundleDaemon::RenameFileInvoke(IpcIo *req)
     return BundleDaemon::GetInstance().handler_.RenameFile(oldFile, newFile);
 }
 
-int32_t BundleDaemon::CreatePermissionInvoke(IpcIo *req)
+int32 BundleDaemon::CreatePermissionInvoke(IpcIo *req)
 {
     return BundleDaemon::GetInstance().handler_.CreatePermissionDir();
 }
 
-int32_t BundleDaemon::CreateDataDirectoryInvoke(IpcIo *req)
+int32 BundleDaemon::CreateDataDirectoryInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *dataPath = reinterpret_cast<char *>(IpcIoPopString(req, &len));
@@ -181,7 +181,7 @@ int32_t BundleDaemon::CreateDataDirectoryInvoke(IpcIo *req)
     return BundleDaemon::GetInstance().handler_.CreateDataDirectory(dataPath, uid, gid, isChown);
 }
 
-int32_t BundleDaemon::StoreContentToFileInvoke(IpcIo *req)
+int32 BundleDaemon::StoreContentToFileInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *path = reinterpret_cast<char *>(IpcIoPopString(req, &len));
@@ -197,26 +197,12 @@ int32_t BundleDaemon::StoreContentToFileInvoke(IpcIo *req)
         return EC_INVALID;
     }
 
-    int32_t ret = BundleDaemon::GetInstance().handler_.StoreContentToFile(path, buff, buffPtr->buffSz);
+    int32 ret = BundleDaemon::GetInstance().handler_.StoreContentToFile(path, buff, buffPtr->buffSz);
     FreeBuffer(nullptr, buffPtr->buff);
     return ret;
 }
 
-int32_t BundleDaemon::MoveFileInvoke(IpcIo *req)
-{
-    size_t len = 0;
-    const char *oldFile = reinterpret_cast<char *>(IpcIoPopString(req, &len));
-    if (oldFile == nullptr || len == 0) {
-        return EC_INVALID;
-    }
-    const char *newFile = reinterpret_cast<char *>(IpcIoPopString(req, &len));
-    if (newFile == nullptr || len == 0) {
-        return EC_INVALID;
-    }
-    return BundleDaemon::GetInstance().handler_.MoveFile(oldFile, newFile);
-}
-
-int32_t BundleDaemon::RemoveFileInvoke(IpcIo *req)
+int32 BundleDaemon::RemoveFileInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *path = reinterpret_cast<char *>(IpcIoPopString(req, &len));
@@ -226,7 +212,7 @@ int32_t BundleDaemon::RemoveFileInvoke(IpcIo *req)
     return BundleDaemon::GetInstance().handler_.RemoveFile(path);
 }
 
-int32_t BundleDaemon::RemoveInstallDirectoryInvoke(IpcIo *req)
+int32 BundleDaemon::RemoveInstallDirectoryInvoke(IpcIo *req)
 {
     size_t len = 0;
     const char *codePath = reinterpret_cast<char *>(IpcIoPopString(req, &len));

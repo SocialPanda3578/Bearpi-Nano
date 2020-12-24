@@ -157,7 +157,7 @@ const struct file_operations_vfs g_uartSampleDevFops = {
 };
 
 #define MAX_DEV_NAME_SIZE 32
-static void AddRemoveUartDev(struct UartHost *host, bool add)
+static void UartSampleAddRemoveDev(struct UartHost *host, bool add)
 {
     int32_t ret;
     char *devName = NULL;
@@ -193,12 +193,12 @@ static void AddRemoveUartDev(struct UartHost *host, bool add)
     OsalMemFree(devName);
 }
 
-void AddUartDevice(struct UartHost *host)
+void UartSampleAddDev(struct UartHost *host)
 {
-    AddRemoveUartDev(host, true);
+    UartSampleAddRemoveDev(host, true);
 }
 
-void RemoveUartDevice(struct UartHost *host)
+void UartSampleRemoveDev(struct UartHost *host)
 {
-    AddRemoveUartDev(host, false);
+    UartSampleAddRemoveDev(host, false);
 }

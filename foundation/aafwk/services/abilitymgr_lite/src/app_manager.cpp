@@ -67,7 +67,10 @@ AbilityMsStatus AppManager::TerminateAppProcess(const char *bundleName)
         return AbilityMsStatus::Ok();
     }
     // exit app process
-    return current->AppExitTransaction();
+    AbilityMsStatus status = current->AppExitTransaction();
+    CHECK_RESULT(status);
+    RemoveAppRecord(*current);
+    return status;
 }
 
 void AppManager::RemoveAppRecord(const char *bundleName)

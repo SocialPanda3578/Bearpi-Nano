@@ -97,7 +97,7 @@ public:
         MONOTONIC = 0,
         /** Monotonically increasing time, including the system sleep time */
         BOOTTIME = 1
-    };
+        };
 };
 
 /**
@@ -108,7 +108,7 @@ public:
  */
 enum State : uint32_t {
     /** Prepared */
-    PREPARED,
+    PREPPARED,
     /** Recording */
     RECORDING,
     /** Stopped */

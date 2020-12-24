@@ -58,16 +58,6 @@ public:
         return isShow_;
     }
 
-    void SetPid(pid_t pid)
-    {
-        pid_ = pid;
-    }
-
-    pid_t GetPid()
-    {
-        return pid_;
-    }
-
     void ResizeSurface(int16_t width, int16_t height);
 
     void Update(Rect rect);
@@ -82,7 +72,6 @@ private:
     void ReleaseSurface();
 
     int32_t id_;
-    pid_t pid_;
     bool isShow_;
     LiteWinConfig config_;
     Surface* surface_;

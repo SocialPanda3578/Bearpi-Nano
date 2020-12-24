@@ -17,12 +17,6 @@
 
 #include <cstring>
 
-#include "adapter.h"
-#include "bundle_inner_interface.h"
-#include "bundle_manager.h"
-#include "iproxy_client.h"
-#include "samgr_lite.h"
-
 namespace OHOS {
 const char * const LAUNCHER_BUNDLE_NAME = "com.huawei.launcher";
 const char * const LAUNCHER_ABILITY_NAME = "MainAbility";
@@ -125,22 +119,6 @@ bool AbilityMsHelper::CheckVisiblePermission(pid_t callingUid, pid_t targetUid, 
     if (isVisible || callingUid == targetUid) {
         return true;
     }
-    IUnknown *iUnknown = SAMGR_GetInstance()->GetFeatureApi(BMS_SERVICE, BMS_FEATURE);
-    if (iUnknown == nullptr) {
-        return false;
-    }
-    BmsServerProxy *bmsServerProxy = nullptr;
-    int result = iUnknown->QueryInterface(iUnknown, DEFAULT_VERSION, (void **) &bmsServerProxy);
-    if (result != 0 || bmsServerProxy == nullptr) {
-        return false;
-    }
-    char *bundleName = nullptr;
-    uint8_t ret = bmsServerProxy->GetBundleNameForUid(callingUid, &bundleName);
-    if (ret == 0 && IsLauncherAbility(bundleName)) {
-        AdapterFree(bundleName);
-        return true;
-    }
-    AdapterFree(bundleName);
     return false;
 }
 }

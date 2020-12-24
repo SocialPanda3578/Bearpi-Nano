@@ -12,35 +12,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import router from "@system.router";
+import router from '@system.router'
 
 export default {
-  data: {
-    location: "HangZhou",
-    udpateStatus: "15:13",
-    dataSource: "tianqi.com",
-    updated: "Updated",
-    dataSourceName: "Data Source",
-    selectedIndex: 0,
-    airData: ["100", "90", "120", "50", "150", "40", "25"]
-  },
-  onInit() {
-    this.location = this.$t(this.location);
-    this.updated = this.$t("updated");
-    this.dataSourceName = this.$t("dataSourceName");
-    this.sampledOn = this.$t("sampledOn");
-    this.monitoringStation = this.$t("monitoringStation");
-    this.selectedIndex = this.selectedCityIndex;
-  },
-  openHistroy() {
-    router.replace({
-      uri: "pages/history/history"
-    });
-  },
-  backMain() {
-    router.replace({
-      uri: "pages/index/index",
-      params: { selectedCityIndex: this.selectedIndex }
-    });
-  }
-};
+    data:{
+        location:"HangZhou",
+        udpateStatus:"15:13",
+        dataSource:"tianqi.com",
+        updated:'Updated',
+        dataSourceName:'Data Source',
+        selectedIndex:0,
+        airData:['100', '90', '120', '50', '150', '40', '25']
+    },
+    onInit(){
+        this.location = this.$t(this.location);
+        this.updated = this.$t("updated");
+        this.dataSourceName = this.$t("dataSourceName");
+        this.sampledOn = this.$t("sampledOn");
+        this.monitoringStation = this.$t("monitoringStation");
+        this.selectedIndex = this.selectedCityIndex;
+    },
+    openHistroy(){
+        router.replace({
+            uri:'pages/history/history'
+        });
+    },
+    backMain(){
+        router.replace({
+            uri:'pages/index/index',
+            params:{selectedCityIndex:this.selectedIndex}
+        });
+    }
+}

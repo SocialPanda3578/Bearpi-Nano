@@ -29,6 +29,8 @@
 
 namespace OHOS {
 namespace Media {
+using namespace std;
+
 
 class RecorderSink {
 public:
@@ -39,13 +41,13 @@ public:
     int32_t AddTrackSource(const TrackSource &trackSource, int32_t &trackId);
     int32_t WriteData(int32_t trackId, FormatFrame &frameData) const;
     int32_t SetOutputFormat(OutputFormat format);
-    int32_t SetOutputPath(const std::string &path);
+    int32_t SetOutputPath(const string &path);
     int32_t SetOutputFile(int32_t fd);
     int32_t SetNextOutputFile(int32_t fd);
     int32_t SetMaxDuration(int64_t duration);
     int32_t SetMaxFileSize(int64_t size);
-    int32_t SetOrientationHint(int32_t degrees);
-    int32_t SetLocation(int32_t latitude, int32_t longitude);
+    int32_t SetOrientationHint(int degrees);
+    int32_t SetLocation(int latitude, int longitude);
     int32_t SetRecorderCallback(const std::shared_ptr<RecorderCallback> &callback);
     int32_t Prepare();
     int32_t Start();

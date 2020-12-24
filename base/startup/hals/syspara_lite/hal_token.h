@@ -25,41 +25,36 @@ extern "C" {
 #endif
 
 /**
- * @brief Read token value from device.
+ * @brief Read token value form device.
  *
- * @param token the result token value, if read sucessfully.
- * @param len length of the token.
- * @returns 0 if success and get the update area token,
- *          1 if success and get the pre-made token,
- *         -1 if failed, 
- *         -2 if no pre-made token.
+ * @param token The token value, len The token len.
+ * @returns 0 if it succeeds and get the update area token,
+ *          1 if it succeeds and get the pre-made token,
+ *         -1 if it fails, -2 if it no pre-made token.
  */
 int HalReadToken(char *token, unsigned int len);
 
 /**
  * @brief Write token value to device.
  *
- * @param token the token to write.
- * @param len length of the token.
- * @returns 0 if success, otherwise -1.
+ * @param token The token value, len The token len.
+ * @returns 0 if it succeeds, -1 if it fails.
  */
 int HalWriteToken(const char *token, unsigned int len);
 
 /**
- * @brief Get AcKey value from device.
+ * @brief Get AcKey value form device.
  *
- * @param acKey the result acKey, if get successfully.
- * @param len length of the acKey.
- * @returns 0 if success, otherwise -1.
+ * @param acKey The acKey value, len The acKey len.
+ * @returns 0 if it succeeds, -1 if it fails.
  */
 int HalGetAcKey(char *acKey, unsigned int len);
 
 /**
- * @brief Get ProdId value from device.
+ * @brief Get ProdId value form device.
  *
- * @param productId[] array of product IDs to be populated with.
- * @param len length of the productId.
- * @returns 0 if success, otherwise -1.
+ * @param productId[] The productId value, len The productId len.
+ * @returns 0 if it succeeds, -1 if it fails.
  */
 int HalGetProdId(char productId[], size_t len);
 

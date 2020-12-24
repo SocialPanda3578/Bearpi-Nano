@@ -65,7 +65,7 @@ typedef struct {
     unsigned char                  commregIsvalid;
     /** Number of valid common registers */
     unsigned int                  validCommregCnt;
-} HalWifiIotSdioExtendFunc;
+}HalWifiIotSdioExtendFunc;
 
 /**
  * @brief Defines attributes of an SDIO ADMA table.
@@ -77,7 +77,7 @@ typedef struct {
     unsigned short len;
     /** Data address */
     unsigned int address;
-} HalWifiIotSdioAdmatable;
+}HalWifiIotSdioAdmatable;
 
 /**
  * @brief SDIO interrupt callback structure.

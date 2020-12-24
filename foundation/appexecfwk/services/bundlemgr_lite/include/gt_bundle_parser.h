@@ -18,8 +18,7 @@
 
 #include "bundle_common.h"
 #include "bundle_info.h"
-
-#include <stdint.h>
+#include "stdint.h"
 
 #include "cJSON.h"
 

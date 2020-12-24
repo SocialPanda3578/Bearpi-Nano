@@ -22,16 +22,16 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # compile options
 add_compile_options(-fpermissive -Wno-narrowing)
 
-set(ACE_LITE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/targets/simulator")
+set(ACE_LITE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/targets/simulator/win")
 set(ACE_LITE_INNERKITS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/innerkits/builtin")
 set(JSFWK_INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
-set(JSFWK_INNERKITS_BUILTIN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../foundation/ace/interfaces/innerkits/builtin")
+set(JSFWK_INNERKITS_BUILTIN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../foundation/ace/interfaces/innerkits/builtin")
 set(JSFWK_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/core")
-set(UIKIT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../foundation/graphic/lite")
-set(THIRTY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../third_party")
-set(JSFWK_SIMULATOR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../tools/developer_tools_lite/graphic_tool/simulator")
+set(UIKIT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../foundation/graphic/lite")
+set(THIRTY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party")
+set(JSFWK_SIMULATOR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../tools/developer_tools_lite/graphic_tool/simulator")
+set(JS_API_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../api/emui_band/MoltenCore/application/framework/ace/api")
 set(AAFWK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../aafwk")
-set(UTILS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../utils/native/lite")
 
 # add definitions
 # temporarily set, when ui and graphic unifid, this can be removed
@@ -84,9 +84,8 @@ include_directories(
     ${THIRTY_PATH}/jerryscript/jerry-port/default/include
     ${THIRTY_PATH}/freetype/include
     ${JSFWK_SIMULATOR_PATH}/config
-    ${UTILS_PATH}/timer_task/include
-    ${AAFWK_PATH}/frameworks/abilitymgr_lite/include
-    ${THIRTY_PATH}/bounds_checking_function/include)
+    ${JS_API_PATH}/timer
+    ${AAFWK_PATH}/frameworks/abilitymgr_lite/include)
 
 # source files
 aux_source_directory(${JSFWK_SOURCE_PATH}/animation ANIMATION)
@@ -138,11 +137,7 @@ target_include_directories(jsfwk PUBLIC
     ${AAFWK_PATH}/frameworks/abilitymgr_lite/include)
 add_dependencies(jsfwk jerryscript)
 target_link_directories(jsfwk PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/jerryscript/lib)
-if(UNIX)
-    target_link_libraries(jsfwk global_resmgr ui jerry-port-default jerry-ext jerry-core)
-else()
-    target_link_libraries(jsfwk global_resmgr ui -Wl,--whole-archive jerry-port-default jerry-ext jerry-core -Wl,--no-whole-archive)
-endif()
+target_link_libraries(jsfwk global_resmgr ui -Wl,--whole-archive jerry-port-default jerry-ext jerry-core -Wl,--no-whole-archive)
 
 if (${JERRY_EXTERNAL_CONTEXT} STREQUAL ON)
     target_compile_definitions(jsfwk PUBLIC -DJS_ENGINE_EXTERNAL_CONTEXT)

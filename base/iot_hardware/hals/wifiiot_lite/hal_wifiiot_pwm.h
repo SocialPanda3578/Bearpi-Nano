@@ -95,17 +95,6 @@ unsigned int HalPwmInit(HalWifiIotPwmPort port);
 unsigned int HalPwmDeinit(HalWifiIotPwmPort port);
 
 /**
- * @brief  Sets the clock source of the PWM module.
- *
- * @param clkSource clock source for PWM module.
- * @return Returns {@link WIFI_IOT_SUCCESS} if the operation is successful;
- * returns an error code defined in {@link wifiiot_errno.h} otherwise.
- * @since 1.0
- * @version 1.0
- */
-unsigned int HalPwmSetClock(HalWifiIotPwmClkSource clkSource);
-
-/**
  * @brief Outputs PWM signals based on the input parameters.
  *
  * This function outputs PWM signals from a specified port based on

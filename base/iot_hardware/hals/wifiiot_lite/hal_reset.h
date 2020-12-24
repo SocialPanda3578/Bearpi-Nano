@@ -61,7 +61,7 @@ typedef enum {
     HAL_SYS_REBOOT_CAUSE_AT_BUSY,
     /** Maximum value */
     HAL_SYS_REBOOT_CAUSE_MAX,
-} HalRebootCause;
+}HalRebootCause;
 
 /**
  * @brief Reboots the device using different causes.

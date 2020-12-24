@@ -30,8 +30,8 @@ extern "C" {
 /* baudrate config */
 #define UART_CFG_BAUDRATE _IO(UART_IOC_MAGIC, 1)
 
-void AddUartDevice(struct UartHost *host);
-void RemoveUartDevice(struct UartHost *host);
+void UartSampleAddDev(struct UartHost *host);
+void UartSampleRemoveDev(struct UartHost *host);
 
 #ifdef __cplusplus
 #if __cplusplus

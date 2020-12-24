@@ -85,13 +85,12 @@ int GetSysParam(const char* key, char* value, unsigned int len)
     if (fd < 0) {
         return EC_FAILURE;
     }
-
-    int ret = read(fd, value, info.st_size);
-    close(fd);
-    fd = -1;
-    if (ret < 0) {
+    if (read(fd, value, info.st_size) < 0) {
+        close(fd);
         return EC_FAILURE;
     }
+    close(fd);
+    fd = -1;
     value[info.st_size] = '\0';
     return info.st_size;
 }
@@ -115,11 +114,12 @@ int SetSysParam(const char* key, const char* value)
     if (fd < 0) {
         return EC_FAILURE;
     }
-
-    int ret = write(fd, value, strlen(value));
+    if (write(fd, value, strlen(value)) < 0) {
+        close(fd);
+        return EC_FAILURE;
+    }
     close(fd);
-    fd = -1;
-    return (ret < 0) ? EC_FAILURE : EC_SUCCESS;
+    return EC_SUCCESS;
 }
 
 boolean CheckPermission(void)

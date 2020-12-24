@@ -75,7 +75,7 @@ IUnknown *SAMGR_CreateIProxy(const IpcContext *context, const char *service, con
     header->key.service = service;
     header->key.feature = feature;
     header->context = context;
-    (void)RegisterDeathCallback(context, identity, OnServiceExit, client, &header->deadId);
+    (void)RegisteDeathCallback(context, identity, OnServiceExit, client, &header->deadId);
 
     IClientEntry *entry = &client->entry;
     entry->iUnknown.Invoke = ProxyInvoke;
@@ -179,7 +179,7 @@ static int ProxyInvoke(IClientProxy *proxy, int funcId, IpcIo *request, IOwner o
         if (header->target.handle == INVALID_INDEX) {
             return EC_INVALID;
         }
-        (void)RegisterDeathCallback(header->context, header->target, OnServiceExit, header, &header->deadId);
+        (void)RegisteDeathCallback(header->context, header->target, OnServiceExit, header, &header->deadId);
     }
 
     IpcIo reply;
@@ -187,7 +187,7 @@ static int ProxyInvoke(IClientProxy *proxy, int funcId, IpcIo *request, IOwner o
     IpcFlag flag = (notify == NULL) ? LITEIPC_FLAG_ONEWAY : LITEIPC_FLAG_DEFAULT;
     int ret = Transact(header->context, header->target, funcId, request, &reply, flag, (uintptr_t *)&replyBuf);
     if (ret != LITEIPC_OK) {
-        (void)UnregisterDeathCallback(header->target, header->deadId);
+        (void)UnRegisteDeathCallback(header->target, header->deadId);
         header->deadId = INVALID_INDEX;
         header->target.handle = INVALID_INDEX;
         header->target.token = INVALID_INDEX;
@@ -209,7 +209,7 @@ static int OnServiceExit(const IpcContext *context, void *ipcMsg, IpcIo *data, v
 {
     (void)data;
     IClientHeader *header = (IClientHeader *)argv;
-    (void)UnregisterDeathCallback(header->target, header->deadId);
+    (void)UnRegisteDeathCallback(header->target, header->deadId);
     header->deadId = INVALID_INDEX;
     header->target.handle = INVALID_INDEX;
     header->target.token = INVALID_INDEX;

@@ -68,74 +68,66 @@ typedef struct {
 #pragma pack()
 
 /**
- * Initializes the file object.
- *
- * @param fp the pointer of hiview file object.
+ * Initialize the file object.
+ * @param fp The address of hivew file object.
  * @param type file type.
  * @param size file size.
- * @return TRUE if success, otherwise FALSE.
+ * @return TRUE/FALSE.
  **/
 boolean InitHiviewFile(HiviewFile *fp, HiviewFileType type, uint32 size);
 
 /**
- * Writes the file header to file.
- *
- * @param fp the pointer of hiview file object.
- * @return TRUE if success, otherwise FALSE.
+ * Write the file header to file.
+ * @param fp The pointer of hivew file object.
+ * @return TRUE/FALSE.
  **/
 boolean WriteFileHeader(HiviewFile *fp);
 
 /**
- * Reads the file header info.
- *
- * @param fp the pointer of hiview file object.
- * @return TRUE if the file contains the correct header info, otherwise FALSE.
+ * Read the file header from file.
+ * @param fp The pointer of hivew file object.
+ * @return TRUE/FALSE. TRUE: If the file contain the correct header info.
  **/
 boolean ReadFileHeader(HiviewFile *fp);
 
 /**
- * Writes data to file.
- *
- * @param fp the pointer of hiview file object.
- * @param data bytes to be written to the file.
- * @param len the length of the data to be written. The length should be a multiple of a structure.
- * @return length of bytes written.
- * @attention Avoid calling this function too frequently, the watchdog may timeout otherwise.
+ * Write data to file.
+ * @param fp The pointer of hivew file object.
+ * @param data Data to be written to the file.
+ * @param len The length of the data to be written. The length should be a multiple of a structure.
+ * @return Length write.
+ * @attention Reduce the file operation frequency. Otherwise, the watchdog may time out.
  **/
 int32 WriteToFile(HiviewFile *fp, const uint8 *data, uint32 len);
 
 /**
- * Reads data from file.
- *
- * @param fp the pointer of hiview file object.
- * @param data buffer for holding reading data.
- * @param readLen the length of the data to be read. The length should be a multiple of a structure.
- * @return length of bytes read.
- * @attention Avoid calling this function too frequently, the watchdog may timeout otherwise.
+ * Read data form file.
+ * @param fp The pointer of hivew file object.
+ * @param data Buffer of reading data.
+ * @param readLen The length of the data to be read. The length should be a multiple of a structure.
+ * @return Length read.
+ * @attention Reduce the file operation frequency. Otherwise, the watchdog may time out.
  **/
 int32 ReadFromFile(HiviewFile *fp, uint8 *data, uint32 readLen);
 
 /**
- * Gets used size of file, excluding the size of file header
- *
- * @param fp the pointer of hiview file object.
- * @return used size.
+ * Get used size of file. Do not contain the size of file header.
+ * @param fp The pointer of hivew file object.
+ * @return used size. Not include the file header.
  **/
 uint32 GetFileUsedSize(HiviewFile *fp);
 
 /**
- * Gets free size of file, excluding the size of file header
- *
- * @param fp the pointer of hiview file object.
- * @return free size.
+ * Get free size of file.
+ * @param fp The pointer of hivew file object.
+ * @return free size. Not include the file header.
  **/
 uint32 GetFileFreeSize(HiviewFile *fp);
 
 /**
- * Closes the file.
- *
- * @param fp the pointer of hiview file object.
- * @return 0 if success, otherwise -1.
+ * Close the file.
+ * @param fp The pointer of hivew file object.
+ * @return 0:success -1:failure.
  **/
 int32 CloseHiviewFile(HiviewFile *fp);
 

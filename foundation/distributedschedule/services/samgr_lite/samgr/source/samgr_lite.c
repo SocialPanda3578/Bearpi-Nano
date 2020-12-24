@@ -125,7 +125,7 @@ void SAMGR_Bootstrap(void)
     VECTOR_Clear(&initServices);
     int32 err = InitCompleted();
     if (err != EC_SUCCESS) {
-        HILOG_INFO(HILOG_MODULE_SAMGR, "Goto next boot step return code:%d", err);
+        HILOG_INFO(HILOG_MODULE_SAMGR, "Goto next boot step failed! errno:%d", err);
     }
 }
 
@@ -484,7 +484,7 @@ static void HandleInitRequest(const Request *request, const Response *response)
                serviceImpl->service->GetName(serviceImpl->service), serviceImpl->ops.timestamp - lastTime);
     int32 err = InitCompleted();
     if (err != EC_SUCCESS) {
-        HILOG_INFO(HILOG_MODULE_SAMGR, "Goto next boot step return code:%d", err);
+        HILOG_INFO(HILOG_MODULE_SAMGR, "Goto next boot step failed! errno:%d", err);
     }
 }
 

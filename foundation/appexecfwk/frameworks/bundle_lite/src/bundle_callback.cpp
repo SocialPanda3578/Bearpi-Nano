@@ -28,7 +28,7 @@ namespace OHOS {
 BundleCallback::~BundleCallback()
 {
     if (svcIdentity_ != nullptr) {
-        UnregisterIpcCallback(*svcIdentity_);
+        UnRegisteIpcCallback(*svcIdentity_);
         TransmitServiceId(*svcIdentity_, false);
         AdapterFree(svcIdentity_);
     }
@@ -151,14 +151,14 @@ int32_t BundleCallback::GenerateLocalServiceId()
     if (svcIdentity_ == nullptr) {
         return ERR_APPEXECFWK_CALLBACK_GENERATE_LOCAL_SERVICEID_FAILED;
     }
-    int32_t ret = RegisterIpcCallback(Callback, 0, IPC_WAIT_FOREVER, svcIdentity_, NULL);
+    int32_t ret = RegisteIpcCallback(Callback, 0, IPC_WAIT_FOREVER, svcIdentity_, NULL);
     if ((ret != LITEIPC_OK)) {
         AdapterFree(svcIdentity_);
         return ERR_APPEXECFWK_CALLBACK_GENERATE_LOCAL_SERVICEID_FAILED;
     }
     ret = TransmitServiceId(*svcIdentity_, true);
     if (ret != ERR_OK) {
-        UnregisterIpcCallback(*svcIdentity_);
+        UnRegisteIpcCallback(*svcIdentity_);
         AdapterFree(svcIdentity_);
         return ERR_APPEXECFWK_CALLBACK_SERVICEID_TRANSMITTED_FAILED;
     }
@@ -211,7 +211,7 @@ int32_t BundleCallback::UnregisterBundleStateCallback()
     innerData_ = nullptr;
     callbackMap_.clear();
     (void) TransmitServiceId(*svcIdentity_, false);
-    (void) UnregisterIpcCallback(*svcIdentity_);
+    (void) UnRegisteIpcCallback(*svcIdentity_);
     AdapterFree(svcIdentity_);
     return ERR_OK;
 }

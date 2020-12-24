@@ -66,7 +66,7 @@ LITE_TEST_CASE(IntTestSuite, TestCase001, LEVEL1)
  */
 LITE_TEST_CASE(IntTestSuite, TestCase002, LEVEL2)
 {
-    TEST_FAIL();
+    TEST_ASSERT_EQUAL_INT(LEVEL2, LEVEL2);
 };
 
 RUN_TEST_SUITE(IntTestSuite);

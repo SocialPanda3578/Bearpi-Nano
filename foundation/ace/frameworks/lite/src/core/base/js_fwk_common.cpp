@@ -190,7 +190,7 @@ int16_t IntegerOf(jerry_value_t source)
         ace_free(strValue);
         return intValue;
     }
-    int number = (int)jerry_get_number_value(source);
+    int number = jerry_get_number_value(source);
     if (number >= INT16_MAX) {
         HILOG_DEBUG(HILOG_MODULE_ACE, "js number value is out of range.");
         return INT16_MAX;
@@ -301,9 +301,9 @@ void CallJSFunctionAutoRelease(const jerry_value_t funcObj,
     jerry_release_value(CallJSFunction(funcObj, thisVal, args, argc));
 }
 
-jerry_value_t CallJSFunctionOnRoot(const jerry_value_t funcObj, /* function object to call */
-                                   const jerry_value_t args[],  /* function's call arguments */
-                                   const jerry_size_t argc)     /* number of the arguments */
+jerry_value_t CallJSFunctionOnRoot(const jerry_value_t funcObj, /**< function object to call */
+                                   const jerry_value_t args[],  /**< function's call arguments */
+                                   const jerry_size_t argc)     /**< number of the arguments */
 {
     jerry_value_t globalObject = jerry_get_global_object();
     jerry_value_t pageViewModel = jerryx_get_property_str(globalObject, ATTR_ROOT);
@@ -1068,7 +1068,7 @@ bool ParseRgbaColor(const char * const source, uint32_t &color, uint8_t &alpha)
         move -= BITS_PER_BYTE;
     }
     if (token != nullptr) {
-        alpha = (uint8_t)(strtod(token, nullptr) * ALPHA_MAX);
+        alpha = strtod(token, nullptr) * ALPHA_MAX;
     } else {
         alpha = ALPHA_MAX;
     }
@@ -1097,6 +1097,24 @@ bool ParseColor(const char * const source, uint32_t &color, uint8_t &alpha)
 #if JS_PAGE_SPECIFIC
 struct JSPageSpecific jsPageSpecific;
 #endif // JS_PAGE_SPECIFIC
+
+#if (defined(_WIN32) || defined(_WIN64))
+/**
+ * Add this configuration for the simulator executable for IDE.
+ * As for IDE simulator, framework.min.js is located in app path.
+ */
+static bool g_seperatedSimulatorMode = false;
+
+void SetSeperatedSimulatorMode(bool seperatedMode)
+{
+    g_seperatedSimulatorMode = seperatedMode;
+}
+
+bool IsSeperatedSimulatorMode()
+{
+    return g_seperatedSimulatorMode;
+}
+#endif
 
 uint16_t GetHorizontalResolution()
 {

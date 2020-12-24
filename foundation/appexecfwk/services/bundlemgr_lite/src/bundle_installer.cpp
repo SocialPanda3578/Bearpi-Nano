@@ -397,6 +397,7 @@ uint8_t BundleInstaller::UpdateBundleInfo(const char *appId, const BundleRes &bu
         bundleInfo->isSystemApp = oldBundleInfo->isSystemApp;
         ManagerService::GetInstance().RemoveBundleInfo(bundleInfo->bundleName);
     }
+    BundleInfoUtils::SetBundleInfoSharedLibPath(bundleInfo, ManagerService::GetInstance().GetSharedLibPath().c_str());
 #ifndef __LINUX__
     bundleInfo->appId = Utils::Strdup(appId);
     if (bundleInfo->appId == nullptr) {

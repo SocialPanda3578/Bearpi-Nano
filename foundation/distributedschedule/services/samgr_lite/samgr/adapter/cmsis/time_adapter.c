@@ -15,6 +15,7 @@
 #include "time_adapter.h"
 #include <ohos_errno.h>
 #include <cmsis_os.h>
+#include <kal.h>
 
 int32 WDT_Start(uint32 ms)
 {
@@ -35,9 +36,5 @@ int32 WDT_Stop(void)
 uint64 SAMGR_GetProcessTime(void)
 {
     uint32 tick = osKernelGetTickCount();
-    uint32 ticksPerSecond = osKernelGetTickFreq();
-    if (ticksPerSecond == 0) {
-        return 0;
-    }
-    return (uint64)tick * 1000 / ticksPerSecond;
+    return KalTickToMs(tick);
 }

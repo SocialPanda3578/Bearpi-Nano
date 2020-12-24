@@ -15,7 +15,6 @@ declare_args() {
     product = ""
     # "debug" or "release"
     ohos_build_type = "debug"
-    ohos_build_target = ""
     ohos_build_compiler_dir = ""
 }
 
@@ -37,7 +36,7 @@ board_name = product_config.board
 # Supported compiler: gcc, clang
 ohos_build_compiler = product_config.compiler
 
-# Supported kernel: "liteos_a", "liteos_m"
+# Supported kernel: "liteos_a", "liteos_riscv"
 ohos_kernel_type = product_config.kernel
 
 ohos_vendor_adapter_dir = product_config.vendor_adapter_dir

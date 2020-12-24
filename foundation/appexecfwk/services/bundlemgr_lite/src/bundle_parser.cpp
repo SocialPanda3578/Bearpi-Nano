@@ -79,7 +79,7 @@ bool BundleParser::CheckBundleNameIsValid(const char *bundleName)
     if (bundleName == nullptr) {
         return false;
     }
-    std::string pattern { "([a-zA-Z0-9]+\\.)+[a-zA-Z0-9_]+" };
+    std::string pattern { "([a-zA-Z0-9]+\\.)+[a-zA-Z0-9]+" };
     std::regex re(pattern);
     try {
         if (!std::regex_match(bundleName, re)) {

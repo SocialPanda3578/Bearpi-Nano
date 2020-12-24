@@ -41,12 +41,12 @@
 
 namespace OHOS {
 namespace Media {
-constexpr int32_t MODULE_MEDIA = 1;
-constexpr int32_t SUBSYS_MEDIA = 30;
+constexpr int MODULE_MEDIA = 1;
+constexpr int SUBSYS_MEDIA = 30;
 
 using ErrCode = int32_t;
-constexpr int32_t SUBSYSTEM_BIT_NUM = 21;
-constexpr int32_t MODULE_BIT_NUM = 16;
+constexpr int SUBSYSTEM_BIT_NUM = 21;
+constexpr int MODULE_BIT_NUM = 16;
 
 /**
  * @brief Generates a start error code with a unique identifier based on specified subsystem and module bit numbers.
@@ -64,32 +64,41 @@ constexpr ErrCode ErrCodeOffset(unsigned int subsystem, unsigned int module = 0)
 
 constexpr int32_t BASE_MEDIA_ERR_OFFSET = ErrCodeOffset(SUBSYS_MEDIA, MODULE_MEDIA);
 
-enum MediaErrorCode : int32_t {
-    /** Invalid data size that has been read */
-    ERR_INVALID_READ = -1,
-    /** Success */
-    SUCCESS = 0,
-    /** Fail */
-    ERROR = BASE_MEDIA_ERR_OFFSET,
-    /** Status error */
-    ERR_ILLEGAL_STATE = BASE_MEDIA_ERR_OFFSET + 1,
-    /** Invalid parameter */
-    ERR_INVALID_PARAM = BASE_MEDIA_ERR_OFFSET + 2,
-    /** Early media preparation */
-    ERR_EARLY_PREPARE = BASE_MEDIA_ERR_OFFSET + 3,
-    /** No media source */
-    ERR_SOURCE_NOT_SET = BASE_MEDIA_ERR_OFFSET + 4,
-    /** Invalid operation */
-    ERR_INVALID_OPERATION = BASE_MEDIA_ERR_OFFSET + 5,
-    /** No idle channel */
-    ERR_NOFREE_CHANNEL = BASE_MEDIA_ERR_OFFSET + 6,
-    /** Buffer reading failed */
-    ERR_READ_BUFFER = BASE_MEDIA_ERR_OFFSET + 7,
-    /**  Device not started */
-    ERR_NOT_STARTED = BASE_MEDIA_ERR_OFFSET + 8,
-    /** Unknown error */
-    ERR_UNKNOWN = BASE_MEDIA_ERR_OFFSET + 200,
-};
+/** Invalid data size that has been read */
+const int32_t  ERR_INVALID_READ = -1;
+
+/** Success */
+const int32_t  SUCCESS = 0;
+
+/** Fail */
+const int32_t  ERROR = BASE_MEDIA_ERR_OFFSET;
+
+/** Status error */
+const int32_t  ERR_ILLEGAL_STATE = BASE_MEDIA_ERR_OFFSET + 1;
+
+/** Invalid parameter */
+const int32_t  ERR_INVALID_PARAM = BASE_MEDIA_ERR_OFFSET + 2;
+
+/** Early media preparation */
+const int32_t  ERR_EARLY_PREPARE = BASE_MEDIA_ERR_OFFSET + 3;
+
+/** No media source */
+const int32_t  ERR_SOURCE_NOT_SET = BASE_MEDIA_ERR_OFFSET + 4;
+
+/** Invalid operation */
+const int32_t  ERR_INVALID_OPERATION = BASE_MEDIA_ERR_OFFSET + 5;
+
+/** No idle channel */
+const int32_t  ERR_NOFREE_CHANNEL = BASE_MEDIA_ERR_OFFSET + 6;
+
+/** Buffer reading failed */
+const int32_t  ERR_READ_BUFFER = BASE_MEDIA_ERR_OFFSET + 7;
+
+/**  Device not started */
+const int32_t  ERR_NOT_STARTED = BASE_MEDIA_ERR_OFFSET + 8;
+
+/** Unknown error */
+const int32_t  ERR_UNKNOWN = BASE_MEDIA_ERR_OFFSET + 200;
 }  // namespace Media
 }  // namespace OHOS
 #endif  // MEDIA_ERRORS_H

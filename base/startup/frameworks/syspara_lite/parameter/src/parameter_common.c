@@ -67,8 +67,8 @@ int SetParameter(const char* key, const char* value)
     if (strncmp(key, FILE_RO, strlen(FILE_RO)) == 0) {
         return EC_INVALID;
     }
-
-    return SetSysParam(key, value);
+    int ret = SetSysParam(key, value);
+    return ret;
 }
 
 char* GetProductType(void)
@@ -136,43 +136,74 @@ char* GetAbiList(void)
     return HalGetAbiList();
 }
 
-static char* GetSysProperty(const char* propertyInfo, const size_t propertySize)
-{
-    char* prop = (char*)malloc(propertySize);
-    if (prop == NULL) {
-        return NULL;
-    }
-    if (strcpy_s(prop, propertySize, propertyInfo) != 0) {
-        free(prop);
-        prop = NULL;
-        return NULL;
-    }
-    return prop;
-}
-
 char* GetOsName(void)
 {
-    return GetSysProperty(g_roBuildOs, strlen(g_roBuildOs) + 1);
+    char* value = (char*)malloc(strlen(g_roBuildOs) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(g_roBuildOs) + 1, g_roBuildOs) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetDisplayVersion(void)
 {
-    return GetSysProperty(g_roBuildVerShow, strlen(g_roBuildVerShow) + 1);
+    char* value = (char*)malloc(strlen(g_roBuildVerShow) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(g_roBuildVerShow) + 1, g_roBuildVerShow) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetSdkApiLevel(void)
 {
-    return GetSysProperty(g_roSdkApiLevel, strlen(g_roSdkApiLevel) + 1);
+    char* value = (char*)malloc(strlen(g_roSdkApiLevel) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(g_roSdkApiLevel) + 1, g_roSdkApiLevel) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetFirstApiLevel(void)
 {
-    return GetSysProperty(g_roFirstApiLevel, strlen(g_roFirstApiLevel) + 1);
+    char* value = (char*)malloc(strlen(g_roFirstApiLevel) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(g_roFirstApiLevel) + 1, g_roFirstApiLevel) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetIncrementalVersion(void)
 {
-    return GetSysProperty(INCREMENTAL_VERSION, strlen(INCREMENTAL_VERSION) + 1);
+    char* value = (char*)malloc(strlen(INCREMENTAL_VERSION) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(INCREMENTAL_VERSION) + 1, INCREMENTAL_VERSION) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetVersionId(void)
@@ -182,61 +213,111 @@ char* GetVersionId(void)
         return NULL;
     }
     if (memset_s(value, VERSION_ID_LEN, 0, VERSION_ID_LEN) != 0) {
-        goto MALLOC_ERROR;
+        free(value);
+        value = NULL;
+        return NULL;
     }
-
     char* productType = GetProductType();
     char* manufacture = GetManufacture();
     char* brand = GetBrand();
     char* productSerial = GetProductSeries();
     char* productModel = GetProductModel();
     char* softwareModel = GetSoftwareModel();
-    int ret = -1;
     if (productType == NULL || manufacture == NULL || brand == NULL ||
         productSerial == NULL || productModel == NULL || softwareModel == NULL) {
-            goto GET_PARA_ERROR;
+        free(productType);
+        free(manufacture);
+        free(brand);
+        free(productSerial);
+        free(productModel);
+        free(softwareModel);
+        free(value);
+        value = NULL;
+        return NULL;
     }
-    ret = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s",
+    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s",
         productType, manufacture, brand, productSerial, g_roBuildOs, productModel,
         softwareModel, g_roSdkApiLevel, INCREMENTAL_VERSION, BUILD_TYPE);
-
-GET_PARA_ERROR:
     free(productType);
     free(manufacture);
     free(brand);
     free(productSerial);
     free(productModel);
     free(softwareModel);
-    if (ret >= 0) {
-        return value;
+    if (len < 0) {
+        free(value);
+        value = NULL;
+        return NULL;
     }
-MALLOC_ERROR:
-    free(value);
-    value = NULL;
-    return NULL;
+    return value;
 }
 
 char* GetBuildType(void)
 {
-    return GetSysProperty(BUILD_TYPE, strlen(BUILD_TYPE) + 1);
+    char* value = (char*)malloc(strlen(BUILD_TYPE) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(BUILD_TYPE) + 1, BUILD_TYPE) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetBuildUser(void)
 {
-    return GetSysProperty(BUILD_USER, strlen(BUILD_USER) + 1);
+    char* value = (char*)malloc(strlen(BUILD_USER) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(BUILD_USER) + 1, BUILD_USER) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetBuildHost(void)
 {
-    return GetSysProperty(BUILD_HOST, strlen(BUILD_HOST) + 1);
+    char* value = (char*)malloc(strlen(BUILD_HOST) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(BUILD_HOST) + 1, BUILD_HOST) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetBuildTime(void)
 {
-    return GetSysProperty(BUILD_TIME, strlen(BUILD_TIME) + 1);
+    char* value = (char*)malloc(strlen(BUILD_TIME) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(BUILD_TIME) + 1, BUILD_TIME) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }
 
 char* GetBuildRootHash(void)
 {
-    return GetSysProperty(BUILD_ROOTHASH, strlen(BUILD_ROOTHASH) + 1);
+    char* value = (char*)malloc(strlen(BUILD_ROOTHASH) + 1);
+    if (value == NULL) {
+        return NULL;
+    }
+    if (strcpy_s(value, strlen(BUILD_ROOTHASH) + 1, BUILD_ROOTHASH) != 0) {
+        free(value);
+        value = NULL;
+        return NULL;
+    }
+    return value;
 }

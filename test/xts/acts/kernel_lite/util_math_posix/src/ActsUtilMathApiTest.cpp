@@ -83,12 +83,12 @@ HWTEST_F(ActsUtilMathApiTest, testErand480200, TestSize.Level1) {
 * @tc.type       FUNC
 */
 HWTEST_F(ActsUtilMathApiTest, testJrand480300, TestSize.Level1) {
-    long long returnVal;
+    long returnVal;
     unsigned short xsubi[3] = {0, 1, 2};
 
     returnVal = jrand48(xsubi);
     LOGD("    jrand48 returnVal:='%ld'\n", returnVal);
-    ASSERT_TRUE(returnVal >= -2147483648 && returnVal < 2147483648)
+    ASSERT_TRUE(returnVal >= -2147483648)
         << "ErrInfo: jrand48 returnVal:='" << returnVal << "'";
 }
 
@@ -100,13 +100,13 @@ HWTEST_F(ActsUtilMathApiTest, testJrand480300, TestSize.Level1) {
 * @tc.type       FUNC
 */
 HWTEST_F(ActsUtilMathApiTest, testMrand480400, TestSize.Level1) {
-    long long returnVal;
+    long returnVal;
     unsigned short paraVal[7] = {0, 1, 2, 3, 4, 5, 6};
 
     lcong48(paraVal);
     returnVal = mrand48();
     LOGD("    mrand48 returnVal:='%ld'\n", returnVal);
-    ASSERT_TRUE(returnVal >= -2147483648 && returnVal < 2147483648)
+    ASSERT_TRUE(returnVal >= -2147483648)
         << "ErrInfo: mrand48 returnVal:='" << returnVal << "'";
 }
 
@@ -118,13 +118,13 @@ HWTEST_F(ActsUtilMathApiTest, testMrand480400, TestSize.Level1) {
 * @tc.type       FUNC
 */
 HWTEST_F(ActsUtilMathApiTest, testLrand480500, TestSize.Level1) {
-    long long returnVal;
+    long returnVal;
     unsigned short paraVal[3] = {0, 1, 2};
 
     seed48(paraVal);
     returnVal = lrand48();
     LOGD("    lrand48 returnVal:='%ld'\n", returnVal);
-    ASSERT_TRUE(returnVal >= 0 && returnVal < 2147483648) << "ErrInfo: lrand48 returnVal:='" << returnVal << "'";
+    ASSERT_TRUE(returnVal >= 0) << "ErrInfo: lrand48 returnVal:='" << returnVal << "'";
 }
 
 /**
@@ -135,12 +135,12 @@ HWTEST_F(ActsUtilMathApiTest, testLrand480500, TestSize.Level1) {
 * @tc.type       FUNC
 */
 HWTEST_F(ActsUtilMathApiTest, testNrand480700, TestSize.Level1) {
-    long long returnVal;
+    long returnVal;
     unsigned short paraVal[3] = {0, 1, 2};
 
     returnVal = nrand48(paraVal);
     LOGD("    nrand48 returnVal:='%ld'\n", returnVal);
-    ASSERT_TRUE(returnVal >= 0 && returnVal < 2147483648) << "ErrInfo: nrand48 returnVal:='" << returnVal << "'";
+    ASSERT_TRUE(returnVal >= 0) << "ErrInfo: nrand48 returnVal:='" << returnVal << "'";
 }
 
 /**

@@ -12,15 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "init_service_manager.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
 #include "init_adapter.h"
 #include "init_jobs.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
 
 static const int SLEEP_DURATION = 1;
 
@@ -90,3 +93,9 @@ void ReapServiceByPID(int pid)
         }
     }
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

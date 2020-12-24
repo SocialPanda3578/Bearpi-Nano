@@ -79,8 +79,12 @@ AbilityMsStatus AppSpawnClient::SpawnProcess(AppRecord &appRecord)
         return AbilityMsStatus::ProcessStatus("cJSON create fail");
     }
     cJSON_AddStringToObject(root, "bundleName", appRecord.GetBundleInfo().bundleName);
-    std::string identityId = std::to_string(appRecord.GetIdentityId());
-    cJSON_AddStringToObject(root, "identityID", identityId.c_str());
+    if (appRecord.GetBundleInfo().sharedLibPath == nullptr) {
+        cJSON_AddStringToObject(root, "sharedLibPaths", "");
+    } else {
+        cJSON_AddStringToObject(root, "sharedLibPaths", appRecord.GetBundleInfo().sharedLibPath);
+    }
+    cJSON_AddNumberToObject(root, "identityID", appRecord.GetIdentityId());
     cJSON_AddNumberToObject(root, "uID", appRecord.GetBundleInfo().uid);
     cJSON_AddNumberToObject(root, "gID", appRecord.GetBundleInfo().gid);
 

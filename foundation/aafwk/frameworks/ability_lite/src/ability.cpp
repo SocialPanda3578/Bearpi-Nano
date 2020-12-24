@@ -124,7 +124,7 @@ const SvcIdentity *Ability::OnConnect(const Want &want)
         HILOG_ERROR(HILOG_MODULE_APP, "malloc memory error, sid_ is null");
         return nullptr;
     }
-    int32_t ret = RegisterIpcCallback(Ability::MsgHandleInner, 0, IPC_WAIT_FOREVER, sid_, this);
+    int32_t ret = RegisteIpcCallback(Ability::MsgHandleInner, 0, IPC_WAIT_FOREVER, sid_, this);
     if (ret != 0) {
         HILOG_ERROR(HILOG_MODULE_APP, "register ipc callback error, ret is %{public}d", ret);
         AdapterFree(sid_);
@@ -139,7 +139,7 @@ void Ability::OnDisconnect(const Want &want)
     HILOG_INFO(HILOG_MODULE_APP, "Ability OnDisconnect");
 
     // clear
-    UnregisterIpcCallback(*sid_);
+    UnRegisteIpcCallback(*sid_);
     AdapterFree(sid_);
     sid_ = nullptr;
 }

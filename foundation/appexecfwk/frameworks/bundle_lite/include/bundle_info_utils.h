@@ -34,6 +34,7 @@ struct BundleInfoUtils {
     static void FreeBundleInfo(BundleInfo *bundleInfo);
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
     static bool SetBundleInfoAppId(BundleInfo *bundleInfo, const char *appId);
+    static bool SetBundleInfoSharedLibPath(BundleInfo *bundleInfo, const char *sharedLibPath);
     static bool SetBundleInfoAbilityInfos(BundleInfo *bundleInfo, const AbilityInfo *abilityInfos,
         uint32_t numOfAbility);
     static void ClearAbilityInfos(AbilityInfo *abilityInfos, uint32_t numOfAbility);

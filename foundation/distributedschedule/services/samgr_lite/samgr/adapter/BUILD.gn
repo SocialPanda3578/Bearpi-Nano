@@ -12,54 +12,59 @@
 # limitations under the License.
 
 config("samgr_adapter_public") {
-  include_dirs = [
-    "./",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//utils/native/lite/include",
-  ]
+    include_dirs = [
+        "./",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//utils/native/lite/include",
+    ]
 }
 
-if (ohos_kernel_type == "liteos_m") {
-  static_library("samgr_adapter") {
-    sources = [
-      "cmsis/memory_adapter.c",
-      "cmsis/queue_adapter.c",
-      "cmsis/thread_adapter.c",
-      "cmsis/time_adapter.c",
-    ]
+if (ohos_kernel_type == "liteos_riscv" || ohos_kernel_type == "liteos_m") {
+    static_library("samgr_adapter") {
+        sources = [
+            "cmsis/memory_adapter.c",
+            "cmsis/queue_adapter.c",
+            "cmsis/thread_adapter.c",
+            "cmsis/time_adapter.c",
+        ]
 
-    public_configs = [ ":samgr_adapter_public" ]
-    cflags = [ "-Wall" ]
+        public_configs = [":samgr_adapter_public"]
+        cflags = [ "-Wall" ]
 
-    include_dirs = [ "//kernel/liteos_m/kal" ]
-  }
+        include_dirs = [
+            "//kernel/liteos_m/components/cmsis",
+            "//kernel/liteos_m/components/kal/include",
+        ]
+    }
 }
 
 if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-  source_set("samgr_adapter") {
-    sources = [
-      "posix/lock_free_queue.c",
-      "posix/memory_adapter.c",
-      "posix/queue_adapter.c",
-      "posix/thread_adapter.c",
-      "posix/time_adapter.c",
-    ]
+    source_set("samgr_adapter") {
+        sources = [
+            "posix/lock_free_queue.c",
+            "posix/memory_adapter.c",
+            "posix/queue_adapter.c",
+            "posix/thread_adapter.c",
+            "posix/time_adapter.c",
+        ]
 
-    public_configs = [ ":samgr_adapter_public" ]
+        public_configs = [":samgr_adapter_public"]
 
-    include_dirs = [
-      "//kernel/liteos_a/kernel/include/",
-      "//third_party/bounds_checking_function/include",
-    ]
+        include_dirs = [
+            "//kernel/liteos_a/kernel/include/",
+            "//third_party/bounds_checking_function/include",
+        ]
 
-    cflags = [
-      "-fPIC",
-      "-Wall",
-    ]
-    public_deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
-    defines = [ "_GNU_SOURCE" ]
-    if (ohos_kernel_type == "linux") {
-      defines += [ "SAMGR_LINUX_ADAPTER" ]
+        cflags = [
+            "-fPIC",
+            "-Wall"
+        ]
+        public_deps = [
+            "//third_party/bounds_checking_function:libsec_shared"
+        ]
+        defines = [ "_GNU_SOURCE" ]
+        if (ohos_kernel_type == "linux") {
+            defines += [ "SAMGR_LINUX_ADAPTER" ]
+        }
     }
-  }
 }

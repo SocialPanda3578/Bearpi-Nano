@@ -19,7 +19,6 @@
 #include "font/ui_font.h"
 #include "font/ui_font_header.h"
 #include "graphic_log.h"
-#include "graphic_math.h"
 #include "securec.h"
 
 #if ENABLE_WINDOW && ENABLE_HARDWARE_ACCELERATION
@@ -499,12 +498,15 @@ void DrawUtils::BlendWithSoftWare(ScreenBufferType* dest, const uint8_t* src, ui
     ColorType color;
 #if COLOR_DEPTH == 32 /* halbuffer is RGB888 */
     if (pxByteSize == static_cast<uint8_t>(PixelType::IMG_RGB888)) {
-        Color24* temp = reinterpret_cast<Color24*>(const_cast<uint8_t*>(src));
-        for (uint32_t col = 0; col < length; col++, temp++) {
-            color = Color::GetColorFromRGB(temp->red, temp->green, temp->blue);
-            if (opa == OPA_OPAQUE) {
-                WRITE_BUFFER(dest[col], color);
-            } else {
+        if (opa == OPA_OPAQUE) {
+            /* hal buffer is RGB888, image buffer RGB888, just memcpy */
+            if (memcpy_s(dest, length * sizeof(Color24), src, length * sizeof(Color24)) != EOK) {
+                return;
+            }
+        } else {
+            Color24* temp = reinterpret_cast<Color24*>(const_cast<uint8_t*>(src));
+            for (uint32_t col = 0; col < length; col++, temp++) {
+                color = Color::GetColorFromRGB(temp->red, temp->green, temp->blue);
                 WRITE_BUFFER_WITH_ALPHA(dest[col], color, opa);
             }
         }
@@ -556,29 +558,13 @@ void DrawUtils::BlendWithSoftWare(ScreenBufferType* dest, const uint8_t* src, ui
                 WRITE_BUFFER(dest[col], *temp);
             } else {
                 OpacityType opaResult = opa;
-                color = Color::GetColorFromRGBA(temp->red, temp->green, temp->blue, temp->alpha);
+                color = Color::GetColorFromRGB(temp->red, temp->green, temp->blue);
                 opaResult = static_cast<uint32_t>(static_cast<uint32_t>(temp->alpha) * opaResult) >> 8;
                 WRITE_BUFFER_WITH_ALPHA(dest[col], color, opaResult);
             }
         }
     } else {
         GRAPHIC_LOGE("DrawUtils::BlendWithSoftWare image format err\n");
-    }
-}
-
-void DrawUtils::GetXAxisErrForJunctionLine(bool ignoreJunctionPoint,
-                                           bool isRightPart,
-                                           int32_t& xMinErr,
-                                           int32_t& xMaxErr)
-{
-    xMinErr = 0;
-    xMaxErr = 0;
-    if (ignoreJunctionPoint) {
-        if (isRightPart) {
-            xMinErr = 1;
-        } else {
-            xMaxErr = -1;
-        }
     }
 }
 
@@ -699,14 +685,9 @@ inline void DrawUtils::StepToNextLine(TriangleEdge& edge1, TriangleEdge& edge2)
 
 void DrawUtils::DrawTriangleAlphaBilinear(const TriangleScanInfo& in)
 {
-    int32_t maskLeft = in.mask.GetLeft();
-    int32_t maskRight = in.mask.GetRight();
     for (int16_t y = in.yMin; y <= in.yMax; y++) {
-        int16_t xMin = MATH_MAX(static_cast<int16_t>(in.edge1.curX), maskLeft);
-        int16_t xMax = MATH_MIN(static_cast<int16_t>(in.edge2.curX), maskRight);
-        int16_t diffX = (xMin - static_cast<int32_t>(in.edge1.curX));
-        in.init.verticalU += in.init.duHorizon * diffX;
-        in.init.verticalV += in.init.dvHorizon * diffX;
+        int16_t xMin = static_cast<int16_t>(in.edge1.curX);
+        int16_t xMax = static_cast<int16_t>(in.edge2.curX);
 #if ENABLE_WINDOW
         ScreenBufferType* screenBuffer = in.screenBuffer + y * in.screenBufferWidth + xMin;
 #else
@@ -902,18 +883,9 @@ void DrawUtils::DrawTriangleTrueColorBilinear888(const TriangleScanInfo& in)
 
 void DrawUtils::DrawTriangleTrueColorBilinear8888(const TriangleScanInfo& in)
 {
-    int16_t maskLeft = in.mask.GetLeft();
-    int16_t maskRight = in.mask.GetRight();
-    int32_t xMinErr = 0;
-    int32_t xMaxErr = 0;
-    GetXAxisErrForJunctionLine(in.ignoreJunctionPoint, in.isRightPart, xMinErr, xMaxErr);
     for (int16_t y = in.yMin; y <= in.yMax; y++) {
-        int16_t xMin = MATH_MAX(static_cast<int16_t>(in.edge1.curX + xMinErr), maskLeft);
-        int16_t xMax = MATH_MIN(static_cast<int16_t>(in.edge2.curX + xMaxErr), maskRight);
-        int16_t diffX = (xMin - static_cast<int32_t>(in.edge1.curX));
-        in.init.verticalU += in.init.duHorizon * diffX;
-        in.init.verticalV += in.init.dvHorizon * diffX;
-
+        int16_t xMin = static_cast<int16_t>(in.edge1.curX);
+        int16_t xMax = static_cast<int16_t>(in.edge2.curX);
 #if ENABLE_WINDOW
         ScreenBufferType* screenBuffer = in.screenBuffer + y * in.screenBufferWidth + xMin;
 #else
@@ -991,14 +963,9 @@ void DrawUtils::DrawTriangleTrueColorBilinear8888(const TriangleScanInfo& in)
 
 void DrawUtils::DrawTriangleTrueColorNearest(const TriangleScanInfo& in)
 {
-    int16_t maskLeft = in.mask.GetLeft();
-    int16_t maskRight = in.mask.GetRight();
-    int32_t xMinErr = 0;
-    int32_t xMaxErr = 0;
-    GetXAxisErrForJunctionLine(in.ignoreJunctionPoint, in.isRightPart, xMinErr, xMaxErr);
     for (int16_t y = in.yMin; y <= in.yMax; y++) {
-        int16_t xMin = MATH_MAX(static_cast<int16_t>(in.edge1.curX + xMinErr), maskLeft);
-        int16_t xMax = MATH_MIN(static_cast<int16_t>(in.edge2.curX + xMaxErr), maskRight);
+        int16_t xMin = static_cast<int16_t>(in.edge1.curX);
+        int16_t xMax = static_cast<int16_t>(in.edge2.curX);
 #if ENABLE_WINDOW
         ScreenBufferType* screenBuffer = in.screenBuffer + y * in.screenBufferWidth + xMin;
 #else
@@ -1085,7 +1052,7 @@ void DrawUtils::DrawTriangleTransformPart(const TrianglePartInfo& part)
     const int32_t srcLineWidth = part.info.header.width * pixelSize;
     TriangleScanInfo input {
         part.yMin, part.yMax, part.edge1, part.edge2, screenBuffer, bufferRect, part.color, init,
-        screenBufferWidth, pixelSize, srcLineWidth, part.info, part.mask, part.isRightPart, part.ignoreJunctionPoint
+        screenBufferWidth, pixelSize, srcLineWidth, part.info
     };
     fuc(input);
 }
@@ -1101,14 +1068,10 @@ void DrawUtils::DrawTriangleTransform(const Rect& mask, const Point& position,
     TriangleEdge edge1;
     TriangleEdge edge2;
     TrianglePartInfo part {
-        mask, transMap, position, edge1, edge2, yMin, yMax, triangleInfo.info, color,
-        triangleInfo.isRightPart,
-        triangleInfo.ignoreJunctionPoint,
+        mask, transMap, position, edge1, edge2, yMin, yMax, triangleInfo.info, color
     };
 
-    uint8_t yErr = 1;
     if (triangleInfo.p2.y == triangleInfo.p1.y) {
-        yErr = 0;
         goto BottomHalf;
     }
     if (p3IsInRight) {
@@ -1145,7 +1108,7 @@ BottomHalf:
         }
     }
 
-    part.yMin = MATH_MAX(mask.GetTop(), triangleInfo.p2.y + yErr);
+    part.yMin = MATH_MAX(mask.GetTop(), triangleInfo.p2.y);
     part.yMax = MATH_MIN(mask.GetBottom(), triangleInfo.p3.y);
     part.edge1 = edge1;
     part.edge2 = edge2;
@@ -1178,10 +1141,7 @@ void DrawUtils::DrawTransform(const Rect& mask, const Point& position,
     Point p3;
     p3.x = polygon[2].x_ + position.x; // 2:third point
     p3.y = polygon[2].y_ + position.y; // 2:third point
-    triangleInfo.isRightPart = ((p1.y - p3.y) * p2.x + (p3.x - p1.x) * p2.y + p1.x * p3.y - p3.x * p1.y) < 0;
-    triangleInfo.isRightPart = (p1.y < p3.y) ? triangleInfo.isRightPart : !triangleInfo.isRightPart;
     DrawTriangle::SortVertexs(p1, p2, p3);
-    triangleInfo.ignoreJunctionPoint = false;
     triangleInfo.p1 = p1;
     triangleInfo.p2 = p2;
     triangleInfo.p3 = p3;
@@ -1189,8 +1149,6 @@ void DrawUtils::DrawTransform(const Rect& mask, const Point& position,
         DrawTriangleTransform(mask, position, color, transMap, triangleInfo);
     }
 
-    triangleInfo.ignoreJunctionPoint = true;
-    triangleInfo.isRightPart = !triangleInfo.isRightPart;
     p1.x = polygon[0].x_ + position.x; // 0:first point
     p1.y = polygon[0].y_ + position.y; // 0:first point
     p3.x = polygon[2].x_ + position.x; // 2:third point

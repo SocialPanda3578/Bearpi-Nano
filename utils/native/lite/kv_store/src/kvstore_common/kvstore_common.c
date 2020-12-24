@@ -35,11 +35,7 @@ boolean IsValidChar(const char ch)
 
 boolean IsValidValue(const char* value, unsigned int len)
 {
-    if (value == NULL) {
-        return FALSE;
-    }
-    size_t valueLen = strnlen(value, MAX_VALUE_LEN);
-    if ((valueLen == 0) || (valueLen >= MAX_VALUE_LEN) || (valueLen >= len)) {
+    if ((value == NULL) || !strlen(value) || (strlen(value) >= len)) {
         return FALSE;
     }
     return TRUE;
@@ -47,11 +43,11 @@ boolean IsValidValue(const char* value, unsigned int len)
 
 boolean IsValidKey(const char* key)
 {
-    if (key == NULL || !IsValidValue(key, MAX_KEY_LEN)) {
+    if (!IsValidValue(key, MAX_KEY_LEN)) {
         return FALSE;
     }
-    size_t keyLen = strnlen(key, MAX_KEY_LEN);
-    for (size_t i = 0; i < keyLen; i++) {
+    int keyLen = strlen(key);
+    for (int i = 0; i < keyLen; i++) {
         if (!IsValidChar(key[i])) {
             return FALSE;
         }
@@ -67,19 +63,21 @@ static void FreeItem(KvItem* item)
     }
     if (item->key != NULL) {
         free(item->key);
+        item->key = NULL;
     }
     if (item->value != NULL) {
         free(item->value);
+        item->value = NULL;
     }
     free(item);
+    item = NULL;
 }
 
 void DeleteKVCache(const char* key)
 {
-    if (key == NULL || g_itemHeader == NULL) {
+    if (g_itemHeader == NULL) {
         return;
     }
-
     KvItem* item = g_itemHeader;
     while (strcmp(key, item->key) != 0) {
         item = item->next;
@@ -106,15 +104,6 @@ void DeleteKVCache(const char* key)
 
 void AddKVCache(const char* key, const char* value, boolean isNew)
 {
-    if (key == NULL || value == NULL) {
-        return;
-    }
-
-    size_t keyLen = strnlen(key, MAX_KEY_LEN);
-    size_t valueLen = strnlen(value, MAX_VALUE_LEN);
-    if ((keyLen >= MAX_KEY_LEN) || (valueLen >= MAX_VALUE_LEN)) {
-        return;
-    }
     if (isNew) {
         DeleteKVCache(key);
     }
@@ -122,15 +111,14 @@ void AddKVCache(const char* key, const char* value, boolean isNew)
     if (item == NULL) {
         return;
     }
-    (void)memset_s(item, sizeof(KvItem), 0, sizeof(KvItem));
-    item->key = (char *)malloc(keyLen + 1);
-    item->value = (char *)malloc(valueLen + 1);
+    item->key = (char *)malloc(strlen(key) + 1);
+    item->value = (char *)malloc(strlen(value) + 1);
     if ((item->key == NULL) || (item->value == NULL)) {
         FreeItem(item);
         return;
     }
-    if ((strcpy_s(item->key, keyLen + 1, key) != EOK) ||
-        (strcpy_s(item->value, valueLen + 1, value) != EOK)) {
+    if ((strcpy_s(item->key, strlen(key) + 1, key) != EOK) ||
+        (strcpy_s(item->value, strlen(value) + 1, value) != EOK)) {
         FreeItem(item);
         return;
     }
@@ -157,10 +145,9 @@ void AddKVCache(const char* key, const char* value, boolean isNew)
 
 int GetValueByCache(const char* key, char* value, unsigned int maxLen)
 {
-    if (key == NULL || value == NULL || g_itemHeader == NULL) {
+    if (g_itemHeader == NULL) {
         return EC_FAILURE;
     }
-
     KvItem* item = g_itemHeader;
     while (strcmp(key, item->key) != 0) {
         item = item->next;
@@ -168,11 +155,7 @@ int GetValueByCache(const char* key, char* value, unsigned int maxLen)
             return EC_FAILURE;
         }
     }
-    size_t valueLen = strnlen(item->value, MAX_VALUE_LEN);
-    if (valueLen >= MAX_VALUE_LEN) {
-        return EC_FAILURE;
-    }
-    if ((valueLen >= maxLen) || (strcpy_s(value, maxLen, item->value) != EOK)) {
+    if ((maxLen <= strlen(item->value)) || (strcpy_s(value, maxLen, item->value) != EOK)) {
         return EC_FAILURE;
     }
     return EC_SUCCESS;
@@ -192,7 +175,9 @@ int ClearKVCacheInner(void)
     }
     g_itemHeader = NULL;
     g_itemTail = NULL;
-
-    return (g_sum != 0) ? EC_FAILURE : EC_SUCCESS;
+    if (g_sum != 0) {
+        return EC_FAILURE;
+    }
+    return EC_SUCCESS;
 }
 #endif

@@ -77,7 +77,7 @@ static int DevmgrServiceFindAndActiveDevice(const char *svcName, bool isLoad)
         HdfSListIteratorInit(&itDeviceInfo, hostClnt->deviceInfos);
         while (HdfSListIteratorHasNext(&itDeviceInfo)) {
             deviceInfo = (struct HdfDeviceInfo *)HdfSListIteratorNext(&itDeviceInfo);
-            if ((strcmp(deviceInfo->svcName, svcName) == 0) && (deviceInfo->preload == DEVICE_PRELOAD_DISABLE)) {
+            if (strcmp(deviceInfo->svcName, svcName) == 0) {
                 return DevmgrServiceActiveDevice(hostClnt, deviceInfo, isLoad);
             }
         }
@@ -126,6 +126,11 @@ static int DevmgrServiceAttachDevice(
     struct DevHostServiceClnt *hostClnt = DevmgrServiceFindDeviceHost(inst, deviceInfo->hostId);
     if (hostClnt == NULL) {
         HDF_LOGE("hostClnt is null");
+        return HDF_FAILURE;
+    }
+    struct IDevHostService *hostService = hostClnt->hostService;
+    if ((hostService == NULL) || (hostClnt->deviceInfos == NULL)) {
+        HDF_LOGE("hostService or hostClnt->deviceInfos is null");
         return HDF_FAILURE;
     }
     struct DeviceTokenClnt *tokenClnt = DeviceTokenClntNewInstance(token);

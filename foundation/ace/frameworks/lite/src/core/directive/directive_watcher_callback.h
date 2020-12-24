@@ -25,31 +25,11 @@ namespace ACELite {
 class DirectiveWatcherCallback final : public MemoryHeap {
 public:
     ACE_DISALLOW_COPY_AND_MOVE(DirectiveWatcherCallback);
-
-    /**
-     * @brief Destructor.
-     */
     ~DirectiveWatcherCallback() {}
-
-    /**
-     * @brief The watcher callback function which will be trigger when the dirctive condition was changed.
-     * @param func The watcher callback function.
-     * @param context The execute context of watcher callback.
-     * @param args The arguments of watcher callabck function.
-     * @param argsSize the arguments size of watcher callback function.
-     * @return The return value when the watcher callback was executed.
-     */
     static JSValue Handler(const JSValue func, const JSValue context, const JSValue args[], const JSSize argsSize);
 
 private:
-    /**
-     * @brief The arguments size of watcher callback function.
-     */
     static const int CALLBACK_ARGS_LENGTH;
-
-    /**
-     * @brief The index of options argument.
-     */
     static const int ARG_IDX_OPTIONS;
 };
 } // namespace ACELite

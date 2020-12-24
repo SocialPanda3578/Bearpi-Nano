@@ -12,17 +12,33 @@
 # limitations under the License.
 
 import("//build/lite/config/component/lite_component.gni")
-if (board_name == "hi3516dv300" || board_name == "hi3518ev300") {
-    group("hdi_display") {
-        public_deps = [
-            "//vendor/huawei/hdf/display/hdi/hi35xx:hi35xx_display",
-        ]
-    }
+
+copy("display_layer") {
+    sources = [
+        "../../libs/${board_name}/libdisplay_layer.so",
+    ]
+    outputs = [ "$root_out_dir/libdisplay_layer.so" ]
 }
-if (board_name == "sun8i") {
-    group("hdi_display") {
-        public_deps = [
-            "//vendor/allwinner/sun8i/hdi:v3s_display",
-        ]
-    }
+
+copy("display_gfx") {
+    sources = [
+        "../../libs/${board_name}/libdisplay_gfx.so",
+    ]
+    outputs = [ "$root_out_dir/libdisplay_gfx.so" ]
 }
+
+copy("display_gralloc") {
+    sources = [
+        "../../libs/${board_name}/libdisplay_gralloc.so",
+    ]
+    outputs = [ "$root_out_dir/libdisplay_gralloc.so" ]
+}
+
+group("hdi_display") {
+    deps = [
+        ":display_layer",
+        ":display_gfx",
+        ":display_gralloc",
+    ]
+}
+

@@ -16,6 +16,17 @@
 #include <ohos_init.h>
 #include <samgr_lite.h>
 
+void HOS_SystemInit(void)
+{
+    MODULE_INIT(bsp);
+    MODULE_INIT(device);
+    MODULE_INIT(core);
+    SYS_INIT(service);
+    SYS_INIT(feature);
+    MODULE_INIT(run);
+    SAMGR_Bootstrap();
+}
+
 void OHOS_SystemInit(void)
 {
     MODULE_INIT(bsp);

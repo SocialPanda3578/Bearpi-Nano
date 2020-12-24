@@ -28,12 +28,11 @@ const char BDS_SERVICE[] = "bundle_daemon";
 
 enum BmsCmd {
     EXTRACT_HAP = 0, // extract hap to code path
-    RENAME_DIR,      // rename code path or json path
+    RENAME_DIR,     // rename code path or json path
     CREATE_PERMISSION_DIR, // create permission dir
     CREATE_DATA_DIRECTORY, // create data path
     STORE_CONTENT_TO_FILE, // store content to json path
-    MOVE_FILE,             // move file to target dictionary
-    REMOVE_FILE,           // delete json path
+    REMOVE_FILE,            // delete json path
     REMOVE_INSTALL_DIRECTORY, // clear app data path and code path
     BDS_CMD_END,
     REGISTER_CALLBACK,    // register bundle_daemon callback

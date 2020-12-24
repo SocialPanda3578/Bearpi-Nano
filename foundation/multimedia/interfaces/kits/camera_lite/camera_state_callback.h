@@ -55,7 +55,7 @@ public:
      * @brief A destructor used to delete the <b>CameraStateCallback</b> instance.
      *
      */
-    virtual ~CameraStateCallback() = default;
+    virtual ~CameraStateCallback() {}
     /**
      * @brief Called when the camera is successfully created.
      *

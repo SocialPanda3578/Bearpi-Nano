@@ -412,7 +412,7 @@ uint64_t JSProfiler::GetCurrentClockTick() const
     // ipcamera
     timeval timeVal;
     timezone timeZone;
-    return (gettimeofday(&timeVal, &timeZone) == 0) ? ((timeVal.tv_usec / unit) + (timeVal.tv_sec * unit)) : 0;
+    return (gettimeofday(&timeVal, &timeZone) == 0) ? (timeVal.tv_usec / unit + timeVal.tv_sec * unit) : 0;
 #else
     // PC simulator
     return clock(); // count in clock ticks, usually is ms

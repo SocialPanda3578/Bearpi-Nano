@@ -14,42 +14,44 @@ import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/ndk/ndk.gni")
 
 lite_component("samgr") {
-  features = [
-    "samgr",
-    "communication/broadcast",
-  ]
-
-  if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-    features += [
-      "samgr_server:server",
-      "samgr_client:client",
+    features = [
+        "samgr",
+        "communication/broadcast",
     ]
-  }
+
+    if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux"){
+        features += [
+            "samgr_server:server",
+            "samgr_client:client",
+        ]
+    }
 }
 
 ndk_lib("samgr_lite_ndk") {
-  if (ohos_kernel_type == "liteos_m") {
-    lib_extension = ".a"
-  } else if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-    lib_extension = ".so"
-  }
-  deps = [
-    "communication/broadcast",
-    "samgr",
-  ]
-  head_files = [
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/communication/broadcast",
-  ]
-  if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-    deps += [ "samgr_server:server" ]
-    head_files += [
-      "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
+    if(ohos_kernel_type == "liteos_riscv" || ohos_kernel_type == "liteos_m") {
+        lib_extension = ".a"
+    } else if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
+        lib_extension = ".so"
+    }
+    deps = [
+        "samgr",
+        "communication/broadcast",
     ]
-  }
+    head_files = [
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/communication/broadcast",
+    ]
+    if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux"){
+        deps += [
+            "samgr_server:server",
+        ]
+        head_files += ["//foundation/distributedschedule/interfaces/kits/samgr_lite/registry"]
+    }
 }
 
 generate_notice_file("samgr_notice_file") {
-  module_name = "samgr"
-  module_source_dir_list = [ "//third_party/bounds_checking_function" ]
+    module_name = "samgr"
+    module_source_dir_list = [
+        "//third_party/bounds_checking_function"
+    ]
 }

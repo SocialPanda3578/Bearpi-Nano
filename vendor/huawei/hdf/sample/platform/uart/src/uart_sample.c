@@ -31,44 +31,44 @@
 static uint8_t g_fifoBuffer[UART_RX_FIFO_SIZE] = {0};
 
 /* HdfDriverEntry method definitions */
-static int32_t SampleUartDriverBind(struct HdfDeviceObject *device);
-static int32_t SampleUartDriverInit(struct HdfDeviceObject *device);
-static void SampleUartDriverRelease(struct HdfDeviceObject *device);
+static int32_t HdfUartSampleBind(struct HdfDeviceObject *device);
+static int32_t HdfUartSampleInit(struct HdfDeviceObject *device);
+static void HdfUartSampleRelease(struct HdfDeviceObject *device);
 
 /* HdfDriverEntry definitions */
-struct HdfDriverEntry g_sampleUartDriverEntry = {
+struct HdfDriverEntry g_hdfUartSample = {
     .moduleVersion = 1,
     .moduleName = "UART_SAMPLE",
-    .Bind = SampleUartDriverBind,
-    .Init = SampleUartDriverInit,
-    .Release = SampleUartDriverRelease,
+    .Bind = HdfUartSampleBind,
+    .Init = HdfUartSampleInit,
+    .Release = HdfUartSampleRelease,
 };
 
 // Initialize HdfDriverEntry
-HDF_INIT(g_sampleUartDriverEntry);
+HDF_INIT(g_hdfUartSample);
 
 /* UartHostMethod method definitions */
-static int32_t SampleUartHostInit(struct UartHost *host);
-static int32_t SampleUartHostDeinit(struct UartHost *host);
-static int32_t SampleUartHostWrite(struct UartHost *host, uint8_t *data, uint32_t size);
-static int32_t SampleUartHostSetBaud(struct UartHost *host, uint32_t baudRate);
-static int32_t SampleUartHostGetBaud(struct UartHost *host, uint32_t *baudRate);
+static int32_t SampleInit(struct UartHost *host);
+static int32_t SampleDeinit(struct UartHost *host);
+static int32_t SampleWrite(struct UartHost *host, uint8_t *data, uint32_t size);
+static int32_t SampleSetBaud(struct UartHost *host, uint32_t baudRate);
+static int32_t SampleGetBaud(struct UartHost *host, uint32_t *baudRate);
 
 /* UartHostMethod definitions */
-struct UartHostMethod g_sampleUartHostMethod = {
-    .Init = SampleUartHostInit,
-    .Deinit = SampleUartHostDeinit,
+struct UartHostMethod g_uartSampleHostMethod = {
+    .Init = SampleInit,
+    .Deinit = SampleDeinit,
     .Read = NULL,
-    .Write = SampleUartHostWrite,
-    .SetBaud = SampleUartHostSetBaud,
-    .GetBaud = SampleUartHostGetBaud,
+    .Write = SampleWrite,
+    .SetBaud = SampleSetBaud,
+    .GetBaud = SampleGetBaud,
     .SetAttribute = NULL,
     .GetAttribute = NULL,
     .SetTransMode = NULL,
 };
 
 /* UartHostMethod implementations */
-static int32_t SampleUartHostInit(struct UartHost *host)
+static int32_t SampleInit(struct UartHost *host)
 {
     HDF_LOGI("%s: Enter", __func__);
     if (host == NULL) {
@@ -78,7 +78,7 @@ static int32_t SampleUartHostInit(struct UartHost *host)
     return HDF_SUCCESS;
 }
 
-static int32_t SampleUartHostDeinit(struct UartHost *host)
+static int32_t SampleDeinit(struct UartHost *host)
 {
     HDF_LOGI("%s: Enter", __func__);
     if (host == NULL) {
@@ -88,7 +88,7 @@ static int32_t SampleUartHostDeinit(struct UartHost *host)
     return HDF_SUCCESS;
 }
 
-static int32_t SampleUartHostWrite(struct UartHost *host, uint8_t *data, uint32_t size)
+static int32_t SampleWrite(struct UartHost *host, uint8_t *data, uint32_t size)
 {
     HDF_LOGI("%s: Enter", __func__);
     uint32_t idx;
@@ -111,7 +111,7 @@ static int32_t SampleUartHostWrite(struct UartHost *host, uint8_t *data, uint32_
     return HDF_SUCCESS;
 }
 
-static int32_t SampleUartHostSetBaud(struct UartHost *host, uint32_t baudRate)
+static int32_t SampleSetBaud(struct UartHost *host, uint32_t baudRate)
 {
     HDF_LOGI("%s: Enter", __func__);
     struct UartDevice *device = NULL;
@@ -141,7 +141,7 @@ static int32_t SampleUartHostSetBaud(struct UartHost *host, uint32_t baudRate)
     return err;
 }
 
-static int32_t SampleUartHostGetBaud(struct UartHost *host, uint32_t *baudRate)
+static int32_t SampleGetBaud(struct UartHost *host, uint32_t *baudRate)
 {
     HDF_LOGI("%s: Enter", __func__);
     struct UartDevice *device = NULL;
@@ -159,7 +159,7 @@ static int32_t SampleUartHostGetBaud(struct UartHost *host, uint32_t *baudRate)
     return HDF_SUCCESS;
 }
 
-static int InitUartDevice(struct UartDevice *device)
+static int UartDeviceInit(struct UartDevice *device)
 {
     UartPl011Error err;
     struct UartResource *resource = &device->resource;
@@ -187,7 +187,7 @@ static int InitUartDevice(struct UartDevice *device)
     return HDF_SUCCESS;
 }
 
-static uint32_t GetUartDeviceResource(
+static uint32_t UartDeviceGetResource(
     struct UartDevice *device, const struct DeviceResourceNode *resourceNode)
 {
     struct UartResource *resource = &device->resource;
@@ -199,11 +199,11 @@ static uint32_t GetUartDeviceResource(
     }
 
     if (dri->GetUint32(resourceNode, "num", &resource->num, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read num fail");
+        HDF_LOGE("uart config  read num fail");
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "base", &resource->base, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read base fail");
+        HDF_LOGE("uart config  read base fail");
         return HDF_FAILURE;
     }
     resource->physBase = (unsigned long)OsalIoRemap(resource->base, 0x48);
@@ -216,29 +216,29 @@ static uint32_t GetUartDeviceResource(
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "baudrate", &resource->baudrate, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read baudrate fail");
+        HDF_LOGE("uart config  read baudrate fail");
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "wlen", &resource->wlen, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read wlen fail");
+        HDF_LOGE("uart config  read wlen fail");
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "parity", &resource->parity, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read parity fail");
+        HDF_LOGE("uart config  read parity fail");
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "stopBit", &resource->stopBit, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read stopBit fail");
+        HDF_LOGE("uart config  read stopBit fail");
         return HDF_FAILURE;
     }
     if (dri->GetUint32(resourceNode, "uartClk", &resource->uartClk, 0) != HDF_SUCCESS) {
-        HDF_LOGE("uart config read uartClk fail");
+        HDF_LOGE("uart config  read uartClk fail");
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
 }
 
-static int32_t AttachUartDevice(struct UartHost *host, struct HdfDeviceObject *device)
+static int32_t SampleAttach(struct UartHost *host, struct HdfDeviceObject *device)
 {
     int32_t ret;
     struct UartDevice *uartDevice = NULL;
@@ -251,18 +251,20 @@ static int32_t AttachUartDevice(struct UartHost *host, struct HdfDeviceObject *d
         HDF_LOGE("%s: OsalMemCalloc uartDevice error", __func__);
         return HDF_ERR_MALLOC_FAIL;
     }
-    ret = GetUartDeviceResource(uartDevice, device->property);
+    SampleDispatchConstruct(uartDevice);
+    device->service = &uartDevice->ioService;
+    ret = UartDeviceGetResource(uartDevice, device->property);
     if (ret != HDF_SUCCESS) {
         (void)OsalMemFree(uartDevice);
         return HDF_FAILURE;
     }
     host->num = uartDevice->resource.num;
     host->priv = uartDevice;
-    AddUartDevice(host);
-    return InitUartDevice(uartDevice);
+    UartSampleAddDev(host);
+    return UartDeviceInit(uartDevice);
 }
 
-static void DeinitUartDevice(struct UartDevice *device)
+static void UartDeviceDeinit(struct UartDevice *device)
 {
     struct UartRegisterMap *regMap = (struct UartRegisterMap *)device->resource.physBase;
     /* wait for uart enter idle. */
@@ -273,7 +275,7 @@ static void DeinitUartDevice(struct UartDevice *device)
     device->state = UART_DEVICE_UNINITIALIZED;
 }
 
-static void DetachUartDevice(struct UartHost *host)
+static void SampleDetach(struct UartHost *host)
 {
     struct UartDevice *uartDevice = NULL;
 
@@ -282,31 +284,22 @@ static void DetachUartDevice(struct UartHost *host)
         return;
     }
     uartDevice = host->priv;
-    DeinitUartDevice(uartDevice);
+    UartDeviceDeinit(uartDevice);
     (void)OsalMemFree(uartDevice);
     host->priv = NULL;
 }
 
 /* HdfDriverEntry implementations */
-static int32_t SampleUartDriverBind(struct HdfDeviceObject *device)
+static int32_t HdfUartSampleBind(struct HdfDeviceObject *device)
 {
-    struct UartHost *uartHost = NULL;
-
     if (device == NULL) {
         return HDF_ERR_INVALID_OBJECT;
     }
     HDF_LOGI("Enter %s:", __func__);
-
-    uartHost = UartHostCreate(device);
-    if (uartHost == NULL) {
-        HDF_LOGE("%s: UartHostCreate failed", __func__);
-        return HDF_FAILURE;
-    }
-    uartHost->service.Dispatch = SampleDispatch;
-    return HDF_SUCCESS;
+    return (UartHostCreate(device) == NULL) ? HDF_FAILURE : HDF_SUCCESS;
 }
 
-static int32_t SampleUartDriverInit(struct HdfDeviceObject *device)
+static int32_t HdfUartSampleInit(struct HdfDeviceObject *device)
 {
     int32_t ret;
     struct UartHost *host = NULL;
@@ -321,16 +314,16 @@ static int32_t SampleUartDriverInit(struct HdfDeviceObject *device)
         HDF_LOGE("%s: host is NULL", __func__);
         return HDF_FAILURE;
     }
-    ret = AttachUartDevice(host, device);
+    ret = SampleAttach(host, device);
     if (ret != HDF_SUCCESS) {
         HDF_LOGE("%s: attach error", __func__);
         return HDF_FAILURE;
     }
-    host->method = &g_sampleUartHostMethod;
+    host->method = &g_uartSampleHostMethod;
     return ret;
 }
 
-static void SampleUartDriverRelease(struct HdfDeviceObject *device)
+static void HdfUartSampleRelease(struct HdfDeviceObject *device)
 {
     struct UartHost *host = NULL;
     HDF_LOGI("Enter %s:", __func__);
@@ -345,7 +338,7 @@ static void SampleUartDriverRelease(struct HdfDeviceObject *device)
         return;
     }
     if (host->priv != NULL) {
-        DetachUartDevice(host);
+        SampleDetach(host);
     }
     UartHostDestroy(host);
 }

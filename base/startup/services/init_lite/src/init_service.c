@@ -14,16 +14,20 @@
  */
 
 #include "init_service.h"
-
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
-
 #include "init_adapter.h"
 #include "init_perms.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
 
 #define CAP_NUM 2
 
@@ -98,7 +102,7 @@ int ServiceStart(Service *service)
         }
 
         char* argv[] = {service->name, NULL};
-        char* env[] = {"LD_LIBRARY_PATH=/storage/app/libs", NULL};
+        char* env[] = {NULL};
         if (execve(service->path, argv, env) != 0) {
             printf("[Init] service %s execve failed! err %d.\n", service->name, errno);
         }
@@ -177,3 +181,9 @@ void ServiceReap(Service *service)
 
     service->attribute &= (~SERVICE_ATTR_NEED_RESTART);
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

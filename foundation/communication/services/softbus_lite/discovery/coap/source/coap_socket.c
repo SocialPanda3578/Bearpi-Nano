@@ -23,6 +23,8 @@ SocketInfo g_socket = {0};
 int g_serverFd = -1;
 int g_clientFd = -1;
 
+#define COAP_DEFAULT_PRIO 11
+
 int GetCoapServerSocket(void)
 {
     return g_serverFd;
@@ -91,7 +93,7 @@ void CoapDeinitSocket(void)
     return;
 }
 
-int CoapCreateUdpClient(const struct sockaddr_in *sockAddr)
+int CoapCreatUdpClient(const struct sockaddr_in *sockAddr)
 {
     if (sockAddr == NULL) {
         return NSTACKX_EFAILED;

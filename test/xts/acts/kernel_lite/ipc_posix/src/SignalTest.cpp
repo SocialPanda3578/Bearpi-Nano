@@ -42,6 +42,72 @@ HWTEST_F(IpcSignalTest, testSignalFailSig, TestSize.Level2)
 }
 
 /**
+ * @tc.number SUB_KERNEL_IPC_SIGTIMEDWAIT_0100
+ * @tc.name   sigtimedwait still work even blocked by sigprocmask
+ * @tc.desc   [C- SOFTWARE -0200]
+ * @tc.size   SMALL
+ * @tc.type   FUNC
+ */
+HWTEST_F(IpcSignalTest, testSigtimedwaitBlock, TestSize.Level1)
+{
+    int rt, status;
+    pid_t pid = fork();
+    ASSERT_TRUE(pid >= 0) << "======== Fork Error! =========";
+    if (pid == 0) { // child
+        int exitCode = 0;
+        signal(SIGSEGV, SignalHandler);
+        struct timespec time1 = {0, 100*1000000};
+        sigset_t sigmask, timeset;
+        sigemptyset(&sigmask);
+        sigaddset(&sigmask, SIGINT);
+        sigaddset(&sigmask, SIGSEGV);
+        sigemptyset(&timeset);
+        sigaddset(&timeset, SIGSEGV);
+
+        sigprocmask(SIG_BLOCK, &sigmask, 0);
+        Msleep(80);
+
+        rt = sigtimedwait(&timeset, 0, &time1);
+        if (rt != SIGSEGV) {
+            LOG("sigtimedwait return fail, expected:%d, actual:%d", SIGSEGV, rt);
+            exitCode = 1;
+        }
+
+        // check the sigprocmask set not changed
+        sigemptyset(&sigmask);
+        sigprocmask(SIG_UNBLOCK, NULL, &sigmask);
+        if (sigismember(&sigmask, SIGINT) != 1) {
+            LOG("SIGINT should still in block set!");
+            exitCode = 1;
+        }
+        if (sigismember(&sigmask, SIGSEGV) != 1) {
+            LOG("SIGSEGV should still in block set!");
+            exitCode = 1;
+        }
+        exit(exitCode);
+    } else { // parent
+        Msleep(40);
+        kill(pid, SIGSEGV);
+        Msleep(200);
+        AssertProcExitedOK(pid);
+    }
+    sigset_t pending;
+    sigemptyset(&pending);
+    sigpending(&pending);
+    if (sigisemptyset(&pending)) {
+        LOG("pending set empty");
+        return;
+    }
+    LOG("========pending set not empty=========");
+    if (sigismember(&pending, SIGCHLD)) {
+        LOG("pending set is SIGCHLD");
+        return;
+    } else {
+        LOG("pending set is not SIGCHLD!");
+    }
+}
+
+/**
  * @tc.number SUB_KERNEL_IPC_SIGTIMEDWAIT_0200
  * @tc.name   sigtimedwait error test: timeout or interupted.
  *            by now, liteos sigtimedwait cannot interupted

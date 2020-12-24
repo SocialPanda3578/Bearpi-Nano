@@ -12,9 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#define _GNU_SOURCE    // syscall function need this macro definition
 #include "init_adapter.h"
-
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -24,6 +23,12 @@
 #else
 #include <sys/syscall.h>
 #endif
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
 
 void RebootSystem()
 {
@@ -47,3 +52,9 @@ int KeepCapability()
 #endif
     return 0;
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
