@@ -68,7 +68,7 @@ hcpptest_suite("ActsSamgrTest") {
         "src",
         "src/utils",
         "include",
-        "//utils/native/lite/include",
+        "//utils/native/liteos/include",
         "//third_party/bounds_checking_function/include",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",

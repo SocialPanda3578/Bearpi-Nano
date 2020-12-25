@@ -26,7 +26,7 @@ namespace OHOS {
 BundleSelfCallback::~BundleSelfCallback()
 {
     if (svcIdentity_ != nullptr) {
-        (void) UnregisterIpcCallback(*svcIdentity_);
+        (void) UnRegisteIpcCallback(*svcIdentity_);
         AdapterFree(svcIdentity_);
     }
 }
@@ -87,7 +87,7 @@ int32 BundleSelfCallback::GenerateLocalServiceId()
         return ERR_APPEXECFWK_CALLBACK_GENERATE_LOCAL_SERVICEID_FAILED;
     }
 
-    int32_t ret = RegisterIpcCallback(Callback, 0, IPC_WAIT_FOREVER, svcIdentity_, NULL);
+    int32_t ret = RegisteIpcCallback(Callback, 0, IPC_WAIT_FOREVER, svcIdentity_, NULL);
     if ((ret != LITEIPC_OK)) {
         AdapterFree(svcIdentity_);
         svcIdentity_ = nullptr;

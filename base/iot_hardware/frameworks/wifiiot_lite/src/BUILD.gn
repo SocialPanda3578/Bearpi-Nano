@@ -13,34 +13,38 @@
 
 import("//build/lite/ndk/ndk.gni")
 static_library("iothardware") {
-  if (ohos_kernel_type == "liteos_m") {
-    sources = [
-      "lowpower.c",
-      "reset.c",
-      "wifiiot_adc.c",
-      "wifiiot_at.c",
-      "wifiiot_flash.c",
-      "wifiiot_gpio.c",
-      "wifiiot_i2c.c",
-      "wifiiot_i2s.c",
-      "wifiiot_kal.c",
-      "wifiiot_partition.c",
-      "wifiiot_pwm.c",
-      "wifiiot_sdio.c",
-      "wifiiot_spi.c",
-      "wifiiot_uart.c",
-      "wifiiot_watchdog.c",
-    ]
-    include_dirs = [
-      "//utils/native/lite/include",
-      "//base/iot_hardware/interfaces/kits/wifiiot_lite",
-      "//base/iot_hardware/hals/wifiiot_lite",
-    ]
-  }
+    if (ohos_kernel_type == "liteos_riscv") {
+        sources = [
+            "wifiiot_gpio.c",
+            "wifiiot_adc.c",
+            "wifiiot_flash.c",
+            "wifiiot_kal.c",
+            "wifiiot_watchdog.c",
+            "wifiiot_partition.c",
+            "reset.c",
+            "lowpower.c",
+            "wifiiot_at.c",
+            "wifiiot_i2s.c",
+            "wifiiot_pwm.c",
+            "wifiiot_uart.c",
+            "wifiiot_i2c.c",
+            "wifiiot_spi.c",
+            "wifiiot_sdio.c"
+        ]
+        include_dirs = [
+            "//utils/native/lite/include",
+            "//base/iot_hardware/interfaces/kits/wifiiot_lite",
+            "//base/iot_hardware/hals/wifiiot_lite"
+        ]
+    }
 }
-if (ohos_kernel_type == "liteos_m") {
-  ndk_lib("iothardware_ndk") {
-    deps = [ ":iothardware" ]
-    head_files = [ "//base/iot_hardware/interfaces/kits/wifiiot_lite" ]
-  }
+if (ohos_kernel_type == "liteos_riscv") {
+    ndk_lib("iothardware_ndk") {
+        deps = [
+            ":iothardware"
+        ]
+        head_files = [
+            "//base/iot_hardware/interfaces/kits/wifiiot_lite"
+        ]
+    }
 }

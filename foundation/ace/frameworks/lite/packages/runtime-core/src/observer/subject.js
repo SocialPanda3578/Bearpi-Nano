@@ -93,7 +93,6 @@ const ObservedMethods = {
   POP: 'pop',
   UNSHIFT: 'unshift',
   SHIFT: 'shift',
-  SORT: 'sort',
   SPLICE: 'splice',
   REVERSE: 'reverse'
 };
@@ -119,7 +118,7 @@ function hijackArray(target) {
       let inserted;
       if (ObservedMethods.PUSH === key || ObservedMethods.UNSHIFT === key) {
         inserted = args;
-      } else if (ObservedMethods.SPLICE === key) {
+      } else if (ObservedMethods.SPLICE) {
         inserted = args.slice(2);
       }
 

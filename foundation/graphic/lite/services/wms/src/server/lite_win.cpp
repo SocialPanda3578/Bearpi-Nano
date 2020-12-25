@@ -18,7 +18,6 @@
 #include "gfx_engines.h"
 #include "graphic_locker.h"
 #include "graphic_log.h"
-#include "pixel_format_utils.h"
 #include "securec.h"
 
 #include "server/lite_wm.h"
@@ -27,7 +26,7 @@ namespace OHOS {
 static const int16_t DEFAULT_QUEUE_SIZE = 2;
 
 LiteWindow::LiteWindow(const LiteWinConfig& config)
-    : id_(INVALID_WINDOW_ID), pid_(INVALID_PID), isShow_(false), config_(config), surface_(nullptr),
+    : id_(INVALID_WINDOW_ID), isShow_(false), config_(config), surface_(nullptr),
       backBuf_(nullptr), sid_({}), needUnregister_(false)
 {
     pthread_mutex_init(&backBufMutex_, NULL);
@@ -37,8 +36,8 @@ LiteWindow::LiteWindow(const LiteWinConfig& config)
 LiteWindow::~LiteWindow()
 {
     if (needUnregister_) {
-        GRAPHIC_LOGI("UnregisterIpcCallback");
-        UnregisterIpcCallback(sid_);
+        GRAPHIC_LOGI("UnRegisteIpcCallback");
+        UnRegisteIpcCallback(sid_);
     }
 
     if (surface_) {
@@ -92,7 +91,7 @@ void LiteWindow::ResizeSurface(int16_t width, int16_t height)
 
 void LiteWindow::Update(Rect rect)
 {
-    LiteWM::GetInstance()->UpdateWindowRegion(this, rect);
+    LiteWM::GetInstance()->UpdateWindow(this, rect);
 }
 
 void LiteWindow::UpdateBackBuf()
@@ -119,6 +118,24 @@ void LiteWindow::UpdateBackBuf()
     }
 }
 
+static uint16_t ARGB8888ToArgb1555(ColorType color)
+{
+    union {
+        struct {
+            uint16_t blue : 5;
+            uint16_t green : 5;
+            uint16_t red : 5;
+            uint16_t alpha : 1;
+        };
+        uint16_t full;
+    } ret;
+    ret.alpha = color.alpha;
+    ret.red = color.red >> 3;
+    ret.green = color.green >> 3;
+    ret.blue = color.blue >> 3;
+    return ret.full;
+}
+
 void LiteWindow::Flush(const Rect& srcRect, const LiteSurfaceData* layerData, int16_t dx, int16_t dy)
 {
     GraphicLocker lock(backBufMutex_);
@@ -139,26 +156,20 @@ void LiteWindow::Flush(const Rect& srcRect, const LiteSurfaceData* layerData, in
     }
 #endif
 
-    int16_t x1 = srcRect.GetLeft();
-    int16_t y1 = srcRect.GetTop();
-    int16_t x2 = srcRect.GetRight();
-    int16_t y2 = srcRect.GetBottom();
+    int x1 = srcRect.GetLeft();
+    int y1 = srcRect.GetTop();
+    int x2 = srcRect.GetRight();
+    int y2 = srcRect.GetBottom();
+    uint8_t* srcBuf = (uint8_t*)backBuf_->GetVirAddr();
+    uint8_t* dstBuf = layerData->virAddr + dy * layerData->stride;
     GRAPHIC_LOGD("Software composite, {%d,%d,%d,%d}", x1, y1, x2, y2);
 
     uint32_t stride = surface_->GetStride();
-    uint8_t* srcBuf = reinterpret_cast<uint8_t*>(backBuf_->GetVirAddr()) + y1 * stride + x1 * sizeof(ColorType);
-    uint8_t* dstBuf = layerData->virAddr + dy * layerData->stride + dx * sizeof(LayerColorType);
-    for (int16_t y = y1; y <= y2; y++) {
-        ColorType* tmpSrc = reinterpret_cast<ColorType*>(srcBuf);
-        LayerColorType* tmpDst = reinterpret_cast<LayerColorType*>(dstBuf);
-        for (int16_t x = x1; x <= x2; x++) {
-#ifdef LAYER_PF_ARGB1555
-            *tmpDst++ = PixelFormatUtils::ARGB8888ToARGB1555((tmpSrc++)->full);
-#elif defined LAYER_PF_ARGB8888
-            *tmpDst++ = (tmpSrc++)->full;
-#endif
+    for (int y = y1; y <= y2; y++) {
+        for (int x = x1; x <= x2; x++) {
+            ColorType* tmp = (ColorType*)(srcBuf + y * stride) + x;
+            *((uint16_t*)dstBuf + dx + x - x1) = ARGB8888ToArgb1555(*tmp);
         }
-        srcBuf += stride;
         dstBuf += layerData->stride;
     }
 }

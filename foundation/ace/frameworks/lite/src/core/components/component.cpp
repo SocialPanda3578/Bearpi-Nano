@@ -188,8 +188,6 @@ bool Component::UpdateView(uint16_t attrKeyId, jerry_value_t attrValue)
     START_TRACING_WITH_EXTRA_INFO(SET_ATTR_SET_TO_NATIVE, componentName_, attrKeyId);
     PreUpdate();
 
-    // check if need to invalided self before changing in case component's area will be changed
-    InvalidateIfNeeded(attrKeyId, true);
     bool updateResult = SetAttribute(attrKeyId, attrValue);
     if (!updateResult) {
         AppStyleItem *styleItem = AppStyleItem::CreateStyleItem(attrKeyId, attrValue);
@@ -201,8 +199,7 @@ bool Component::UpdateView(uint16_t attrKeyId, jerry_value_t attrValue)
     }
 
     RefreshRect();
-    // force parent to relayout the children in case component's area is changed
-    InvalidateIfNeeded(attrKeyId, false);
+    ReLayoutChildrenIfNeeded(attrKeyId);
 
     PostUpdate(attrKeyId, updateResult);
     StartAnimation();
@@ -303,9 +300,8 @@ bool Component::RefreshRect() const
     // set view height and width
     uint8_t borderNum = 2;
     if (height_ >= 0) {
-        // as uiView->GetStyle(STYLE_PADDING_TOP) and uiView->GetStyle(STYLE_PADDING_BOTTOM) is defined
-        // as uint16_t, so do not need to judge whether less than 0
-        if (uiView->GetStyle(STYLE_BORDER_WIDTH) < 0) {
+        if ((uiView->GetStyle(STYLE_BORDER_WIDTH) < 0) || (uiView->GetStyle(STYLE_PADDING_TOP) < 0) ||
+            (uiView->GetStyle(STYLE_PADDING_BOTTOM) < 0)) {
             HILOG_WARN(HILOG_MODULE_ACE, "border and padding size should not less than 0");
         }
         int16_t contentHeight = height_ - (uiView->GetStyle(STYLE_BORDER_WIDTH) * borderNum) -
@@ -322,7 +318,8 @@ bool Component::RefreshRect() const
         }
     }
     if (width_ >= 0) {
-        if (uiView->GetStyle(STYLE_BORDER_WIDTH) < 0) {
+        if ((uiView->GetStyle(STYLE_BORDER_WIDTH) < 0) || (uiView->GetStyle(STYLE_PADDING_LEFT) < 0) ||
+            (uiView->GetStyle(STYLE_PADDING_RIGHT) < 0)) {
             HILOG_WARN(HILOG_MODULE_ACE, "border and padding size should not less than 0");
         }
         int16_t contentWidth = width_ - (uiView->GetStyle(STYLE_BORDER_WIDTH) * borderNum) -
@@ -851,8 +848,7 @@ int32_t Component::GetAnimatorValue(char *animatorValue, const int8_t index, boo
         return 0;
     }
 
-    long convertedValue = isOpacity ? (long)((strtod(value, nullptr) * ALPHA_MAX)) :
-                                      strtol(value, nullptr, DEC);
+    long convertedValue = isOpacity ? (strtod(value, nullptr) * ALPHA_MAX) : strtol(value, nullptr, DEC);
     if (TransitionImpl::IsEndWith(value, "rad")) {
         uint8_t degConversionRate = 57;
         convertedValue = convertedValue * degConversionRate;
@@ -1114,7 +1110,7 @@ void Component::AppendDescriptorOrElements(UIViewGroup *viewGroup, const JSValue
     }
 }
 
-void Component::InvalidateIfNeeded(uint16_t attrKeyId, bool invalidateSelf) const
+void Component::ReLayoutChildrenIfNeeded(uint16_t attrKeyId) const
 {
     UIView *uiView = GetComponentRootView();
     if ((uiView == nullptr) || !KeyParser::IsKeyValid(attrKeyId)) {
@@ -1127,13 +1123,10 @@ void Component::InvalidateIfNeeded(uint16_t attrKeyId, bool invalidateSelf) cons
         attrKeyId == K_PADDING_RIGHT || attrKeyId == K_PADDING_TOP || attrKeyId == K_BORDER_BOTTOM_WIDTH ||
         attrKeyId == K_BORDER_LEFT_WIDTH || attrKeyId == K_BORDER_RIGHT_WIDTH || attrKeyId == K_BORDER_TOP_WIDTH ||
         attrKeyId == K_BORDER_WIDTH || attrKeyId == K_BORDER_RADIUS || attrKeyId == K_LEFT || attrKeyId == K_TOP) {
-        if (invalidateSelf) {
-            uiView->Invalidate();
-            return;
-        }
         UIView *parent = uiView->GetParent();
         if (parent != nullptr) {
-            parent->LayoutChildren(true);
+            parent->LayoutChildren();
+            parent->Invalidate();
         }
     }
 }

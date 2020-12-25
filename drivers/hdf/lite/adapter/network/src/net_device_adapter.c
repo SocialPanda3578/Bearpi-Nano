@@ -463,11 +463,12 @@ int32_t LiteNetDhcpIsBound(struct NetDeviceImpl *netDeviceImpl)
         HDF_LOGE("%s fail : lwipNf = null!", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
-
-    if (dhcp_is_bound(lwipNf) == ERR_OK) {
+    int32_t ret = 0;
+    if ((ret = dhcp_is_bound(lwipNf)) == ERR_OK) {
         HDF_LOGI("%s success!", __func__);
         return HDF_SUCCESS;
     }
+    HDF_LOGE("%s fail, ret = %d!", __func__, ret);
     return HDF_FAILURE;
 }
 

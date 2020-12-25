@@ -26,13 +26,9 @@ namespace ACELite {
 namespace {
 char g_kvFullPath[FILE_NAME_MAX_LEN + 1] = {0};
 
-bool IsValidKey(const char* key)
+bool IsValidKey(const char *key)
 {
-    if (key == nullptr) {
-        return false;
-    }
-    size_t keyLen = strnlen(key, KEY_MAX_LEN + 1);
-    if ((keyLen == 0) || (keyLen > KEY_MAX_LEN)) {
+    if ((key == nullptr) || !strlen(key) || (strlen(key) > KEY_MAX_LEN)) {
         return false;
     }
     if (strpbrk(key, "/\\\"*+,:;<=>\?[]|\x7F")) {
@@ -57,7 +53,7 @@ int GetFullPath(const char* dataPath, const char* key)
 
 void GetDefault(const JSIValue thisVal, const JSIValue args)
 {
-    char* defaultValue = JSI::GetStringProperty(args, DEFAULT);
+    char *defaultValue = JSI::GetStringProperty(args, DEFAULT);
     JSIValue result;
     if (defaultValue == nullptr) {
         result = JSI::CreateString("");
@@ -75,7 +71,8 @@ int GetValueInner(const char* dataPath, const char* key, char* value)
     if (ret != NATIVE_SUCCESS) {
         return ret;
     }
-    return GetValue(g_kvFullPath, value);
+    ret = GetValue(g_kvFullPath, value);
+    return ret;
 }
 
 int SetValueInner(const char* dataPath, const char* key, const char* value)
@@ -84,7 +81,8 @@ int SetValueInner(const char* dataPath, const char* key, const char* value)
     if (ret != NATIVE_SUCCESS) {
         return ret;
     }
-    return SetValue(g_kvFullPath, value);
+    ret = SetValue(g_kvFullPath, value);
+    return ret;
 }
 
 int DeleteValueInner(const char* dataPath, const char* key)
@@ -93,7 +91,8 @@ int DeleteValueInner(const char* dataPath, const char* key)
     if (ret != NATIVE_SUCCESS) {
         return ret;
     }
-    return DeleteValue(g_kvFullPath);
+    ret = DeleteValue(g_kvFullPath);
+    return ret;
 }
 
 JSIValue ExecuteAsyncWork(const JSIValue thisVal, const JSIValue* args,
@@ -126,7 +125,7 @@ void ExecuteGet(void* data)
     const char* dataPath = GetDataPath();
     JSIValue result = JSI::CreateUndefined();
     int ret = ERROR_CODE_GENERAL;
-    char* value = reinterpret_cast<char *>(malloc(VALUE_MAX_LEN + 1));
+    char *value = reinterpret_cast<char *>(malloc(VALUE_MAX_LEN + 1));
     if (value == nullptr) {
         NativeapiCommon::FailCallBack(thisVal, args, ret);
         goto EXIT;

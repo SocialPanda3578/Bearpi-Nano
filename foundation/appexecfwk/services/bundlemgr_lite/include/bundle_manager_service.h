@@ -16,7 +16,6 @@
 #ifndef OHOS_BUNDLE_MANAGER_SERVICE_H
 #define OHOS_BUNDLE_MANAGER_SERVICE_H
 
-#include <cstdint>
 #include <map>
 #include <vector>
 
@@ -28,6 +27,7 @@
 #include "cJSON.h"
 #include "message.h"
 #include "nocopyable.h"
+#include "stdint.h"
 
 namespace OHOS {
 class ManagerService {
@@ -47,8 +47,10 @@ public:
     int32_t GenerateUid(const char *bundleName, int8_t bundleStyle);
     void RecycleUid(const char *bundleName);
     static bool GetAmsInterface(AmsInnerInterface **amsInterface);
+    std::string GetSharedLibPath() const;
     std::string GetCodeDirPath() const;
     std::string GetDataDirPath() const;
+    void SetSharedLibPath(const std::string &sharedLibPath);
     uint8_t SetExternalInstallMode(bool enable);
     bool IsExternalInstallMode() const;
     uint8_t SetDebugMode(bool enable);
@@ -83,6 +85,7 @@ private:
     BundleInstaller *installer_;
     BundleMap *bundleMap_;
     std::vector<SvcIdentity> svcIdentity_;
+    std::string sharedLibPath_;
     bool IsExternalInstallMode_ { false };
     bool isDebugMode_ { false };
 #ifdef OHOS_DEBUG

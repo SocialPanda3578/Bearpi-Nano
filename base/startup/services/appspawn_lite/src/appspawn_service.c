@@ -26,6 +26,12 @@
 #include "samgr_lite.h"
 #include "service.h"
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
+
 static const int INVALID_PID = -1;
 
 typedef struct AppSpawnFeatureApi {
@@ -113,8 +119,8 @@ static int Invoke(IServerProxy* iProxy, int funcId, void* origin, IpcIo* req, Ip
         return EC_FAILURE;
     }
 
-    HILOG_INFO(HILOG_MODULE_HIVIEW, "[appspawn] msg<%{public}s,%{public}s,%{public}d,%{public}d>",\
-        msgSt.bundleName, msgSt.identityID, msgSt.uID, msgSt.gID);
+    HILOG_INFO(HILOG_MODULE_HIVIEW, "[appspawn] msg<%{public}s,%{public}s,%{public}llu,%{public}d,%{public}d>",\
+        msgSt.bundleName, msgSt.sharedLibPaths, msgSt.identityID, msgSt.uID, msgSt.gID);
 
     pid_t newPid = CreateProcess(&msgSt);
     FreeMessageSt(&msgSt);
@@ -154,3 +160,9 @@ void AppSpawnInit(void)
 }
 
 SYSEX_SERVICE_INIT(AppSpawnInit);
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

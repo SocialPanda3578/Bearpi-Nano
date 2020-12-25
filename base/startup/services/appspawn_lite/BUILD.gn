@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import("//build/lite/config/component/lite_component.gni")
-import("//build/lite/config/subsystem/aafwk/config.gni")
 
 lite_component("appspawn_lite") {
     features = [
@@ -29,10 +28,6 @@ executable("appspawn") {
         "src/appspawn_adapter.c",
     ]
 
-    ldflags = [
-        "-lstdc++",
-    ]
-
     cflags = [
         "-Wall",
         "-Wno-format",
@@ -44,28 +39,16 @@ executable("appspawn") {
         "//utils/native/lite/include",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
         "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
-        "//foundation/aafwk/interfaces/innerkits/abilitymgr_lite",
         "//third_party/bounds_checking_function/include/",
         "//third_party/cJSON",
     ]
 
     deps = [
         "//third_party/bounds_checking_function:libsec_shared",
-        "//foundation/aafwk/frameworks/ability_lite:aafwk_abilitykit_lite",
         "//foundation/distributedschedule/services/samgr_lite/samgr:samgr",
         "//foundation/communication/frameworks/ipc_lite:liteipc_adapter",
         "//third_party/cJSON:cjson_shared",
-        "//utils/native/lite/kv_store:kv_store",
     ]
-
-    if (enable_ohos_appexecfwk_feature_ability == true) {
-        deps += [
-            "//foundation/ace/frameworks/lite:ace_lite",
-            "//foundation/graphic/lite/frameworks/ui:ui",
-            "//foundation/graphic/lite/utils:graphic_utils",
-            "//foundation/graphic/lite/frameworks/surface",
-        ]
-    }
 
     if (ohos_kernel_type == "liteos_a") {
         include_dirs += [
@@ -78,6 +61,7 @@ executable("appspawn") {
     }
 
     if (ohos_kernel_type == "linux") {
+        ldflags = ["-lstdc++"]
         include_dirs += [
         ]
     }

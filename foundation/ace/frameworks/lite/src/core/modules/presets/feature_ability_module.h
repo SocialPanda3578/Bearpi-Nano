@@ -107,25 +107,11 @@ private:
                                     const uint16_t errCode,
                                     bool success);
 
-    /**
-     * @fn FeatureAbilityModule::Detect
-     *
-     * @brief ping to phone app
-     * @param func function object
-     * @param context the context of function execution
-     * @param args the list of arguments
-     * @param length the length of arguments list
-     */
-    static jerry_value_t Detect(const jerry_value_t func,
-                                     const jerry_value_t context,
-                                     const jerry_value_t args[],
-                                     const jerry_length_t length);
+    static int32_t MessageSuccessCallback(void *data);
 
-    static int32_t MessageSuccessCallback(const void *data);
+    static void CopySuccessMessage(FeatureAbilityDataInfo *origin, FeatureAbilityDataInfo *&target);
 
-    static void CopySuccessMessage(const FeatureAbilityDataInfo *origin, FeatureAbilityDataInfo *&target);
-
-    static int32_t MessageFailCallback(const void *data, uint16_t dataLength, uint16_t errorCode);
+    static int32_t MessageFailCallback(void *data, uint16_t dataLength, uint16_t errorCode);
 
     static void AsyncSuccessCallback(void *data);
 
@@ -134,10 +120,6 @@ private:
     static void ReleaseJsValues();
 
     static void ReleaseJsValue(jerry_value_t &value);
-
-    static void ReleaseDetectJsValue();
-
-    static void ReleaseSendMsgJsValue();
 
     /**
      * the execute context of callback
@@ -158,36 +140,6 @@ private:
      * register callback whether of not
      */
     static bool registed;
-
-    /**
-     * the execute context of callback for sendMsg
-     */
-    static jerry_value_t sendMsgCallbackContext_;
-
-    /**
-     * success callback for sendMsg
-     */
-    static jerry_value_t sendMsgSuccessCallback_;
-
-    /**
-     * fail callback for sendMsg
-     */
-    static jerry_value_t sendMsgFailCallback_;
-
-    /**
-     * the execute context of callback for detect
-     */
-    static jerry_value_t detectCallbackContext_;
-
-    /**
-     * success callback for detect
-     */
-    static jerry_value_t detectSuccessCallback_;
-
-    /**
-     * fail callback for detect
-     */
-    static jerry_value_t detectFailCallback_;
 };
 } // namespace ACELite
 } // namespace OHOS

@@ -12,64 +12,66 @@
 # limitations under the License.
 
 config("samgr_source_public") {
-  include_dirs = [
-    "../adapter",
-    "../registry",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//utils/native/lite/include",
-  ]
+    include_dirs = [
+        "../adapter",
+        "../registry",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/registry",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//utils/native/lite/include",
+    ]
 }
 
-if (ohos_kernel_type == "liteos_m") {
-  static_library("samgr_source") {
-    sources = [
-      "common.c",
-      "feature.c",
-      "iunknown.c",
-      "message.c",
-      "service.c",
-      "task_manager.c",
-    ]
+if (ohos_kernel_type == "liteos_riscv" || ohos_kernel_type == "liteos_m") {
+    static_library("samgr_source") {
+        sources = [
+            "common.c",
+            "iunknown.c",
+            "feature.c",
+            "service.c",
+            "message.c",
+            "task_manager.c",
+        ]
 
-    public_configs = [ ":samgr_source_public" ]
-    cflags = [ "-Wall" ]
+        public_configs = [":samgr_source_public"]
+        cflags = [ "-Wall" ]
 
-    public_deps = [ "//foundation/distributedschedule/services/samgr_lite/samgr/adapter:samgr_adapter" ]
+        public_deps = [
+            "//foundation/distributedschedule/services/samgr_lite/samgr/adapter:samgr_adapter"
+        ]
 
-    include_dirs = [
-      "//base/hiviewdfx/interfaces/kits/hilog_lite",
-      "//kernel/liteos_m/components/cmsis",
-    ]
-  }
+        include_dirs = [
+            "//base/hiviewdfx/interfaces/kits/hilog_lite",
+            "//kernel/liteos_m/components/cmsis",
+        ]
+    }
 }
 
 if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-  source_set("samgr_source") {
-    sources = [
-      "common.c",
-      "feature.c",
-      "iunknown.c",
-      "message.c",
-      "service.c",
-      "task_manager.c",
-    ]
+    source_set("samgr_source") {
+        sources = [
+            "common.c",
+            "iunknown.c",
+            "feature.c",
+            "service.c",
+            "message.c",
+            "task_manager.c",
+        ]
 
-    cflags = [
-      "-fPIC",
-      "-Wall",
-    ]
+        cflags = [
+            "-fPIC",
+            "-Wall"
+        ]
 
-    public_configs = [ ":samgr_source_public" ]
+        public_configs = [":samgr_source_public"]
 
-    public_deps = [
-      "//base/hiviewdfx/frameworks/hilog_lite/featured:hilog_shared",
-      "//foundation/distributedschedule/services/samgr_lite/samgr/adapter:samgr_adapter",
-    ]
+        public_deps = [
+            "//foundation/distributedschedule/services/samgr_lite/samgr/adapter:samgr_adapter",
+            "//base/hiviewdfx/frameworks/hilog_lite/featured:hilog_shared",
+        ]
 
-    include_dirs = [
-      "//kernel/liteos_a/kernel/include/",
-      "//third_party/bounds_checking_function/include",
-    ]
-  }
+        include_dirs = [
+            "//kernel/liteos_a/kernel/include/",
+            "//third_party/bounds_checking_function/include",
+        ]
+    }
 }

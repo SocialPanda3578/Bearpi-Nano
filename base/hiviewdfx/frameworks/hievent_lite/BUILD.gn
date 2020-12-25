@@ -12,17 +12,17 @@
 # limitations under the License.
 
 static_library("hievent_lite") {
-  sources = [
-    "hiview_event.c",
-    "hiview_output_event.c",
-  ]
-  cflags = [ "-Wall" ]
-  include_dirs = [
-    "//kernel/liteos_m/kal",
-    "//base/hiviewdfx/interfaces/kits/hilog_lite",
-    "//base/hiviewdfx/interfaces/innerkits/hievent_lite",
-    "//base/hiviewdfx/utils/lite",
-    "//base/hiviewdfx/services/hiview_lite",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-  ]
+    sources = [
+        "hiview_event.c",
+        "hiview_output_event.c",
+    ]
+    cflags = [ "-Wall" ]
+    include_dirs = [
+        "//kernel/liteos_m/components/cmsis",
+        "//base/hiviewdfx/interfaces/kits/hilog_lite",
+        "//base/hiviewdfx/interfaces/innerkits/hievent_lite",
+        "//base/hiviewdfx/utils/lite",
+        "//base/hiviewdfx/services/hiview_lite",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr"
+    ]
 }

@@ -11,22 +11,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 static_library("bootstrap") {
-  sources = [
-    "bootstrap_service.c",
-    "system_init.c",
-  ]
-  include_dirs = [
-    "../source",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//utils/native/lite/include",
-  ]
-  if (ohos_kernel_type == "liteos_m") {
-    include_dirs += [ "//kernel/liteos_m/kal" ]
-  } else if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-    include_dirs += [
-      "//kernel/liteos_a/kernel/include/",
-      "//third_party/bounds_checking_function/include",
+
+    sources = [
+        "bootstrap_service.c",
+        "system_init.c",
     ]
-  }
-  cflags = [ "-Wall" ]
+    include_dirs = [
+        "../source",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//utils/native/lite/include",
+    ]
+    if (ohos_kernel_type == "liteos_riscv" || ohos_kernel_type == "liteos_m") {
+        include_dirs += [
+            "//kernel/liteos_m/components/cmsis",
+        ]
+    } else if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
+        include_dirs += [
+            "//kernel/liteos_a/kernel/include/",
+            "//third_party/bounds_checking_function/include",
+        ]
+    }
+    cflags = [ "-Wall" ]
 }

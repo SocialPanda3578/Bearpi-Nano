@@ -12,9 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "init_read_cfg.h"
-
 #include <errno.h>
 #include <linux/capability.h>
 #include <stdio.h>
@@ -22,11 +20,16 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 #include "init_jobs.h"
 #include "init_perms.h"
 #include "init_service_manager.h"
 #include "securec.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
 
 static const long MAX_JSON_FILE_LEN = 102400;    // max init.cfg size 100KB
 #define MAX_SERVICES_CNT_IN_FILE 100
@@ -86,7 +89,7 @@ static cJSON* GetArrItem(const cJSON* fileRoot, int* arrSize, const char* arrNam
 static int IsForbidden(const char* fieldStr)
 {
     size_t fieldLen = strlen(fieldStr);
-    size_t forbidStrLen = strlen(BIN_SH_NOT_ALLOWED);
+    size_t forbidStrLen =  strlen(BIN_SH_NOT_ALLOWED);
     if (fieldLen == forbidStrLen) {
         if (strncmp(fieldStr, BIN_SH_NOT_ALLOWED, fieldLen) == 0) {
             return 1;
@@ -187,7 +190,7 @@ static int GetServiceCaps(const cJSON* curArrItem, Service* curServ)
     }
 
     if (capsCnt > MAX_CAPS_CNT_FOR_ONE_SERVICE) {
-        printf("[Init] GetServiceCaps, too many caps[cnt %d] for one service, should not exceed %d.\n",
+        printf("[Init] GetServiceCaps, too many caps[cnt %d] for one service, should not exceed %d.\n",\
             capsCnt, MAX_CAPS_CNT_FOR_ONE_SERVICE);
         return SERVICE_FAILURE;
     }
@@ -225,7 +228,7 @@ static void ParseAllServices(const cJSON* fileRoot)
     }
 
     if (servArrSize > MAX_SERVICES_CNT_IN_FILE) {
-        printf("[Init] InitReadCfg, too many services[cnt %d] detected, should not exceed %d.\n",
+        printf("[Init] InitReadCfg, too many services[cnt %d] detected, should not exceed %d.\n",\
             servArrSize, MAX_SERVICES_CNT_IN_FILE);
         return;
     }
@@ -301,3 +304,9 @@ void InitReadCfg()
     DoJob("post-init");
     ReleaseAllJobs();
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

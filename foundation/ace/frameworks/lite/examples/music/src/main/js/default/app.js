@@ -20,4 +20,5 @@ export default {
     onDestroy() {
         console.info("Application onDestroy");
     }
-};
+}
+;

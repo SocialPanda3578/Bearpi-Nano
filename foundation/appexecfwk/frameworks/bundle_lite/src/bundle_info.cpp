@@ -35,6 +35,7 @@ void ClearBundleInfo(BundleInfo *bundleInfo)
     AdapterFree(bundleInfo->moduleInfos);
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
     AdapterFree(bundleInfo->appId);
+    AdapterFree(bundleInfo->sharedLibPath);
     OHOS::BundleInfoUtils::ClearAbilityInfos(bundleInfo->abilityInfos, bundleInfo->numOfAbility);
     AdapterFree(bundleInfo->abilityInfos);
 #else

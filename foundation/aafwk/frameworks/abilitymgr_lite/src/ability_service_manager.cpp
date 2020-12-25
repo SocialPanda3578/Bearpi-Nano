@@ -33,7 +33,7 @@ AbilityServiceManager::~AbilityServiceManager()
             continue;
         }
         if (storeArgs->sid != nullptr) {
-            UnregisterIpcCallback(*(storeArgs->sid));
+            UnRegisteIpcCallback(*(storeArgs->sid));
             delete storeArgs->sid;
         }
         delete storeArgs;
@@ -53,7 +53,7 @@ int AbilityServiceManager::ConnectAbility(const Want &want, const IAbilityConnec
         return LITEIPC_EINVAL;
     }
 
-    int32_t result = RegisterIpcCallback(ConnectAbilityCallBack, 0, IPC_WAIT_FOREVER, storeArgs->sid, storeArgs);
+    int32_t result = RegisteIpcCallback(ConnectAbilityCallBack, 0, IPC_WAIT_FOREVER, storeArgs->sid, storeArgs);
     if (result != LITEIPC_OK) {
         RemoveStoreArgs(nullptr, storeArgs);
         delete storeArgs->sid;
@@ -63,7 +63,7 @@ int AbilityServiceManager::ConnectAbility(const Want &want, const IAbilityConnec
     AbilityMsClient::GetInstance().Initialize();
     result = AbilityMsClient::GetInstance().ScheduleAms(&want, token, storeArgs->sid, CONNECT_ABILITY);
     if (result != EC_SUCCESS) {
-        UnregisterIpcCallback(*(storeArgs->sid));
+        UnRegisteIpcCallback(*(storeArgs->sid));
         RemoveStoreArgs(nullptr, storeArgs);
         delete storeArgs->sid;
         delete storeArgs;
@@ -168,7 +168,7 @@ void AbilityServiceManager::ClearStore(StoreArgs *storeArgs)
         HILOG_INFO(HILOG_MODULE_APP, "no need to clear storeArgs");
         return;
     }
-    UnregisterIpcCallback(*(storeArgs->sid));
+    UnRegisteIpcCallback(*(storeArgs->sid));
     delete storeArgs->sid;
     delete storeArgs;
 }

@@ -28,11 +28,6 @@ unsigned int PwmDeinit(WifiIotPwmPort port)
     return HalPwmDeinit((HalWifiIotPwmPort)port);
 }
 
-unsigned int PwmSetClock(WifiIotPwmClkSource clkSource)
-{
-    return HalPwmSetClock((HalWifiIotPwmClkSource)clkSource);
-}
-
 unsigned int PwmStart(WifiIotPwmPort port, unsigned short duty, unsigned short freq)
 {
     return HalPwmStart((HalWifiIotPwmPort)port, duty, freq);

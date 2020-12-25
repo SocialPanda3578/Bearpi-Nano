@@ -19,11 +19,13 @@
 #include "gtest/gtest.h"
 
 namespace OHOS::Media {
+/* 定义函数回调FLAG取值常量 */
 enum TestCallBackFlag {
     FLAG0 = 0,
     FLAG1 = 1,
 };
 
+/* 预定义测试数据：VideoSize */
 enum TestVideoSize {
     WIDTH = 1920,
     HEIGHT = 1080,

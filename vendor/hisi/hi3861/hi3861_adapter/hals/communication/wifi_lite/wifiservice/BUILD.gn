@@ -12,23 +12,26 @@
 # limitations under the License.
 import("//build/lite/ndk/ndk.gni")
 static_library("wifiservice") {
-  sources = [
-    "source/wifi_device.c",
-    "source/wifi_device_util.c",
-    "source/wifi_hotspot.c",
-  ]
-  include_dirs = [
-    "//vendor/hisi/hi3861/hi3861/include",
-    "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
-    "//kernel/liteos_m/kal",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-  ]
+    sources = [
+        "source/wifi_device.c",
+        "source/wifi_hotspot.c",
+        "source/wifi_device_util.c",
+    ]
+    include_dirs = [
+        "//vendor/hisi/hi3861/hi3861/include",
+        "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
+        "//kernel/liteos_m/components/cmsis",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+    ]
 }
-if (ohos_kernel_type == "liteos_m") {
-  ndk_lib("wifiservice_ndk") {
-    deps = [ ":wifiservice" ]
+if (ohos_kernel_type == "liteos_riscv") {
+    ndk_lib("wifiservice_ndk") {
+        deps = [
+            ":wifiservice"
+        ]
 
-    head_files =
-        [ "//foundation/communication/interfaces/kits/wifi_lite/wifiservice" ]
-  }
+        head_files = [
+            "//foundation/communication/interfaces/kits/wifi_lite/wifiservice"
+        ]
+    }
 }

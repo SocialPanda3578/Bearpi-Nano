@@ -62,6 +62,7 @@ void BundleInfoUtils::CopyBundleInfo(int32_t flags, BundleInfo *des, BundleInfo 
     des->targetApi = src.targetApi;
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
     SetBundleInfoAppId(des, src.appId);
+    SetBundleInfoSharedLibPath(des, src.sharedLibPath);
     des->isKeepAlive = src.isKeepAlive;
     des->isNativeApp = src.isNativeApp;
     des->uid = src.uid;
@@ -212,6 +213,17 @@ bool BundleInfoUtils::SetBundleInfoAppId(BundleInfo *bundleInfo, const char *app
     AdapterFree(bundleInfo->appId);
     bundleInfo->appId = Utils::Strdup(appId);
     return bundleInfo->appId != nullptr;
+}
+
+bool BundleInfoUtils::SetBundleInfoSharedLibPath(BundleInfo *bundleInfo, const char *sharedLibPath)
+{
+    if (bundleInfo == nullptr || sharedLibPath == nullptr) {
+        return false;
+    }
+
+    AdapterFree(bundleInfo->sharedLibPath);
+    bundleInfo->sharedLibPath = Utils::Strdup(sharedLibPath);
+    return bundleInfo->sharedLibPath != nullptr;
 }
 
 bool BundleInfoUtils::SetBundleInfoAbilityInfos(BundleInfo *bundleInfo, const AbilityInfo *abilityInfos,

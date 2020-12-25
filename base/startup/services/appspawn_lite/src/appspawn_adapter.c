@@ -16,6 +16,12 @@
 #include <stdio.h>
 #include <sys/prctl.h>
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
+
 int KeepCapability()
 {
 #ifdef __LINUX__
@@ -26,3 +32,9 @@ int KeepCapability()
 #endif
     return 0;
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

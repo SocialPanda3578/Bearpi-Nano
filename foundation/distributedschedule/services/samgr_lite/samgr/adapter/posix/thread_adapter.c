@@ -21,8 +21,7 @@
 #define MIN_STACK_SIZE 0x8000
 static int g_threadCount = 0;
 static pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_key_t g_localKey = -1;
-static pthread_once_t g_localKeyOnce = PTHREAD_ONCE_INIT;
+static pthread_key_t g_localKey = 0;
 
 MutexId MUTEX_InitValue()
 {
@@ -60,11 +59,6 @@ void MUTEX_GlobalUnlock(void)
     pthread_mutex_unlock(&g_mutex);
 }
 
-static void KeyCreate()
-{
-    (void) pthread_key_create(&g_localKey, NULL);
-}
-
 ThreadId THREAD_Create(Runnable run, void *argv, const ThreadAttr *attr)
 {
     pthread_attr_t threadAttr;
@@ -78,7 +72,7 @@ ThreadId THREAD_Create(Runnable run, void *argv, const ThreadAttr *attr)
 #endif
     pthread_attr_setschedpolicy(&threadAttr, SCHED_RR);
     pthread_attr_setschedparam(&threadAttr, &sched);
-    (void) pthread_once(&g_localKeyOnce, KeyCreate);
+    pthread_key_create(&g_localKey, NULL);
     pthread_t threadId = 0;
     int errno = pthread_create(&threadId, &threadAttr, run, argv);
     if (errno != 0) {

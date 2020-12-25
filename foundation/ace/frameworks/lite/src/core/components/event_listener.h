@@ -21,7 +21,7 @@
 #include "non_copyable.h"
 #include "ui_checkbox.h"
 #include "ui_list.h"
-#include "ui_radio_button.h"
+#include "ui_radiobutton.h"
 #include "ui_scroll_view.h"
 #include "ui_slider.h"
 #include "ui_toggle_button.h"
@@ -37,7 +37,6 @@ public:
         componentId_ = componentId;
         isChanging_ = false;
         radio_ = nullptr;
-        value_ = nullptr;
         state_ = UICheckBox::UICheckBoxState::UNSELECTED;
     }
 
@@ -62,11 +61,6 @@ public:
                 jerry_value_t nameVal = jerry_create_string(reinterpret_cast<const jerry_char_t *>(radio_->GetName()));
                 ReleaseJerryValue(jerryx_set_property_str(args[0], name, nameVal), nameVal, VA_ARG_END_FLAG);
             }
-        }
-        if (value_ != nullptr) {
-            const char * const valueName = "value";
-            jerry_value_t valueProp = jerry_create_string(reinterpret_cast<jerry_char_t *>(value_));
-            ReleaseJerryValue(jerryx_set_property_str(args[0], valueName, valueProp), valueProp, VA_ARG_END_FLAG);
         }
         jerry_value_t globalObject = jerry_get_global_object();
         jerry_value_t appViewModel = jerryx_get_property_str(globalObject, ATTR_APP);
@@ -106,11 +100,6 @@ public:
         radio_ = radioButton;
     }
 
-    void SetValue(char* value)
-    {
-        value_ = value;
-    }
-
     ~StateChangeListener()
     {
         jerry_release_value(fn_);
@@ -119,7 +108,6 @@ public:
 private:
     jerry_value_t fn_;
     uint16_t componentId_;
-    char* value_;
     UIRadioButton* radio_;
     UICheckBox::UICheckBoxState state_;
     bool isChanging_; // the flag to avoid change event cycle execute
@@ -337,10 +325,6 @@ public:
 
     void EventExcute(const int16_t index, jerry_value_t bindScrollFunc) const
     {
-        if (IS_UNDEFINED(bindScrollFunc)) {
-            return;
-        }
-
         int8_t currentState = this->GetScrollState();
         jerry_value_t currentStateValue = jerry_create_number(currentState);
         jerry_value_t componentIndex = jerry_create_number(index);

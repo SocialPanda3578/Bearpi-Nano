@@ -70,8 +70,8 @@ struct JSHeapStatus : public MemoryHeap {
  * @brief Struct definition for JS property descriptor
  */
 struct JSPropertyDescriptor : public MemoryHeap {
-    JSIFunctionHandler setter; // access function for setting value
-    JSIFunctionHandler getter; // access function for getting value
+    JSIFunctionHandler setter; // access function for set value
+    JSIFunctionHandler getter; // access function for get value
 
     JSPropertyDescriptor() : setter(nullptr), getter(nullptr) {}
 };
@@ -661,41 +661,6 @@ public:
      *         false: otherwise
      */
     static bool DefineNamedProperty(JSIValue object, const char * const propNameStr, JSPropertyDescriptor descriptor);
-
-    /**
-     * @brief Define a property on the specified object with the given setter and getter.
-     *
-     * @param [in] object: object to define property on
-     * @param [in] propNameStr: property name in character string
-     * @param [in] setter: access function for setting value
-     * @param [in] getter: access function for getting value
-     * @return true: if success
-     *         false: otherwise
-     */
-    static bool DefineNamedProperty(JSIValue object,
-                                    const char * const propNameStr,
-                                    JSIFunctionHandler setter,
-                                    JSIFunctionHandler getter);
-
-    /**
-     * @brief Call fail and complete callbacks acquired from args.
-     *
-     * @param [in] thisVal: object for 'this' binding
-     * @param [in] args: object to acquire function callbacks from
-     * @param [in] errCode: error code for fail callback
-     * @param [in] errDesc: error description for fail callback
-     */
-    static void FailCallback(const JSIValue thisVal, const JSIValue args, int32_t errCode, const char * const errDesc);
-
-    /**
-     * @brief Call success and complete callbacks acquired from args.
-     *
-     * @param [in] thisVal: object for 'this' binding
-     * @param [in] args: object to acquire function callbacks from
-     * @param [in] argv: arguments for success callback
-     * @param [in] argc: number of arguments for success callback
-     */
-    static void SuccessCallback(const JSIValue thisVal, const JSIValue args, const JSIValue *argv, uint8_t argc);
 
 private:
     // private constructor for singleton instance

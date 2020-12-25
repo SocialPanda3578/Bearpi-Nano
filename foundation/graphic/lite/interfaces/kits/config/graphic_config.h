@@ -204,23 +204,6 @@ namespace OHOS {
  * The value can be <b>16</b> or <b>32</b>.
  */
 #define COLOR_DEPTH 32
-
-/**
- * @brief Represents the code number of the layer pixel format. 
- * 0:     LAYER_PF_ARGB1555
- * 1:     LAYER_PF_ARGB8888
- * Other: LAYER_PF_ARGB8888
- */
-#define LAYER_PF_CODE                     0
-
-#if LAYER_PF_CODE == 0
-#define LAYER_PF_ARGB1555
-#elif LAYER_PF_CODE == 1
-#define LAYER_PF_ARGB8888
-#else
-#define LAYER_PF_ARGB8888
-#endif
-
 /**
  * @brief Defines the file name of default vector font.
  */
@@ -257,9 +240,9 @@ static constexpr const char* DEFAULT_SCREENSHOT_PATH = "user/log/screenshot.bin"
 static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = "user/log/dump_dom_tree.json";
 #else
 /* Default file path for screenshots */
-static constexpr const char* DEFAULT_SCREENSHOT_PATH = "/storage/screenshot.bin";
+static constexpr const char* DEFAULT_SCREENSHOT_PATH = "/data/screenshot.bin";
 /* Default file path for DOM tree logs */
-static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = "/storage/dump_dom_tree.json";
+static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = "/data/dump_dom_tree.json";
 /* Default file path for font */
 static constexpr const char* VECTOR_FONT_DIR = "/user/data/";
 #endif

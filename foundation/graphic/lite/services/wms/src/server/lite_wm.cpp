@@ -17,7 +17,6 @@
 
 #include "color.h"
 #include "graphic_log.h"
-#include "pixel_format_utils.h"
 
 namespace OHOS {
 namespace {
@@ -109,7 +108,7 @@ LiteWM::LiteWM()
 
     layerData_ = GetDevSurfaceData();
     if (layerData_ != nullptr) {
-        if (layerData_->virAddr == nullptr) {
+        if (layerData_->phyAddr == nullptr || layerData_->virAddr == nullptr) {
             GRAPHIC_LOGE("LayerInfo addr is null!");
         }
         GRAPHIC_LOGI("LayerInfo, width=%d, height=%d, stride=%d",
@@ -125,7 +124,7 @@ LiteWM::~LiteWM()
 
 void LiteWM::MainTaskHandler()
 {
-    if (layerData_ == nullptr || layerData_->virAddr == nullptr) {
+    if (layerData_ == nullptr || layerData_->phyAddr == nullptr || layerData_->virAddr == nullptr) {
         return;
     }
 
@@ -168,7 +167,7 @@ void LiteWM::Show(int32_t id)
     LiteWindow* window = GetWindowById(id);
     if (window != nullptr) {
         window->SetIsShow(true);
-        UpdateWindowRegion(window, window->config_.rect);
+        UpdateWindow(window, window->config_.rect);
     }
 }
 
@@ -178,7 +177,7 @@ void LiteWM::Hide(int32_t id)
     LiteWindow* window = GetWindowById(id);
     if (window != nullptr) {
         window->SetIsShow(false);
-        UpdateWindowRegion(window, window->config_.rect);
+        UpdateWindow(window, window->config_.rect);
     }
 }
 
@@ -195,7 +194,7 @@ void LiteWM::RaiseToTop(int32_t id)
         head->next_->prev_ = node;
         head->next_ = node;
 
-        UpdateWindowRegion(winList_.Begin()->data_, node->data_->config_.rect);
+        UpdateWindow(winList_.Begin()->data_, node->data_->config_.rect);
     }
 }
 
@@ -212,7 +211,7 @@ void LiteWM::LowerToBottom(int32_t id)
         head->prev_->next_ = node;
         head->prev_ = node;
 
-        UpdateWindowRegion(winList_.Begin()->data_, node->data_->config_.rect);
+        UpdateWindow(winList_.Begin()->data_, node->data_->config_.rect);
     }
 }
 
@@ -304,7 +303,7 @@ void LiteWM::InitMouseCursor()
     cursorInfo_.enableCursor = false;
 }
 
-LiteWindow* LiteWM::CreateWindow(const LiteWinConfig& config, pid_t pid)
+LiteWindow* LiteWM::CreateWindow(const LiteWinConfig& config)
 {
     GraphicLocker lock(stackLock_);
     if (CheckWinIdIsAvailable() == false) {
@@ -318,7 +317,6 @@ LiteWindow* LiteWM::CreateWindow(const LiteWinConfig& config, pid_t pid)
         delete window;
         return nullptr;
     }
-    window->SetPid(pid);
     winList_.PushFront(window);
     return window;
 }
@@ -332,7 +330,7 @@ void LiteWM::RemoveWindow(int32_t id)
     }
     LiteWindow* window = node->data_;
     winList_.Remove(node);
-    AddUpdateRegion(window->config_.rect);
+    UpdateWindow(winList_.Begin()->data_, window->config_.rect);
     delete window;
 }
 
@@ -376,17 +374,22 @@ void LiteWM::InitMutex(pthread_mutex_t& mutex, int type)
     pthread_mutexattr_destroy(&attr);
 }
 
+void LiteWM::UpdateWindow(const LiteWindow* window, const Rect& rect)
+{
+    GRAPHIC_LOGI("UpdateWindow, id=%d, rect={%d,%d,%d,%d}", window->id_, EXPAND_RECT(rect));
+    UpdateWindowRegion(window, rect);
+}
+
 void LiteWM::UpdateWindowRegion(const LiteWindow* window, const Rect& rect)
 {
     ListNode<LiteWindow *>* winNode = winList_.Tail();
     while (winNode != winList_.End()) {
         if (winNode->data_ == window) {
             CalculateUpdateRegion(winNode->prev_, EXPAND_RECT(rect));
-            return;
+            break;
         }
         winNode = winNode->prev_;
     }
-    AddUpdateRegion(rect);
 }
 
 void LiteWM::CalculateUpdateRegion(const ListNode<LiteWindow*>* winNode, int16_t x1, int16_t y1, int16_t x2, int16_t y2)
@@ -547,8 +550,8 @@ void LiteWM::DrawBackground(int16_t x1, int16_t y1, int16_t x2, int16_t y2)
 
     GRAPHIC_LOGD("DrawBackground, {%d,%d,%d,%d}", x1, y1, x2, y2);
     int16_t len = (x2 - x1 + 1) * layerData_->bytePerPixel;
-    for (int16_t y = y1; y <= y2; y++) {
-        LayerColorType* buf1 = reinterpret_cast<LayerColorType*>(layerData_->virAddr + y * layerData_->stride);
+    for (int y = y1; y <= y2; y++) {
+        uint16_t *buf1 = (uint16_t *)(layerData_->virAddr + y * layerData_->stride);
         if (memset_s(buf1 + x1, len, 0, len) != EOK) {
             GRAPHIC_LOGE("memset_s error!");
         }
@@ -567,24 +570,17 @@ void LiteWM::DrawMouseCursor()
     int16_t y1 = rect.GetTop();
     int16_t y2 = rect.GetBottom();
 
-    const uint16_t* srcBuf = reinterpret_cast<const uint16_t*>(CURSOR_MAP);
-    uint8_t* dstBuf = layerData_->virAddr + y1 * layerData_->stride + x1 * sizeof(LayerColorType);
-    for (int16_t y = y1; y <= y2; y++) {
-        const uint16_t* tmpSrc = srcBuf;
-        LayerColorType* tmpDst = reinterpret_cast<LayerColorType*>(dstBuf);
-        for (int16_t x = x1; x <= x2; x++) {
-            if ((*srcBuf) & 0x8000) {
-#ifdef LAYER_PF_ARGB1555
-                *tmpDst = *tmpSrc;
-#elif defined LAYER_PF_ARGB8888
-                *tmpDst = PixelFormatUtils::ARGB1555ToARGB8888(*tmpSrc);
-#endif
+    uint16_t* buf = (uint16_t*)CURSOR_MAP;
+    uint8_t* dstBuf = layerData_->virAddr + y1 * layerData_->stride;
+    for (int y = y1; y <= y2; y++) {
+        for (int x = x1; x <= x2; x++) {
+            if ((*buf) & 0x8000) {
+                *((uint16_t*)dstBuf + x) = *(buf);
             }
-            tmpSrc++;
-            tmpDst++;
+            buf++;
         }
         dstBuf += layerData_->stride;
-        srcBuf += CURSOR_WIDTH;
+        buf += (CURSOR_WIDTH - x2 + x1 - 1);
     }
 }
 
@@ -672,63 +668,21 @@ void LiteWM::OnScreenshot(Surface* surface)
 
 void LiteWM::Screenshot()
 {
-    int32_t lineSize = 0;
-    int16_t bpp = 0;
-    uint8_t* dstAddr = nullptr;
-    uint8_t* srcAddr = nullptr;
-    int32_t width = 0;
-    int32_t height = 0;
     if (screenshotSurface_ == nullptr) {
         return;
     }
 
     SurfaceBuffer* buffer = screenshotSurface_->RequestBuffer();
-    if (buffer == nullptr) {
-        goto end2;
-    }
-
-    width = screenshotSurface_->GetWidth();
-    height = screenshotSurface_->GetHeight();
-    if (width > layerData_->width || height > layerData_->height) {
-        goto end1;
-    }
-
-    if (!PixelFormatUtils::BppOfPixelFormat(static_cast<ImagePixelFormat>(screenshotSurface_->GetFormat()), bpp)) {
-        goto end1;
-    }
-
-    lineSize = width * bpp;
-    dstAddr = static_cast<uint8_t*>(buffer->GetVirAddr());
-    srcAddr = layerData_->virAddr;
-    if (dstAddr != nullptr && srcAddr != nullptr) {
-        for (int32_t i = 0; i < height; i++) {
-            if (memcpy_s(dstAddr, lineSize, srcAddr, lineSize) != EOK) {
+    if (buffer != nullptr) {
+        void* virAddr = buffer->GetVirAddr();
+        if (virAddr != nullptr) {
+            if (memcpy_s(virAddr, buffer->GetSize(), layerData_->virAddr, buffer->GetSize()) != EOK) {
                 GRAPHIC_LOGE("memcpy_s error!");
             }
-            dstAddr += lineSize;
-            srcAddr += layerData_->stride;
         }
+        screenshotSurface_->FlushBuffer(buffer);
     }
-end1:
-    screenshotSurface_->FlushBuffer(buffer);
-end2:
     delete screenshotSurface_;
     screenshotSurface_ = nullptr;
-}
-
-void LiteWM::OnClientDeathNotify(pid_t pid)
-{
-    GraphicLocker lock(stackLock_);
-    auto node = winList_.Begin();
-    while (node != winList_.End()) {
-        auto tmp = node;
-        node = node->next_;
-        LiteWindow* window = tmp->data_;
-        if (window->GetPid() == pid) {
-            winList_.Remove(tmp);
-            AddUpdateRegion(window->config_.rect);
-            delete window;
-        }
-    }
 }
 }

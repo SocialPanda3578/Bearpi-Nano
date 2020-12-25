@@ -157,9 +157,9 @@ int8_t StartAbilityFromRemote(const char *bundleName, const char *abilityName,
     if (g_serviceIdentity.token == INVALID_IPC_TOKEN) {
         /* register a callback for notification when ams starts ability successfully */
         IpcCbMode mode = ONCE;
-        if (RegisterIpcCallback(AmsResultCallback, mode, IPC_WAIT_FOREVER,
+        if (RegisteIpcCallback(AmsResultCallback, mode, IPC_WAIT_FOREVER,
             &g_serviceIdentity, NULL) != EC_SUCCESS) {
-            HILOGE("[RegisterIpcCallback failed]");
+            HILOGE("[RegisteIpcCallback failed]");
             return DMS_EC_REGISTE_IPC_CALLBACK_FAILURE;
         }
     }

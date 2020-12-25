@@ -37,6 +37,7 @@
 #ifndef _LOS_CONFIG_H
 #define _LOS_CONFIG_H
 
+#include "los_typedef.h"
 #include "target_config.h"
 
 #ifdef __cplusplus
@@ -441,7 +442,7 @@ extern UINT32 g_sysMemAddrEnd;
  * Configuration module tailoring of more mempry pool checking
  */
 #ifndef LOSCFG_MEM_MUL_POOL
-#define LOSCFG_MEM_MUL_POOL                                 YES
+#define LOSCFG_MEM_MUL_POOL                                 NO
 #endif
 
 /**
@@ -900,6 +901,29 @@ extern VOID   OsHwInit(VOID);
  * @see
  */
 extern UINT32 OsTickStart(VOID);
+
+/**
+ * @ingroup los_config
+ * @brief Configure Tick Interrupt Start.
+ *
+ * @par Description:
+ * This API is used to configure Tick Interrupt Start while macro LOSCFG_BASE_CORE_TICK_HW_TIME is Yes.
+ *
+ * @attention
+ * <ul>
+ * <li>None.</li>
+ * </ul>
+ *
+ * @param: None.
+ *
+ * @retval #LOS_OK                               0:configure Tick Interrupt success.
+ * @retval #LOS_ERRNO_TICK_CFG_INVALID           0x02000400:configure Tick Interrupt failed.
+ *
+ * @par Dependency:
+ * <ul><li>los_config.h: the header file that contains the API declaration.</li></ul>
+ * @see
+ */
+extern UINT32 os_timer_init(VOID);
 
 /**
  * @ingroup los_config

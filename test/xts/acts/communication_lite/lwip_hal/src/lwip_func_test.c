@@ -139,18 +139,9 @@ static void SampleTcpServerTask(void)
 
     waitServer();
     memset_s(buf, BUF_SIZE, 0, BUF_SIZE);
-    unsigned int recvSum = 0;
-    int recvTimes = 50;
-    while (recvTimes > 0) {
-        ret = recv(sfd, buf, sizeof(buf), 0);
-        recvSum += ret;
-        if (recvSum == (len * strlen(SRV_MSG)) || ret <= 0) {
-            break;
-        }
-        recvTimes--;
-    }
-    printf("[tcp server]recv, recvSum=%d,recvTimes=%d\n", recvSum, recvTimes);
-    TEST_ASSERT_EQUAL_INT(len * strlen(CLI_MSG), recvSum);
+    ret = recv(sfd, buf, sizeof(buf), 0);
+    printf("[tcp server]recv, ret=%d\n", ret);
+    TEST_ASSERT_EQUAL_INT(ret, len * strlen(CLI_MSG));
 
     ret = shutdown(sfd, SHUT_RDWR);
     printf("[tcp server]shutdown, ret=%d\n", ret);
@@ -235,18 +226,9 @@ static void SampleTcpClientTask(void)
 
     waitClient();
     memset_s(buf, BUF_SIZE, 0, BUF_SIZE);
-    unsigned int recvSum = 0;
-    int recvTimes = 50;
-    while (recvTimes > 0) {
-        ret = recv(sfd, buf, sizeof(buf), 0);
-        recvSum += ret;
-        if (recvSum == (len * strlen(SRV_MSG)) || ret <= 0) {
-            break;
-        }
-        recvTimes--;
-    }
-    printf("[tcp client]recv, recvSum=%d,recvTimes=%d\n", recvSum, recvTimes);
-    TEST_ASSERT_EQUAL_INT(len * strlen(SRV_MSG), recvSum);
+    ret = recv(sfd, buf, sizeof(buf), 0);
+    printf("[tcp client]recv, ret=%d\n", ret);
+    TEST_ASSERT_EQUAL_INT(ret, len * strlen(SRV_MSG));
 
     ret = shutdown(sfd, SHUT_RDWR);
     printf("[tcp client]shutdown, ret=%d\n", ret);

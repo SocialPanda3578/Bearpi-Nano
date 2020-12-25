@@ -34,6 +34,10 @@ struct Watcher : public MemoryHeap {
     struct Watcher *next;
 };
 
+#if (!defined(_WIN32) && !defined(_WIN64))
+#define SECURE_ENABLED
+#endif
+
 /*
  * Remove parameters, variables, or expressions compiling warning.
  */
@@ -162,6 +166,10 @@ uint16_t GetHorizontalResolution();
 // get screen vertical resolution
 uint16_t GetVerticalResolution();
 
+#if (defined(_WIN32) || defined(_WIN64))
+void SetSeperatedSimulatorMode(bool seperatedMode);
+bool IsSeperatedSimulatorMode();
+#endif
 // global functions
 void JerrySetNamedProperty(jerry_value_t object, const char * const name, jerry_value_t propValue);
 void JerrySetNumberProperty(jerry_value_t object, const char * const name, double value);
@@ -229,17 +237,17 @@ jerry_value_t WatcherCallbackFunc(const jerry_value_t func,
 // print out error information from jerry value
 void PrintErrorMessage(const jerry_value_t errorValue);
 // wrapper function for jerry_call_function
-jerry_value_t CallJSFunction(const jerry_value_t func,          /* function object to call */
-                             const jerry_value_t context,       /* object for 'this' binding */
-                             const jerry_value_t args[],        /* function's call arguments */
-                             const jerry_size_t argsCount);     /* number of the arguments */
-void CallJSFunctionAutoRelease(const jerry_value_t funcObj,     /* function object to call */
-                               const jerry_value_t thisVal,     /* object for 'this' binding */
-                               const jerry_value_t args[],      /* function's call arguments */
-                               const jerry_size_t argc);        /* number of the arguments */
-jerry_value_t CallJSFunctionOnRoot(const jerry_value_t funcObj, /* function object to call */
-                                   const jerry_value_t args[],  /* function's call arguments */
-                                   const jerry_size_t argc);    /* number of the arguments */
+jerry_value_t CallJSFunction(const jerry_value_t func,          /**< function object to call */
+                             const jerry_value_t context,       /**< object for 'this' binding */
+                             const jerry_value_t args[],        /**< function's call arguments */
+                             const jerry_size_t argsCount);     /**< number of the arguments */
+void CallJSFunctionAutoRelease(const jerry_value_t funcObj,     /**< function object to call */
+                               const jerry_value_t thisVal,     /**< object for 'this' binding */
+                               const jerry_value_t args[],      /**< function's call arguments */
+                               const jerry_size_t argc);        /**< number of the arguments */
+jerry_value_t CallJSFunctionOnRoot(const jerry_value_t funcObj, /**< function object to call */
+                                   const jerry_value_t args[],  /**< function's call arguments */
+                                   const jerry_size_t argc);    /**< number of the arguments */
 jerry_value_t CallJSWatcher(jerry_value_t arg1,
                             jerry_value_t (*watcherCB)(const jerry_value_t func,
                                                        const jerry_value_t context,

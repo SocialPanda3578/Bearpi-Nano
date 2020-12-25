@@ -28,6 +28,16 @@ static UITextLanguageFontParam g_uiTextLangFontsTable[LANGUAGE_FONT_ID_MAX] = {
     {30, 4, 0, 0, "RobotoCondensed-Regular"},
     {38, 4, 0, 0, "RobotoCondensed-Regular"},
     {48, 4, 0, 0, "RobotoCondensed-Regular"},
+    {14, 4, 0, 1, "HYQiHei-65S"},
+    {18, 4, 0, 1, "HYQiHei-65S"},
+    {16, 4, 0, 1, "HYQiHei-65S"},
+    {22, 4, 0, 1, "HYQiHei-65S"},
+    {24, 4, 0, 1, "HYQiHei-65S"},
+    {26, 4, 0, 1, "HYQiHei-65S"},
+    {30, 4, 0, 1, "HYQiHei-65S"},
+    {34, 4, 0, 1, "HYQiHei-65S"},
+    {38, 4, 0, 1, "HYQiHei-65S"},
+    {48, 4, 0, 1, "HYQiHei-65S"},
     {14, 4, 1, 2, "NotoNaskhArabic-Regular"},
     {18, 4, 1, 2, "NotoNaskhArabic-Regular"},
     {24, 4, 1, 2, "NotoNaskhArabic-Regular"},
@@ -91,6 +101,7 @@ static UITextLanguageFontParam g_uiTextLangFontsTable[LANGUAGE_FONT_ID_MAX] = {
 }; // g_uiTextLangFontsTable
 
 static LangTextParam g_langTextDefaultParamTable[LANGUAGE_MAX] = {
+    {0, 30, "HYQiHei-65S", "zh"},
     {0, 30, "RobotoCondensed-Regular", "en"},
     {0, 30, "RobotoCondensed-Regular", "fr"},
     {0, 30, "RobotoCondensed-Regular", "de"},
@@ -105,6 +116,8 @@ static LangTextParam g_langTextDefaultParamTable[LANGUAGE_MAX] = {
     {0, 30, "RobotoCondensed-Regular", "sv"},
     {0, 30, "RobotoCondensed-Regular", "no"},
     {0, 30, "RobotoCondensed-Regular", "fi"},
+    {0, 30, "HYQiHei-65S", "zh"},
+    {0, 30, "HYQiHei-65S", "zh"},
     {0, 30, "NotoSansCJKjp-Regular", "jv"},
     {0, 30, "NotoSansCJKkr-Regular", "ko"},
     {1, 30, "NotoNaskhArabic-Regular", "ar"},

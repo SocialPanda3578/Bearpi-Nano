@@ -42,9 +42,7 @@ JSValue DescriptorUtils::CreateDescriptorWatcher(JSValue element, JSValue descri
 {
     JSValue getter = JSObject::Get(descriptor, DESCRIPTOR_ATTR_GETTER);
     JSValue options = JSObject::Create();
-    // We should change the children of element when watcher callaback is triggered.
     JSObject::Set(options, WATCHER_OPTION_ELEMENT, element);
-    // We should know which descriptor condition is changed.
     JSObject::Set(options, WATCHER_OPTION_DESCRIPTOR, descriptor);
 
     JSValue watcher = CreateWatcher(getter, DirectiveWatcherCallback::Handler, options);
@@ -96,7 +94,7 @@ JSValue DescriptorUtils::RenderForDescriptor(JSValue descriptor)
     }
 
     JSValue render = JSObject::Get(descriptor, DESCRIPTOR_ATTR_RENDER);
-    // execute `array.map(render)`.
+
     JSValue rendered = JSArray::Map(array, render);
     JSRelease(render);
     JSRelease(array);

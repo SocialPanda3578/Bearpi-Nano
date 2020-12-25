@@ -32,9 +32,12 @@
 #define LEVEL_FOUR 4
 #define DEF_TASK_STACK 2000
 #define DEF_TASK_PRIORITY 20
+#define DEPE_AP_SSID "xts_execute"
+#define DEF_NET_IF "wlan0"
 
 static int g_apEnableSuccess = 0;
 static int g_staScanSuccess = 0;
+struct netif *g_wsNetInterface = NULL;
 WifiEvent g_wifiEventHandler = {0};
 
 /**
@@ -213,61 +216,14 @@ LITE_TEST_SUIT(communication, wifiservice, WifiServiceFuncTestSuite);
  */
 static BOOL WifiServiceFuncTestSuiteSetUp(void)
 {
-    WifiErrorCode error;
-    // check wifi stat
-    int ret = IsWifiActive();
-    if (ret == WIFI_STATE_AVALIABLE) {
-        printf("[Setup]wifi is active, disbale now...\n");
-        error = DisableWifi();
-        if (error == WIFI_SUCCESS) {
-            printf("[Setup]disbale wifi success\n");
-        } else {
-            TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
-            printf("[Setup]disbale wifi fail, please disable wifi, then run test cases!\n");
-            return FALSE;
-        }
-    }
-
-    // check AP stat
-    ret = IsHotspotActive();
-    if (ret == WIFI_HOTSPOT_ACTIVE) {
-        printf("[Setup]AP is active, disbale now...\n");
-        error = DisableHotspot();
-        if (error == WIFI_SUCCESS) {
-            printf("[Setup]disbale AP success\n");
-        } else {
-            TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
-            printf("[Setup]disbale AP fail, please disable ap, then run test cases!\n");
-            return FALSE;
-        }
-    }
-
-    // check device config
-    WifiDeviceConfig config[WIFI_MAX_CONFIG_SIZE] = {0};
-    unsigned int size = WIFI_MAX_CONFIG_SIZE;
-    error = GetDeviceConfigs(config, &size);
-    if (error != ERROR_WIFI_NOT_AVAILABLE) {
-        printf("[Setup]there is device config, clear now...\n");
-        int count = 0;
-        for (int i = 0; i < WIFI_MAX_CONFIG_SIZE; i++) {
-            if (&config[i] != NULL) {
-                RemoveDevice(config[i].netId);
-                count++;
-            }
-        }
-        printf("[Setup]clear count [%d]\n", count);
-    }
-
-    // register wifi event
     g_wifiEventHandler.OnWifiScanStateChanged = OnWifiScanStateChangedHandler;
     g_wifiEventHandler.OnWifiConnectionChanged = OnWifiConnectionChangedHandler;
     g_wifiEventHandler.OnHotspotStaJoin = OnHotspotStaJoinHandler;
     g_wifiEventHandler.OnHotspotStaLeave = OnHotspotStaLeaveHandler;
     g_wifiEventHandler.OnHotspotStateChanged = OnHotspotStateChangedHandler;
-    error = RegisterWifiEvent(&g_wifiEventHandler);
-    TEST_ASSERT_EQUAL_INT(WIFI_SUCCESS, error);
+    WifiErrorCode error = RegisterWifiEvent(&g_wifiEventHandler);
+    TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
     if (error != WIFI_SUCCESS) {
-        printf("[Setup]register wifi event fail!\n");
         return FALSE;
     }
     return TRUE;
@@ -373,13 +329,13 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testScan, LEVEL2)
 LITE_TEST_CASE(WifiServiceFuncTestSuite, testConnectDisConnect, LEVEL2)
 {
     int netId = 0;
+    int ssidLen = 11;
+    WifiErrorCode error;
     WifiDeviceConfig config = {0};
-    const char* ssid = "xts_execute";
-    int ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid, strlen(ssid));
+    int ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "xts_execute", ssidLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-
     config.securityType = WIFI_SEC_TYPE_OPEN;
-    WifiErrorCode error = AddDeviceConfig(&config, &netId);
+    error = AddDeviceConfig(&config, &netId);
     TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
 
     error = ConnectTo(netId);
@@ -404,30 +360,31 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testConnectDisConnect, LEVEL2)
 LITE_TEST_CASE(WifiServiceFuncTestSuite, testHandleDeviceConfig, LEVEL2)
 {
     int netId = 0;
-    const char* ssid1 = "XtsTestWifi1";
-    const char* ssid2 = "XtsTestWifi2";
-    const char* ssid3 = "XtsTestWifi3";
-    const char* info = "12345678";
+    int ssidLen = 11;
+    int keyLen = 8;
+    int freq = 20;
     unsigned char bssid[WIFI_MAC_LEN] = {0xac, 0x75, 0x1d, 0xd8, 0x55, 0xc1};
     WifiDeviceConfig config = {0};
-    config.freq = 20;
+    config.freq = freq;
     config.securityType = WIFI_SEC_TYPE_SAE;
     config.wapiPskType = WIFI_PSK_TYPE_ASCII;
-    int ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid1, strlen(ssid1));
+    int ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "XtsTestWifi", ssidLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-    ret = strncpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, info, strlen(info));
+    ret = memcpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, "12345678", keyLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
     ret = memcpy_s(config.bssid, WIFI_MAC_LEN, bssid, WIFI_MAC_LEN);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
     WifiErrorCode error = AddDeviceConfig(&config, &netId);
     TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
 
-    for (int i = 0; i < WIFI_MAX_CONFIG_SIZE - 1; i++) {
+    ssidLen += 1;
+    int addCount = 9;
+    for (int i = 0; i < addCount; i++) {
         config.securityType = WIFI_SEC_TYPE_PSK;
         config.wapiPskType = WIFI_PSK_TYPE_HEX;
-        ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid2, sizeof(ssid2));
+        ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "XtsTestWifi2", ssidLen);
         TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-        ret = strncpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, info, strlen(info));
+        ret = memcpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, "01234567", keyLen);
         TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
         error = AddDeviceConfig(&config, &netId);
         TEST_ASSERT_EQUAL_INT(error, WIFI_SUCCESS);
@@ -437,9 +394,9 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testHandleDeviceConfig, LEVEL2)
         }
     }
 
-    ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid3, strlen(ssid3));
+    ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "XtsTestWifi3", ssidLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-    ret = strncpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, info, strlen(info));
+    ret = memcpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, "01234567", keyLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
     config.securityType = WIFI_SEC_TYPE_PSK;
     error = AddDeviceConfig(&config, &netId);
@@ -470,12 +427,12 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testHandleDeviceConfig, LEVEL2)
  */
 LITE_TEST_CASE(WifiServiceFuncTestSuite, testHandleHotspotConfig, LEVEL2)
 {
-    const char* ssid = "XtsTestAp";
-    const char* info = "12345678";
+    int keyLen = 9;
+    int ssidLen = 10;
     HotspotConfig config = {0};
-    int ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid, strlen(ssid));
+    int ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "XtsTestAp", ssidLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-    ret = strncpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, info, strlen(info));
+    ret = memcpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, "12345678", keyLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
     config.securityType = WIFI_SEC_TYPE_PSK;
     WifiErrorCode error = SetHotspotConfig(&config);
@@ -516,12 +473,12 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testHandleHotspotConfig, LEVEL2)
  */
 LITE_TEST_CASE(WifiServiceFuncTestSuite, testEnableDisableHotSpot, LEVEL2)
 {
-    const char* ssid = "XtsTestAp";
-    const char* info = "12345678";
+    int ssidLen = 10;
+    int keyLen = 9;
     HotspotConfig config = {0};
-    int ret = strncpy_s(config.ssid, WIFI_MAX_SSID_LEN, ssid, strlen(ssid));
+    int ret = memcpy_s(config.ssid, WIFI_MAX_SSID_LEN, "XtsTestAp", ssidLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
-    ret = strncpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, info, strlen(info));
+    ret = memcpy_s(config.preSharedKey, WIFI_MAX_KEY_LEN, "12345678", keyLen);
     TEST_ASSERT_EQUAL_INT(ret, WIFI_SUCCESS);
     config.securityType = WIFI_SEC_TYPE_PSK;
     WifiErrorCode error = SetHotspotConfig(&config);
@@ -692,7 +649,7 @@ LITE_TEST_CASE(WifiServiceFuncTestSuite, testAdvanceScanInvalidParam01, LEVEL2)
 
 /**
  * @tc.number    : SUB_COMMUNICATION_WIFISERVICE_SDK_1000
- * @tc.name      : test adavance scan interface with different invalid scantype
+ * @tc.name      : test adavance scan interface with invalid parameter
  * @tc.desc      : [C- SOFTWARE -0200]
  * @tc.size      : MEDIUM
  * @tc.type      : FUNC

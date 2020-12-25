@@ -22,8 +22,8 @@
 #ifndef __LINUX__
 #include "hap_sign_verify.h"
 #endif
+#include "stdint.h"
 
-#include <cstdint>
 #include <string>
 #include <vector>
 

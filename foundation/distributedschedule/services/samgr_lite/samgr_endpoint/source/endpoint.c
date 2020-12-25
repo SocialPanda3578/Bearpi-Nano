@@ -224,8 +224,8 @@ static void *Receive(void *argv)
         ret = endpoint->registerEP(endpoint->context, &endpoint->identity);
         if (ret == EC_SUCCESS) {
             SvcIdentity samgr = {SAMGR_HANDLE, SAMGR_TOKEN, SAMGR_COOKIE};
-            (void)UnregisterDeathCallback(samgr, endpoint->deadId);
-            (void)RegisterDeathCallback(endpoint->context, samgr, OnSamgrServerExit, endpoint, &endpoint->deadId);
+            (void)UnRegisteDeathCallback(samgr, endpoint->deadId);
+            (void)RegisteDeathCallback(endpoint->context, samgr, OnSamgrServerExit, endpoint, &endpoint->deadId);
             break;
         }
         ++retry;
@@ -382,6 +382,7 @@ static int RegisterRemoteEndpoint(const IpcContext *context, SvcIdentity *identi
     IpcIoInit(&req, data, MAX_DATA_LEN, 0);
     IpcIoPushUint32(&req, RES_ENDPOINT);
     IpcIoPushUint32(&req, OP_POST);
+    IpcIoPushUint32(&req, identity->handle);
     uint8 retry = 0;
     while (retry < MAX_RETRY_TIMES) {
         ++retry;
@@ -427,20 +428,17 @@ static int OnSamgrServerExit(const IpcContext *context, void *ipcMsg, IpcIo *dat
         router->policyNum = 0;
     }
 
-    SvcIdentity old = endpoint->identity;
     while (endpoint->registerEP(endpoint->context, &endpoint->identity) != EC_SUCCESS) {
         HILOG_ERROR(HILOG_MODULE_SAMGR, "Reconnect to samgr server failed!");
         sleep(RETRY_INTERVAL);
     }
-    SvcIdentity new = endpoint->identity;
-    if (old.handle != new.handle || old.cookie != new.cookie || old.token != new.token) {
-        HILOG_ERROR(HILOG_MODULE_SAMGR, "Samgr server identity error!");
-        exit(-1);
-    }
 
-    SvcIdentity identity = {SAMGR_HANDLE, SAMGR_TOKEN, SAMGR_COOKIE};
-    (void)UnregisterDeathCallback(identity, endpoint->deadId);
-    (void)RegisterDeathCallback(endpoint->context, identity, OnSamgrServerExit, endpoint, &endpoint->deadId);
+    SvcIdentity identity;
+    identity.handle = SAMGR_HANDLE;
+    identity.token = SAMGR_TOKEN;
+    identity.cookie = SAMGR_COOKIE;
+    (void)UnRegisteDeathCallback(identity, endpoint->deadId);
+    (void)RegisteDeathCallback(endpoint->context, identity, OnSamgrServerExit, endpoint, &endpoint->deadId);
     int remain = RegisterRemoteFeatures(endpoint);
     HILOG_INFO(HILOG_MODULE_SAMGR, "Reconnect and register finished! remain<%d> iunknown!", remain);
     return EC_SUCCESS;

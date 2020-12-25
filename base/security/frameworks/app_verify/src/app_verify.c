@@ -51,14 +51,6 @@ static const TrustAppCert g_trustAppList[] = {
             "C=CN, O=Huawei CBG, OU=HOS Development Team, CN=HOS Application Provision Profile Release_Debug",
         .issueCA = "C=CN, O=Huawei, OU=Huawei CBG, CN=Huawei CBG Software Signing Service CA",
     },
-    {
-        .maxCertPath = CERT_MAX_DEPTH,
-        .name = "huawei system apps",
-        .appSignCert = "C=CN, O=OpenHarmony, OU=OpenHarmony Development Team, CN=OpenHarmony Software Signature",
-        .profileSignCert = "C=CN, O=OpenHarmony, OU=OpenHarmony Development Team, CN=OpenHarmony Software Signature",
-        .profileDebugSignCert = "C=CN, O=OpenHarmony, OU=OpenHarmony Development Team, CN=OpenHarmony Software Signature",
-        .issueCA = "C=CN, O=OpenHarmony, OU=OpenHarmony Development Team, CN=OpenHarmony Software Signature",
-    },
 };
 
 static const TrustAppCert g_trustAppListTest[] = {
@@ -90,6 +82,7 @@ static void SignHeadN2H(HwSignHead *signHead)
     signHead->magicLow = HapGetInt64((unsigned char *)&signHead->magicLow, sizeof(signHead->magicLow));
     signHead->magicHigh = HapGetInt64((unsigned char *)&signHead->magicHigh, sizeof(signHead->magicHigh));
     signHead->version = HapGetInt((unsigned char *)&signHead->version, sizeof(signHead->version));
+    return;
 }
 
 static void BlockHeadN2H(BlockHead *blockHead)
@@ -97,6 +90,7 @@ static void BlockHeadN2H(BlockHead *blockHead)
     blockHead->type = HapGetInt((unsigned char *)&blockHead->type, sizeof(blockHead->type));
     blockHead->length = HapGetInt((unsigned char *)&blockHead->length, sizeof(blockHead->length));
     blockHead->offset = HapGetInt((unsigned char *)&blockHead->offset, sizeof(blockHead->offset));
+    return;
 }
 
 static void ContentN2H(ContentInfo *content)
@@ -105,6 +99,7 @@ static void ContentN2H(ContentInfo *content)
     content->size = HapGetInt((unsigned char *)&content->size, sizeof(content->size));
     content->algId = HapGetInt((unsigned char *)&content->algId, sizeof(content->algId));
     content->length = HapGetInt((unsigned char *)&content->length, sizeof(content->length));
+    return;
 }
 
 static int GetSignHead(const FileRead *file, SignatureInfo *signInfo)
@@ -240,6 +235,7 @@ int CalculateHash(const unsigned char *input, int len, int hashAlg, unsigned cha
     int ret = mbedtls_md(mbedtls_md_info_from_type((mbedtls_md_type_t)hashAlg), input, len, output);
     if (ret) {
         LOG_ERROR("Error: calc digest failed");
+        return ret;
     }
     return ret;
 }
@@ -539,7 +535,6 @@ EXIT:
     APPV_FREE(profileData);
     return V_ERR;
 }
-
 static unsigned char *GetRsaPk(const mbedtls_pk_context *pk, int *len)
 {
     unsigned char *buf = APPV_MALLOC(MAX_PK_BUF);
@@ -645,14 +640,16 @@ static int ParseCertGetPk(const char *certEncoded, AppSignPk *pk)
     }
     int len = 0;
     unsigned char *pkBuf = GetPkBuf(&cert->pk, &len);
-    mbedtls_x509_crt_free(cert);
-    APPV_FREE(cert);
     if (pkBuf == NULL) {
         LOG_ERROR("get pk error");
+        mbedtls_x509_crt_free(cert);
+        APPV_FREE(cert);
         return V_ERR;
     }
     pk->pk = (char *)pkBuf;
     pk->len = len;
+    mbedtls_x509_crt_free(cert);
+    APPV_FREE(cert);
     return V_OK;
 }
 
@@ -678,6 +675,7 @@ static void FreeAppSignPublicKey(AppSignPk *pk)
     if (pk->pk != NULL) {
         APPV_FREE(pk->pk);
     }
+    return;
 }
 
 int GetAppid(ProfileProf *profile)
@@ -715,15 +713,16 @@ int GetAppid(ProfileProf *profile)
     }
     ret = mbedtls_base64_encode((unsigned char *)appid + bundleNameLen + 1,
         appidLen - bundleNameLen - 1, &useLen, (unsigned char *)pk.pk, pk.len);
-    FreeAppSignPublicKey(&pk);
     if (ret != V_OK) {
         LOG_ERROR("base 64 encode error");
         APPV_FREE(appid);
+        FreeAppSignPublicKey(&pk);
         return V_ERR_GET_APPID;
     }
     profile->appid = appid;
     LOG_INFO("appid len: %d, bL len: %d, base64: %d", appidLen, bundleNameLen, (int)useLen);
     LOG_PRINT_STR("%s", appid);
+    FreeAppSignPublicKey(&pk);
     return V_OK;
 }
 
@@ -749,11 +748,12 @@ static int VerifyProfGetContent(int fp, const SignatureInfo *signInfo, int certT
     }
 
     ret = ParseProfile(profBuf, len, pf);
-    APPV_FREE(profBuf);
     if (ret != V_OK) {
         LOG_ERROR("GetSignBlock error");
+        APPV_FREE(profBuf);
         return V_ERR_GET_PARSE_PROFILE;
     }
+    APPV_FREE(profBuf);
 
     ret = VerifyProfileContent(pf);
     P_ERR_GOTO_WTTH_LOG(ret);
@@ -1134,12 +1134,14 @@ static int VerifyIntegrity(SignatureInfo *signInfo, int fp, ProfileProf *pf)
     }
 
     ret = VerfiyAppSourceGetProfile(fp, signInfo, certType, binSignCert, pf);
-    FreeCertInfo(binSignCert);
-    APPV_FREE(binSignCert);
     if (ret != V_OK) {
         LOG_ERROR("verify app source failed : %d", ret);
+        FreeCertInfo(binSignCert);
+        APPV_FREE(binSignCert);
         return ret;
     }
+    FreeCertInfo(binSignCert);
+    APPV_FREE(binSignCert);
     return V_OK;
 }
 

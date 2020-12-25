@@ -19,7 +19,6 @@
 #include <los_base.h>
 #include "hctest.h"
 #include "parameter.h"
-#include <unistd.h>
 
 void setUp() {}
 void tearDown() {}
@@ -163,7 +162,6 @@ static void RunTestSuite(const char* suite_name)
         int16 times = curSuite->times;
         int16 i;
         for (i = 0; i < times; i++) {
-            sleep(1);
             printf("Run test suite %d times\n", i+1);
             runSingleTestSuite(curSuite);
         }

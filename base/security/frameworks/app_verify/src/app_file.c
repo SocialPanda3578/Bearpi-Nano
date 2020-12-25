@@ -29,10 +29,9 @@ static int g_memoryPageSize = 0;
 int InitVerify(FileRead *file, const char *filePath, int *handle)
 {
     if (handle == NULL || file == NULL || filePath == NULL) {
-        LOG_ERROR("invalid input");
+        LOG_ERROR("file open error");
         return V_ERR_FILE_OPEN;
     }
-    RegistHalFunc();
     char *path = APPV_MALLOC(PATH_MAX + 1);
     if (path == NULL) {
         LOG_ERROR("path malloc error");
@@ -44,8 +43,8 @@ int InitVerify(FileRead *file, const char *filePath, int *handle)
         return V_ERR_FILE_OPEN;
     }
     *handle = open(path, O_RDONLY, 0);
-    APPV_FREE(path);
     if (*handle < 0) {
+        APPV_FREE(path);
         LOG_PRINT_STR("file open error %s", path);
         return V_ERR_FILE_OPEN;
     }
@@ -54,10 +53,12 @@ int InitVerify(FileRead *file, const char *filePath, int *handle)
     }
     if (g_memoryPageSize <= 0) {
         LOG_ERROR("MAP_FAILED %d", g_memoryPageSize);
+        APPV_FREE(path);
         return V_ERR_FILE_STAT;
     }
     file->len = lseek(*handle, 0, SEEK_END);
     file->fp = *handle;
+    APPV_FREE(path);
     return V_OK;
 }
 
@@ -81,7 +82,7 @@ int HapMMap(int bufCapacity, int offset, MmapInfo *mmapInfo, const FileRead *fil
     mmapInfo->readMoreLen = (int)(offset - mmapInfo->mmapPosition);
     mmapInfo->mmapSize = bufCapacity + mmapInfo->readMoreLen;
     mmapInfo->mapAddr = (char*)(mmap(NULL, mmapInfo->mmapSize, PROT_READ,
-        MAP_SHARED, file->fp, mmapInfo->mmapPosition));
+        MAP_SHARED | MAP_POPULATE, file->fp, mmapInfo->mmapPosition));
     if (mmapInfo->mapAddr == MAP_FAILED) {
         LOG_ERROR("MAP_FAILED");
         return MMAP_FAILED;

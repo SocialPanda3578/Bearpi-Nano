@@ -532,7 +532,7 @@ LITE_TEST_CASE(KalFuncTestSuite, testKalGetMemInfo001, LEVEL1)
     MemInfo *pmemInfo;
     pmemInfo = malloc(sizeof(MemInfo));
     if (pmemInfo == NULL) {
-        TEST_FAIL();
+        TEST_ASSERT_EQUAL_INT(0, 1);
     }
     kRet = KalGetMemInfo(pmemInfo);
     TEST_ASSERT_EQUAL_INT(KAL_OK, kRet);

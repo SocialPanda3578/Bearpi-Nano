@@ -94,7 +94,7 @@ static int32_t
     paramIndex++;
 
     uint32_t frameRate = attr->fps;
-    MEDIA_DEBUG_LOG("frameRate=%u", frameRate);
+    MEDIA_DEBUG_LOG("frameRate=%d", frameRate);
     param[paramIndex].key = KEY_VIDEO_FRAME_RATE;
     param[paramIndex].val = &frameRate;
     param[paramIndex].size = sizeof(uint32_t);

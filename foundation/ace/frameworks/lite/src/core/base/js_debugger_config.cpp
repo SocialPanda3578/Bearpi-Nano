@@ -31,7 +31,10 @@ bool Debugger::IsDebuggerEnabled()
 
 void Debugger::ConfigEngineDebugger(DebuggerConfig &config)
 {
-    debuggerConfig_ = config;
+    if (memcpy_s(&debuggerConfig_, sizeof(DebuggerConfig), &config, sizeof(DebuggerConfig)) != 0) {
+        HILOG_ERROR(HILOG_MODULE_ACE, "ConfigEngineDebugger memcpy_s failed!");
+        return;
+    }
     ConfigDebugger();
 }
 

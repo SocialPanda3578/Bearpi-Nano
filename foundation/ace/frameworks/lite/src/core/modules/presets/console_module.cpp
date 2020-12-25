@@ -14,6 +14,9 @@
  */
 
 #include "presets/console_module.h"
+#if (defined(_WIN32) || defined(_WIN64))
+#include "handler.h"
+#endif /* defined(_WIN32) || defined(_WIN64) */
 #if ENABLED(CONSOLE_LOG_OUTPUT)
 #include "presets/console_log_impl.h"
 #endif // ENABLED(CONSOLE_LOG_OUTPUT)
@@ -43,7 +46,7 @@ jerry_value_t ConsoleModule::LogDebug(const jerry_value_t func,
     return UNDEFINED;
 #else
     return LogNative(LOG_LEVEL_DEBUG, func, context, args, length);
-#endif // DISABLED(CONSOLE_LOG_OUTPUT)
+#endif /* !defined(_WIN32) && !defined(_WIN64) */
 }
 
 jerry_value_t ConsoleModule::LogInfo(const jerry_value_t func,
@@ -55,7 +58,7 @@ jerry_value_t ConsoleModule::LogInfo(const jerry_value_t func,
     return UNDEFINED;
 #else
     return LogNative(LOG_LEVEL_INFO, func, context, args, length);
-#endif // DISABLED(CONSOLE_LOG_OUTPUT)
+#endif /* !defined(_WIN32) && !defined(_WIN64) */
 }
 
 jerry_value_t ConsoleModule::LogWarn(const jerry_value_t func,
@@ -67,7 +70,7 @@ jerry_value_t ConsoleModule::LogWarn(const jerry_value_t func,
     return UNDEFINED;
 #else
     return LogNative(LOG_LEVEL_WARN, func, context, args, length);
-#endif // DISABLED(CONSOLE_LOG_OUTPUT)
+#endif /* !defined(_WIN32) && !defined(_WIN64) */
 }
 
 jerry_value_t ConsoleModule::Log(const jerry_value_t func,
@@ -79,7 +82,7 @@ jerry_value_t ConsoleModule::Log(const jerry_value_t func,
     return UNDEFINED;
 #else
     return LogNative(LOG_LEVEL_NONE, func, context, args, length);
-#endif // DISABLED(CONSOLE_LOG_OUTPUT)
+#endif /* !defined(_WIN32) && !defined(_WIN64) */
 }
 
 jerry_value_t ConsoleModule::LogError(const jerry_value_t func,
@@ -91,7 +94,7 @@ jerry_value_t ConsoleModule::LogError(const jerry_value_t func,
     return UNDEFINED;
 #else
     return LogNative(LOG_LEVEL_ERR, func, context, args, length);
-#endif // DISABLED(CONSOLE_LOG_OUTPUT)
+#endif /* !defined(_WIN32) && !defined(_WIN64) */
 }
 } // namespace ACELite
 } // namespace OHOS

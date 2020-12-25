@@ -134,15 +134,7 @@ Linux服务器通用环境配置需要的工具及其获取途径如下表所示
 </td>
 <td class="cellrowborder" valign="top" width="33.33333333333333%" headers="mcps1.2.4.1.3 "><p id="p146361701097"><a name="p146361701097"></a><a name="p146361701097"></a><a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">https://code.visualstudio.com/</a></p>
 </td>
-</tr>
-<tr id="row12133123315277"><td class="cellrowborder" valign="top" width="16.371637163716375%" headers="mcps1.2.4.1.1 "><p id="p613393317271"><a name="p613393317271"></a><a name="p613393317271"></a>HUAWEI DevEco Device Tool</p>
-</td>
-<td class="cellrowborder" valign="top" width="50.29502950295029%" headers="mcps1.2.4.1.2 "><p id="p10133193310276"><a name="p10133193310276"></a><a name="p10133193310276"></a>IDE开发工具，支持WLAN模组的代码编写、远程编译、版本烧录、串口调试等功能。</p>
-<div class="note" id="note7133193392718"><a name="note7133193392718"></a><a name="note7133193392718"></a><span class="notetitle"> 说明： </span><div class="notebody"><p id="p1133183310277"><a name="p1133183310277"></a><a name="p1133183310277"></a>HUAWEI DevEco Device Tool是<span id="text4133533192719"><a name="text4133533192719"></a><a name="text4133533192719"></a>OpenHarmony</span>面向智能设备开发者提供的一站式集成开发环境，支持<span id="text4133933162719"><a name="text4133933162719"></a><a name="text4133933162719"></a>OpenHarmony</span>的组件按需定制，支持C/C++语言，以插件的形式部署在Visual Studio Code上。</p>
-</div></div>
-</td>
-<td class="cellrowborder" valign="top" width="33.33333333333333%" headers="mcps1.2.4.1.3 "><p id="p1240954393114"><a name="p1240954393114"></a><a name="p1240954393114"></a><a href="https://device.harmonyos.com/cn/ide" target="_blank" rel="noopener noreferrer">https://device.harmonyos.com/cn/ide</a></p>
-</td>
+
 </tr>
 <tr id="row18342145821513"><td class="cellrowborder" valign="top" width="16.371637163716375%" headers="mcps1.2.4.1.1 "><p id="p123421958131517"><a name="p123421958131517"></a><a name="p123421958131517"></a>MobaXterm、PuTTY或其他超级终端（选其一）</p>
 </td>

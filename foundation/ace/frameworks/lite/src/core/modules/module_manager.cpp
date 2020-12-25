@@ -38,6 +38,7 @@ extern const PrivateModule* GetPrivateModules(uint16_t& moduleCount);
 
 // Initialization of static variables
 JSIValue ModuleManager::requiredSystemModules = 0;
+JSIValue ModuleManager::requiredHistoryModules = 0;
 
 JSIValue ModuleManager::RequireModule(const char * const moduleName)
 {
@@ -215,30 +216,30 @@ JSIValue ModuleManager::InitModuleObject(const char * const name, Module module,
 
 void ModuleManager::InsertTerminateCallback(const char * const name, const JSIValue& moduleObj)
 {
-    if (name == nullptr) {
-        return;
+    if (requiredHistoryModules == 0) {
+        requiredHistoryModules = JSI::CreateObject();
     }
-    // Determine if this callback has been inserted
-    CallbackNode *node = onTerminateHead_;
-    while (node != nullptr) {
-        if ((node->moduleName != nullptr) && (strcmp(name, node->moduleName) == 0)) {
-            return;
-        }
-        node = node->next;
+    JSIValue object = JSI::GetNamedProperty(requiredHistoryModules, name);
+    if (JSI::ValueIsUndefined(object)) {
+        JSI::SetNamedProperty(requiredHistoryModules, name, moduleObj);
+        // Get OnTerminate callback from module object
+        NativeCallback terminate = GetNativeCallback(moduleObj, ON_TERMINATE);
+        JsiCallback terminateHandler = GetJsiCallback(moduleObj, ON_TERMINATE_HANDLER);
+        InsertCallback(onTerminateHead_, terminate, terminateHandler);
     }
-    // Get OnTerminate callback from module object
-    NativeCallback terminate = GetNativeCallback(moduleObj, ON_TERMINATE);
-    JsiCallback terminateHandler = GetJsiCallback(moduleObj, ON_TERMINATE_HANDLER);
-    InsertCallback(onTerminateHead_, terminate, terminateHandler, name);
+    JSI::ReleaseValue(object);
 }
 
 void ModuleManager::OnTerminate()
 {
+    if (requiredHistoryModules != 0) {
+        JSI::ReleaseValue(requiredHistoryModules);
+        requiredHistoryModules = 0;
+    }
     InvokeCallbacks(onTerminateHead_);
 }
 
-void ModuleManager::InsertCallback(CallbackNode *&head, NativeCallback callback,
-    JsiCallback callbackHandler, const char * const moduleName) const
+void ModuleManager::InsertCallback(CallbackNode *&head, NativeCallback callback, JsiCallback callbackHandler) const
 {
     if ((callback == nullptr) && (callbackHandler == nullptr)) {
         return;
@@ -249,13 +250,6 @@ void ModuleManager::InsertCallback(CallbackNode *&head, NativeCallback callback,
     }
     node->callback = callback;
     node->callbackHandler = callbackHandler;
-    if (moduleName != nullptr) {
-        char *copiedName = nullptr;
-        if (CreateString(moduleName, &copiedName)) {
-            node->moduleName = copiedName;
-        }
-    }
-
     if (head == nullptr) {
         head = node;
     } else {

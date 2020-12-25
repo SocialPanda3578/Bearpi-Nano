@@ -23,7 +23,7 @@
 #include "service.h"
 
 namespace OHOS {
-typedef int32_t (*InvokeFunc)(IpcIo *req);
+typedef int32 (*InvokeFunc)(IpcIo *req);
 class BundleDaemon : public Service, NoCopyable {
 public:
     static BundleDaemon &GetInstance()
@@ -31,7 +31,7 @@ public:
         static BundleDaemon instance;
         return instance;
     }
-    static int32_t Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply);
+    static int32 Invoke(IServerProxy *iProxy, int funcId, void *origin, IpcIo *req, IpcIo *reply);
 private:
     static const char *GetServiceName(Service *service);
     static BOOL ServiceInitialize(Service *service, Identity identity);
@@ -44,22 +44,20 @@ private:
     BundleDaemonHandler handler_ {};
     BundleMsClient *bundleMsClient_ { nullptr };
 
-    static int32_t RegisterCallbackInvoke(IpcIo *req);
-    static int32_t ExtractHapInvoke(IpcIo *req);
-    static int32_t RenameFileInvoke(IpcIo *req);
-    static int32_t CreatePermissionInvoke(IpcIo *req);
-    static int32_t CreateDataDirectoryInvoke(IpcIo *req);
-    static int32_t StoreContentToFileInvoke(IpcIo *req);
-    static int32_t MoveFileInvoke(IpcIo *req);
-    static int32_t RemoveFileInvoke(IpcIo *req);
-    static int32_t RemoveInstallDirectoryInvoke(IpcIo *req);
+    static int32 RegisterCallbackInvoke(IpcIo *req);
+    static int32 ExtractHapInvoke(IpcIo *req);
+    static int32 RenameFileInvoke(IpcIo *req);
+    static int32 CreatePermissionInvoke(IpcIo *req);
+    static int32 CreateDataDirectoryInvoke(IpcIo *req);
+    static int32 StoreContentToFileInvoke(IpcIo *req);
+    static int32 RemoveFileInvoke(IpcIo *req);
+    static int32 RemoveInstallDirectoryInvoke(IpcIo *req);
     static constexpr InvokeFunc invokeFuncs[BDS_CMD_END] {
         BundleDaemon::ExtractHapInvoke,
         BundleDaemon::RenameFileInvoke,
         BundleDaemon::CreatePermissionInvoke,
         BundleDaemon::CreateDataDirectoryInvoke,
         BundleDaemon::StoreContentToFileInvoke,
-        BundleDaemon::MoveFileInvoke,
         BundleDaemon::RemoveFileInvoke,
         BundleDaemon::RemoveInstallDirectoryInvoke,
     };

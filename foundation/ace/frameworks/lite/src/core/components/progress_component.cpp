@@ -31,11 +31,8 @@ ProgressComponent::ProgressComponent(jerry_value_t options, jerry_value_t childr
       progressView_(nullptr),
       type_(HORIZONTAL),
       hStrokeWidth_(0),
-      centerX_(INT16_MAX),
-      centerY_(INT16_MAX),
-      radius_(INT16_MAX),
-      startAngle_(DEFAULT_START_ANGLE),
-      totalAngle_(DEFAULT_TOTAL_ANGLE)
+      startAngle_(-1),
+      totalAngle_(-1)
 {
     SetComponentName(K_PROGRESS);
 }
@@ -55,6 +52,10 @@ bool ProgressComponent::CreateNativeViews()
 
         // set default value
         UICircleProgress *circleProgress = reinterpret_cast<UICircleProgress *>(progressView_);
+        circleProgress->SetRadius(circleProgress->GetRadius());
+        circleProgress->SetStartAngle(circleProgress->GetStartAngle());
+        circleProgress->SetEndAngle(circleProgress->GetEndAngle());
+
         circleProgress->SetBackgroundStyle(StyleDefault::GetBrightStyle());
         const int8_t defaultLineWidth = 32;
         circleProgress->SetBackgroundStyle(STYLE_LINE_WIDTH, defaultLineWidth); // Compatible with rich devices
@@ -180,28 +181,21 @@ void ProgressComponent::HorizonProgressPostDeal() const
     horizonProgress->SetValidHeight(hStrokeWidth_);
 }
 
-void ProgressComponent::SetAngles()
+void ProgressComponent::SetAngles() const
 {
     UICircleProgress *circleProgress = reinterpret_cast<UICircleProgress *>(progressView_);
-
-    if (centerX_ == INT16_MAX) {
-        centerX_ = static_cast<uint16_t>(circleProgress->GetWidth()) >> 1;
+    uint8_t defaultStartAngle = 240;
+    if (startAngle_ == -1) {
+        circleProgress->SetStartAngle(defaultStartAngle);
+    } else {
+        circleProgress->SetStartAngle(startAngle_);
     }
-    if (centerY_ == INT16_MAX) {
-        centerY_ = static_cast<uint16_t>(circleProgress->GetHeight()) >> 1;
+    if (totalAngle_ == -1) {
+        uint8_t defaultTotalAngle = 240;
+        circleProgress->SetEndAngle(defaultStartAngle + defaultTotalAngle);
+    } else {
+        circleProgress->SetEndAngle(startAngle_ + totalAngle_);
     }
-    if (radius_ == INT16_MAX) {
-        if (circleProgress->GetWidth() <= circleProgress->GetHeight()) {
-            radius_ = static_cast<uint16_t>(circleProgress->GetWidth()) >> 1;
-        } else {
-            radius_ = static_cast<uint16_t>(circleProgress->GetHeight()) >> 1;
-        }
-    }
-
-    circleProgress->SetCenterPosition(centerX_, centerY_);
-    circleProgress->SetRadius(radius_);
-    circleProgress->SetStartAngle(startAngle_);
-    circleProgress->SetEndAngle(startAngle_ + totalAngle_);
 }
 
 bool ProgressComponent::SetArcProgressStyle(const AppStyleItem *style)
@@ -216,15 +210,19 @@ bool ProgressComponent::SetArcProgressStyle(const AppStyleItem *style)
 
     switch (stylePropNameId) {
         case K_CENTER_X: {
-            centerX_ = GetStylePixelValue(style);
+            Point point = circleProgress->GetCenterPosition();
+            point.x = GetStylePixelValue(style);
+            circleProgress->SetCenterPosition(point.x, point.y);
             return true;
         }
         case K_CENTER_Y: {
-            centerY_ = GetStylePixelValue(style);
+            Point point = circleProgress->GetCenterPosition();
+            point.y = GetStylePixelValue(style);
+            circleProgress->SetCenterPosition(point.x, point.y);
             return true;
         }
         case K_RADIUS: {
-            radius_ = GetStylePixelValue(style);
+            circleProgress->SetRadius(GetStylePixelValue(style));
             return true;
         }
         case K_START_ANGLE: {
@@ -327,7 +325,9 @@ void ProgressComponent::PostUpdate(uint16_t attrKeyId, bool updateResult)
     if (type_ == HORIZONTAL) {
         HorizonProgressPostDeal();
     } else if (type_ == ARC) {
-        SetAngles();
+        if ((attrKeyId == K_DIRECTION) || (attrKeyId == K_START_ANGLE) || (attrKeyId == K_TOTAL_ANGLE)) {
+            SetAngles();
+        }
     } else {
         // Do nothing
     }

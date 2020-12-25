@@ -132,6 +132,30 @@ HWTEST_F(PipeTest, testPipeBuf, TestSize.Level3)
 }
 
 /**
+ * @tc.number   SUB_KERNEL_IPC_PIPE_0500
+ * @tc.name     teset max pipe number
+ * @tc.desc     [C- SOFTWARE -0200]
+ * @tc.size     SMALL
+ * @tc.type     FUNC
+ */
+HWTEST_F(PipeTest, testMaxPipeNum, TestSize.Level2)
+{
+    int fd[MAX_PIPE_NUMBER * 2];                  // two file descriptor
+    int tmpInt;
+    for (int i = 0; i < MAX_PIPE_NUMBER; i++) {
+        tmpInt = pipe(&fd[i * 2]);
+        ASSERT_EQ(tmpInt, 0) << "> Create Pipe Error! " << errno;
+        LOG("> Create Pipe %d", i);
+    }
+    tmpInt = pipe(fd);
+    EXPECT_TRUE((tmpInt == -1) && (errno == ENFILE)) << "> tmpInt = "<< tmpInt << "\n" \
+                                                     << "> errno = " << errno;
+    for (int i = 0; i < MAX_PIPE_NUMBER * 2; i++) {
+        close(fd[i]);
+    }
+}
+
+/**
  * @tc.number   SUB_KERNEL_IPC_PIPE_0600
  * @tc.name     test pipe-ipc between brother
  * @tc.desc     [C- SOFTWARE -0200]

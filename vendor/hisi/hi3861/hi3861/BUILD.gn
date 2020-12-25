@@ -1,28 +1,26 @@
-# Copyright (c) 2020 Huawei Device Co., Ltd. All rights reserved.
+# Copyright (c) Huawei Technologies Co., Ltd. 2020. All rights reserved.
 
-import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/config/subsystem/lite_subsystem.gni")
+import("//build/lite/config/component/lite_component.gni")
 
 lite_subsystem("wifiiot_sdk") {
-  subsystem_components = [ ":sdk" ]
+    subsystem_components = [
+        ":sdk",
+    ]
 }
 
 build_ext_component("run_wifiiot_scons") {
-  exec_path = rebase_path(".", root_build_dir)
-  command = "sh hm_build.sh"
-  deps = [
-    ":sdk",
-    "//base/security/frameworks/hichainsdk_lite:hichainsdk",
-    "//build/lite:ohos",
-  ]
+    exec_path = rebase_path(".", root_build_dir)
+    command = "sh hm_build.sh"
+    deps = [ "//build/lite:ohos",":sdk","//base/security/frameworks/hichainsdk_lite:hichainsdk",]
 }
 
 lite_component("sdk") {
-  features = []
+    features = [ ]
 
-  deps = [
-    "//kernel/liteos_m/kal",
-    "//third_party/cJSON:cjson_static",
-    "//third_party/paho_mqtt:pahomqtt_static",
-  ]
+    deps = [ "//kernel/liteos_m/components/cmsis",
+             "//kernel/liteos_m/components/kal",
+             "//third_party/cJSON:cjson_static",
+             "//third_party/paho_mqtt:pahomqtt_static",
+    ]
 }

@@ -315,7 +315,7 @@ int32_t VideoView::SetSource(const char * const videoSourceUrl)
     return -1;
 }
 
-/* panel info */
+/* pannel info */
 bool VideoView::HideVideoPanel()
 {
     if (panelView_ == nullptr) {
@@ -444,7 +444,6 @@ void VideoView::UpdatePanelTimeText(bool currentTime)
     HILOG_DEBUG(HILOG_MODULE_ACE, "--- set time =%{public}s -----", timeStr);
     timeLabel->SetText(timeStr);
     timeLabel->Invalidate();
-    PanelRefreshLayout();
     // update video slider status when play changed
     UISlider* videoSlider = const_cast<UISlider *>(panelView_->GetVideoSlider());
     if (videoSlider != nullptr && currentTime) {

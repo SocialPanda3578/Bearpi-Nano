@@ -30,7 +30,6 @@ public:
     void HandleCommands(int32_t argc, char *argv[]) const;
 private:
     void RunAsInstallCommand(int32_t argc, char *argv[]) const;
-    void RunAsForceInstallCommand(int32_t argc, char *argv[]) const;
     void RunAsUninstallCommand(int32_t argc, char *argv[]) const;
     void RunAsDumpCommand(int32_t argc, char *argv[]) const;
     void GetInstallBundleInfo(const std::string &bundleName) const;

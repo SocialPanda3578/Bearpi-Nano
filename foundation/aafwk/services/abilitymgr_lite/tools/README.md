@@ -1,8 +1,8 @@
-# Abilityms command line tool
+# AMS command line tool
 
 ## Introduction
 
-This module allows users to submit instructions to the abilityms through text lines.
+This module allows users to submit instructions to the AMS through text lines.
 
 ## Features
 

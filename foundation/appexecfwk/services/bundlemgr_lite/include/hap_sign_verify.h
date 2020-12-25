@@ -24,7 +24,8 @@ extern "C" {
 }
 #endif
 
-#include <cstdint>
+#include "stdint.h"
+
 #include <string>
 #include <vector>
 

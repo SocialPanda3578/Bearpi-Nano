@@ -72,7 +72,7 @@ public:
      * @brief A destructor used to delete the <b>FrameConfig</b> instance.
      *
      */
-    ~FrameConfig() = default;
+    ~FrameConfig() {}
 
     /**
      * @brief Obtains the frame configuration type.

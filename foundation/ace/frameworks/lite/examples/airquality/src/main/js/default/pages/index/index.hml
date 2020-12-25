@@ -14,33 +14,21 @@
  * limitations under the License.
  */
  -->
-<swiper class="container" index="{{ swiperPage }}" duration="500" onchange="swiperChange">
-  <stack class="container">
-    <text class="airquality" style="color:{{ textColor1 }};">{{ airData[0].airQuality }}</text>
-    <text class="location-text">{{ airData[0].location }}</text>
-    <progress
-      class="circleProgress"
-      style="color:{{ textColor1 }};background-Color:{{ bgColor1 }};"
-      type="arc"
-      onclick="openDetail"
-      percent="{{ percent1 }}"
-    ></progress>
-    <image class="image" src="{{ src1 }}"></image>
-    <text class="pm25-value">{{ airData[0].detailData }}</text>
-    <text class="pm25-name">AQI</text>
-  </stack>
-  <stack class="container">
-    <text class="airquality" style="color:{{ textColor2 }};">{{ airData[1].airQuality }}</text>
-    <text class="location-text">{{ airData[1].location }}</text>
-    <progress
-      class="circleProgress"
-      style="color: {{ textColor2 }};background-Color:{{ bgColor2 }};"
-      type="arc"
-      onclick="openDetail"
-      percent="{{ percent2 }}"
-    ></progress>
-    <image class="image" src="{{ src2 }}"></image>
-    <text class="pm25-value">{{ airData[1].detailData }}</text>
-    <text class="pm25-name">AQI</text>
-  </stack>
+<swiper class="container" index="{{swiperPage}}" duration="500" onchange="swiperChange">
+    <stack class="container">
+        <text class="airquality" style="color:{{textColor1}};">{{airData[0].airQuality}}</text>
+        <text class="location-text">{{airData[0].location}}</text>
+        <progress class="circleProgress" style="color:{{textColor1}};background-Color:{{bgColor1}};" type="arc" onclick="openDetail" percent="{{percent1}}" ></progress>
+        <image class="image" src="{{src1}}"></image>
+        <text class="pm25-value">{{airData[0].detailData}}</text>
+        <text class="pm25-name">AQI</text>
+    </stack>
+    <stack class="container">
+        <text class="airquality" style="color:{{textColor2}};">{{airData[1].airQuality}}</text>
+        <text class="location-text">{{airData[1].location}}</text>
+        <progress class="circleProgress" style="color: {{textColor2}};background-Color:{{bgColor2}};" type="arc" onclick="openDetail" percent="{{percent2}}" ></progress>
+        <image class="image" src="{{src2}}"></image>
+        <text class="pm25-value">{{airData[1].detailData}}</text>
+        <text class="pm25-name">AQI</text>
+    </stack>
 </swiper>

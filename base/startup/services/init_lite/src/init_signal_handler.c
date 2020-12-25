@@ -14,12 +14,16 @@
  */
 
 #include "init_signal_handler.h"
-
 #include <signal.h>
 #include <stdio.h>
 #include <sys/wait.h>
-
 #include "init_service_manager.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */
 
 static void SigHandler(int sig)
 {
@@ -58,3 +62,9 @@ void SignalInitModule()
     sigaction(SIGCHLD, &act, NULL);
     sigaction(SIGTERM, &act, NULL);
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cpluscplus */
+#endif /* __cpluscplus */

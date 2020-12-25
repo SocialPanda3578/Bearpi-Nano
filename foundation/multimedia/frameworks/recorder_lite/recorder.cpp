@@ -40,7 +40,6 @@ int32_t Recorder::SetVideoSize(int32_t sourceId, int32_t width, int32_t height)
 {
     return impl_->SetVideoSize(sourceId, width, height);
 }
-
 int32_t Recorder::SetVideoFrameRate(int32_t sourceId, int32_t frameRate)
 {
     return impl_->SetVideoFrameRate(sourceId, frameRate);
@@ -96,7 +95,7 @@ int32_t Recorder::SetOutputFormat(OutputFormatType format)
     return impl_->SetOutputFormat(format);
 }
 
-int32_t Recorder::SetOutputPath(const std::string &path)
+int32_t Recorder::SetOutputPath(const string &path)
 {
     return impl_->SetOutputPath(path);
 }

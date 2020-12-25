@@ -66,7 +66,7 @@ JSIValue PermModule::RequestSelfPermission(const JSIValue thisVal, const JSIValu
     int ret = RequestPermission(0, permission);
     JSIValue code = JSI::CreateNumber(ret);
     JSIValue argv[ARGC_ONE] = { code };
-    if (ret != GRANTED && ret != NOT_GRANTED) {
+    if (ret != GRANTED || ret != NOT_GRANTED) {
         HILOG_ERROR(HILOG_MODULE_ACE, "Check permission failed.");
         JSI::CallFunction(fail, thisVal, argv, ARGC_ONE);
         goto RELEASE;

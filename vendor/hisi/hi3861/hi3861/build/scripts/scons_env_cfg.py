@@ -210,10 +210,11 @@ class SconsEnvCfg:
         # found and include libgcc.a
         env_path_param = os.environ['PATH'].split(':')
         for param in env_path_param:
-            compiler = os.path.join(param, 'riscv32-unknown-elf-gcc')
-            if os.path.isfile(compiler): # make sure the dir is accessable
-                gcc_lib_path = param
-                break
+            if (param.find('gcc_riscv32') >= 0) and (param.endswith('bin') == True):
+                compiler = os.path.join(param, 'riscv32-unknown-elf-gcc')
+                if os.path.isfile(compiler) == True: #make sure the dir is accessable
+                    gcc_lib_path = param
+                    break
 
         gcc_lib_path = os.path.join(gcc_lib_path, '..', 'lib', 'gcc', 'riscv32-unknown-elf', self.gcc_ver_num)
         lib_paths.append(gcc_lib_path)

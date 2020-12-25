@@ -15,8 +15,8 @@
 #ifndef OHOS_CAMERA_HAL_H
 #define OHOS_CAMERA_HAL_H
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "stdbool.h"
+#include "stdint.h"
 
 #include "meta_data.h"
 

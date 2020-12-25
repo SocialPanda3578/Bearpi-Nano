@@ -1,15 +1,15 @@
-# Abilityms - Ability manager service of OpenHarmony
+# AMS - Ability manager service of OpenHarmony
 
 ## Introduction
 
-`Ability manager service` plays an important role in the OpenHarmony. This module focuses on aspect of introducing the feature of abilityms aiming at managing ability stack, managing application process and controlling life cycle of ability slices.
+`Ability manager service` plays an important role in the OpenHarmony. This module focuses on aspect of introducing the feature of AMS aiming at managing ability stack, managing application process and controlling life cycle of ability slices.
 
 ## Features
 
 - Manage ability stack.
 - Manage application process.
 - Controll life cycle of ability slices.
-- Abilityms tools.
+- AMS tools.
 
 ## Directions
 

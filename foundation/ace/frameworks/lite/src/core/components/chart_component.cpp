@@ -417,7 +417,6 @@ void ChartComponent::AppendValues(UIChartDataSerial& dataserial, Point* pointArr
         }
         // Get the data set beyond the screen, and replace the existing data in the sequence one by one
         // from the beginning
-        chartView_->RefreshChart();
         for (uint16_t i = 0; i < (expectedDatasLen - (xMaxValue_ + 1)); i++) {
             if (((xMaxValue_ - latestIndex) + i) >= dataLen) {
                 HILOG_ERROR(HILOG_MODULE_ACE, "append data error2");
@@ -425,7 +424,7 @@ void ChartComponent::AppendValues(UIChartDataSerial& dataserial, Point* pointArr
             }
             pointArray[(xMaxValue_ - latestIndex) + i].x = i;
             dataserial.ModifyPoint(i, pointArray[(xMaxValue_ - latestIndex) + i]);
-            dataserial.HidePoint(i, seriesOptions_->margin);
+            dataserial.HidePoint(i + latestIndex + 1, seriesOptions_->margin);
         }
     } else { // after adding data, the length will not exceed the maximum value of the x axis
         if (latestIndex < existingDataLen - 1) {
@@ -645,8 +644,8 @@ bool ChartComponent::SetOptionsAxisDataRange(jerry_value_t xAxisValue, bool isXA
     uint8_t defaultMaxValue = 100;
     jerry_value_t jMinValue = jerryx_get_property_str(xAxisValue, MIN);
     jerry_value_t jMaxValue = jerryx_get_property_str(xAxisValue, MAX);
-    uint16_t minValue = (uint16_t)(jerry_get_number_value(jMinValue));
-    uint16_t maxValue = (uint16_t)(jerry_get_number_value(jMaxValue));
+    uint16_t minValue = jerry_get_number_value(jMinValue);
+    uint16_t maxValue = jerry_get_number_value(jMaxValue);
     if (maxValue == 0) {
         if (!jerryx_has_property_str(xAxisValue, "max")) {
             HILOG_WARN(HILOG_MODULE_ACE,
@@ -706,7 +705,7 @@ bool ChartComponent::SetOptionsAxisDataRange(uint16_t minValue, uint16_t maxValu
 void ChartComponent::SetOptionsAxisTick(jerry_value_t xAxisValue, bool isXAxis)
 {
     jerry_value_t jAxisTickValue = jerryx_get_property_str(xAxisValue, "axisTick");
-    int16_t axisTickValue = (int16_t)(jerry_get_number_value(jAxisTickValue));
+    int16_t axisTickValue = jerry_get_number_value(jAxisTickValue);
     const int8_t minTickValue = 1;
     const int8_t maxTickValue = 20;
     if ((axisTickValue < minTickValue) || (axisTickValue > maxTickValue)) {

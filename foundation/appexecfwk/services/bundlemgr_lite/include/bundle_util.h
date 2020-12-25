@@ -19,8 +19,7 @@
 #include "bundle_common.h"
 #include "bundle_info.h"
 #include "utils_list.h"
-
-#include <cstdint>
+#include "stdint.h"
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
 #include <string>
 #include <vector>

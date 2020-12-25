@@ -12,51 +12,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.pm25-value {
-  text-align: center;
-  font-size: 38px;
-  color: #f0ffff;
-  width: 454px;
-  height: 50px;
-  top: 275px;
+.pm25-value{
+  text-align:center;
+  font-size:38px;
+  color:#f0ffff;
+  width:454px;
+  height:50px;
+  top:275px;
 }
-.pm25-name {
-  text-align: center;
-  color: #a2c4a2;
-  width: 454px;
-  height: 50px;
-  top: 335px;
+.pm25-name{
+  text-align:center;
+  color:#a2c4a2;
+  width:454px;
+  height:50px;
+  top:335px;
 }
-.location-text {
-  text-align: center;
-  color: #f0ffff;
-  width: 454px;
-  height: 50px;
-  top: 20px;
+.location-text{
+  text-align:center;
+  color:#f0ffff;
+  width:454px;
+  height:50px;
+  top:20px;
 }
-.container {
+.container{
   height: 454px;
-  width: 454px;
+  width: 454px;;
 }
-.circleProgress {
-  center-x: 227px;
-  center-y: 250px;
-  radius: 180px;
-  start-angle: 198;
-  total-angle: 320;
-  stroke-width: 45px;
-  width: 454px;
-  height: 454px;
+.circleProgress{
+  centerX:227px;
+  centerY:250px;
+  radius:180px;
+  startAngle:198;
+  totalAngle:320;
+  strokeWidth:45px;
+  width:454px;
+  height:454px;
 }
-.image {
-  top: 390px;
-  left: 217px;
-  width: 32px;
-  height: 32px;
+.image{
+  top:390px;
+  left:217px;
+  width:32px;
+  height:32px;
 }
-.airquality {
-  top: 220px;
+.airquality{
+  top:220px;
   text-align: center;
-  width: 454px;
-  height: 40px;
+  width:454px;
+  height:40px;
 }

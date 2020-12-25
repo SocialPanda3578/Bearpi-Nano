@@ -16,7 +16,7 @@
 #ifndef OHOS_GT_BUNDLE_EXTRACTOR_UTIL_H
 #define OHOS_GT_BUNDLE_EXTRACTOR_UTIL_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 namespace OHOS {
 class GtExtractorUtil {

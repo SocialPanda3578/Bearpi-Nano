@@ -83,26 +83,26 @@ typedef enum {
 extern HiviewConfig g_hiviewConfig;
 
 /**
- * Dynamically adjust the Log Output Level.
+ * Dynamically adjusting the Log Output Level.
  * @param level log level. Logs of this level or higher will be generated.
  * @return TRUE/FALSE
  **/
 boolean SetLogLevel(uint8 level);
 
 /**
- * Enable or disable the log function.
+ * Enabling or disabling the log function.
  * @param flag HIVIEW_FEATURE_ON/HIVIEW_FEATURE_OFF
  **/
 void SwitchLog(uint8 flag);
 
 /**
- * Enable or disable the event function.
+ * Enabling or disabling the event function.
  * @param flag HIVIEW_FEATURE_ON/HIVIEW_FEATURE_OFF
  **/
 void SwitchEvent(uint8 flag);
 
 /**
- * Enable or disable the dump function.
+ * Enabling or disabling the dump function.
  * @param flag HIVIEW_FEATURE_ON/HIVIEW_FEATURE_OFF
  **/
 void SwitchDump(uint8 flag);

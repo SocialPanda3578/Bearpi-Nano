@@ -47,7 +47,7 @@ typedef enum {
     HAL_LIGHT_SLEEP,
     /** Deep sleep */
     HAL_DEEP_SLEEP,
-} HalLpcType;
+}HalLpcType;
 
 /**
  * @brief Initializes low power consumption.

@@ -36,7 +36,7 @@ class AbilityThreadClient {
 public:
     AbilityThreadClient(uint64_t token, pid_t callingPid, const SvcIdentity &svcIdentity, IpcMsgHandler handler);
     AbilityThreadClient(const AbilityThreadClient &client);
-    ~AbilityThreadClient();
+    ~AbilityThreadClient() = default;
 
     AbilityMsStatus Initialize(const char *bundleName);
     uint64_t GetToken() const;

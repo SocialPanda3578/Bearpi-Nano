@@ -17,8 +17,7 @@
 #define OHOS_GT_BUNDLE_EXTRACTOR_H
 
 #include "bundle_common.h"
-
-#include <stdint.h>
+#include "stdint.h"
 
 namespace OHOS {
 class GtBundleExtractor {

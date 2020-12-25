@@ -12,29 +12,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-.line-div {
-  background-color: #f5fffa;
-  height: 2px;
-  width: 454px;
+.line-div{
+    background-color:#f5fffa;
+    height:2px;
+    width:454px;
 }
-.info-div-width-height {
-  width: 321px;
-  height: 35px;
-  margin-top: 20px;
+.info-div-width-height{
+    width:321px;
+    height:35px;
+    margin-top: 20px;
 }
-.gas-name {
-  color: #f5fffa;
-  width: 160px;
-  height: 35px;
+.gas-name{
+    color:#f5fffa;
+    width:160px;
+    height:35px;
 }
-.gas-value {
-  text-align: right;
-  color: #00fa9a;
-  width: 160px;
-  height: 35px;
+.gas-value{
+    text-align:right;
+    color:#00fa9a;
+    width:160px;
+    height:35px;
 }
 .config-info {
-  height: 40px;
-  width: 321px;
-  color: #f5fffa;
+    height:40px;
+    width:321px;
+    color:#f5fffa;
 }

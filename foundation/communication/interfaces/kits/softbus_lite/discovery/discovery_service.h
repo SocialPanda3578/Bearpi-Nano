@@ -47,7 +47,7 @@ extern "C" {
 #endif
 
 /**
- * @brief Enumerates media, such as Bluetooth, Wi-Fi and USB, used for publishing services.
+ * @brief Enumerates media, such as Bluetooth, Wi-Fi, and USB, used for publishing services.
  *
  * Currently, the media can only be set to coap.
  *
@@ -61,7 +61,7 @@ typedef enum {
     COAP = 2,
     /** USB */
     USB = 3,
-} ExchangeMedium;
+} ExchanageMedium;
 
 /**
  * @brief Enumerates frequencies for publishing services.
@@ -76,7 +76,7 @@ typedef enum {
     HIGH = 2,
    /** Super-high */
     SUPER_HIGH = 3,
-} ExchangeFreq;
+} ExchangeFre;
 
 /**
  * @brief Enumerates the modes in which services are published.
@@ -99,9 +99,9 @@ typedef struct PublishInfo {
   /** Service publishing mode, which can be {@link DISCOVER_MODE_PASSIVE} or {@link DISCOVER_MODE_ACTIVE } */
     int mode;
   /** Service publishing medium */
-    ExchangeMedium medium;
+    ExchanageMedium medium;
   /** Service publishing frequency */
-    ExchangeFreq freq;
+    ExchangeFre freq;
   /** Service publishing capabilities. For details, see {@link g_capabilityMap}. */
     const char *capability;
   /** Capability data for service publishing */
@@ -160,8 +160,8 @@ typedef struct {
 static const CapabilityMap g_capabilityMap[] = {
     {HICALL_CAPABILITY_BITMAP, (char *)"hicall"},
     {PROFILE_CAPABILITY_BITMAP, (char *)"profile"},
-    {CASTPLUS_CAPABILITY_BITMAP, (char *)"castPlus"},
-    {HOMEVISIONPIC_CAPABILITY_BITMAP, (char *)"homevisionPic"},
+    {HOMEVISIONPIC_CAPABILITY_BITMAP, (char *)"castPlus"},
+    {CASTPLUS_CAPABILITY_BITMAP, (char *)"homevisionPic"},
     {AA_CAPABILITY_BITMAP, (char *)"aaCapability"},
     {DVKIT_CAPABILITY_BITMAP, (char *)"dvKit"},
     {DDMP_CAPABILITY_BITMAP, (char *)"ddmpCapability"},
@@ -226,7 +226,7 @@ typedef struct IPublishCallback {
 } IPublishCallback;
 
 /**
- * @brief Enumerates device information, such as its indentity, type and name.
+ * @brief Enumerates device information, such as its ID, type, and name.
  *
  */
 typedef enum {
@@ -276,10 +276,10 @@ int PublishService(const char *moduleName, const struct PublishInfo* info, const
 int UnPublishService(const char *moduleName, int publishId);
 
 /**
- * @brief Sets common device information, such as its indentity, type and name.
+ * @brief Sets common device information, such as its ID, type, and name.
  *
  * @param devInfo Indicates the pointer to the device information array.
- * @param num Indicates the number of elements in the device information array.
+ * @param2 num Indicates the number of elements in the device information array.
  * If the value is inconsistent with the length of the device information array, the program breaks down.
  * @return Returns <b>0</b> if the operation is successful; returns a non-zero value otherwise.
  * @see PublishService

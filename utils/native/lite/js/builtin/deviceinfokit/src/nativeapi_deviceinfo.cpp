@@ -49,7 +49,7 @@ void ExecuteGetInfo(void* data)
     }
     JSIValue args = params->args;
     JSIValue thisVal = params->thisVal;
-    char* brand = GetBrand();
+    char* brand =  GetBrand();
     if (brand == nullptr) {
         NativeapiCommon::FailCallBack(args, thisVal, ERROR_CODE_GENERAL);
         JSI::ReleaseValueList(args, thisVal, ARGS_END);

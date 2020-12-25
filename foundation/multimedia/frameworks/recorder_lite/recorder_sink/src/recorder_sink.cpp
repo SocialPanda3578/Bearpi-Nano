@@ -20,10 +20,7 @@
 
 namespace OHOS {
 namespace Media {
-namespace {
 constexpr uint32_t RECORDER_PARAMS_CNT = 2;
-}
-
 RecorderSink::RecorderSink()
     :formatMuxerHandle_(nullptr),
      prepared_(false),
@@ -36,7 +33,7 @@ RecorderSink::RecorderSink()
 {
     FormatInit();
     if (memset_s(&outputConfig_, sizeof(FormatOutputConfig), 0, sizeof(FormatOutputConfig)) != EOK) {
-        MEDIA_ERR_LOG("memset_s failed %s", path_.c_str());
+        MEDIA_ERR_LOG("memset_s failed %s ", path_.c_str());
     }
 }
 
@@ -63,7 +60,7 @@ int32_t RecorderSink::CheckStarted() const
     return SUCCESS;
 }
 
-int32_t RecorderSink::SetOutputPath(const std::string &path)
+int32_t RecorderSink::SetOutputPath(const string &path)
 {
     path_ = path;
     return SUCCESS;
@@ -81,7 +78,7 @@ int32_t RecorderSink::Prepare()
     } else {
         outputConfig_.type = OUTPUT_TYPE_URI;
         if (memcpy_s(outputConfig_.url, URL_LEN, path_.c_str(), path_.length()) != EOK) {
-            MEDIA_ERR_LOG("memcpy_s failed %s", path_.c_str());
+            MEDIA_ERR_LOG("memcpy_s failed %s ", path_.c_str());
             return ERR_INVALID_PARAM;
         }
     }
@@ -110,7 +107,7 @@ int32_t RecorderSink::AddTrackSource(const TrackSource &trackSource, int32_t &tr
 {
     int32_t trackIndex = FormatMuxerAddTrack(formatMuxerHandle_, &trackSource);
     if (trackIndex < 0) {
-        MEDIA_ERR_LOG("FormatMuxerAddTrack failed 0x%x", trackIndex);
+        MEDIA_ERR_LOG("FormatMuxerAddTrack failed 0x%x ", trackIndex);
         return trackIndex;
     }
     trackId = trackIndex;
@@ -148,7 +145,7 @@ int32_t RecorderSink::SetNextOutputFile(int32_t fd)
 int32_t RecorderSink::SetMaxDuration(int64_t duration)
 {
     if (started_) {
-        MEDIA_ERR_LOG("RecorderSink is started, SetMaxDuration must be setted before Prepare");
+        MEDIA_ERR_LOG("RecorderSink is started ,SetMaxDuration must be setted before Prepare");
         return ERR_ILLEGAL_STATE;
     }
     if (duration <= 0) {
@@ -165,7 +162,7 @@ int32_t RecorderSink::SetMaxDuration(int64_t duration)
 int32_t RecorderSink::SetMaxFileSize(int64_t size)
 {
     if (started_) {
-        MEDIA_ERR_LOG("RecorderSink is started, SetMaxFileSize must setted before Prepare");
+        MEDIA_ERR_LOG("RecorderSink is started , SetMaxFileSize must setted before Prepare");
         return ERR_ILLEGAL_STATE;
     }
     if (size <= 0) {
@@ -179,7 +176,7 @@ int32_t RecorderSink::SetMaxFileSize(int64_t size)
     return SUCCESS;
 }
 
-int32_t RecorderSink::SetOrientationHint(int32_t degrees)
+int32_t RecorderSink::SetOrientationHint(int degrees)
 {
     if (CheckPrepared() != SUCCESS) {
         return ERR_ILLEGAL_STATE;
@@ -187,7 +184,7 @@ int32_t RecorderSink::SetOrientationHint(int32_t degrees)
     return FormatMuxerSetOrientation(formatMuxerHandle_, degrees);
 }
 
-int32_t RecorderSink::SetLocation(int32_t latitude, int32_t longitude)
+int32_t RecorderSink::SetLocation(int latitude, int longitude)
 {
     if (CheckPrepared() != SUCCESS) {
         return ERR_ILLEGAL_STATE;
@@ -366,11 +363,10 @@ int32_t RecorderSink::SetFileSplitDuration(ManualSplitType type, int64_t timesta
 
 int32_t RecorderSink::SetParameter(int32_t trackId, const Format &format)
 {
+    int32_t itemNum = 0;
     ParameterItem items[RECORDER_PARAMS_CNT];
     memset_s(items, sizeof(ParameterItem) * RECORDER_PARAMS_CNT, 0x00,
              sizeof(ParameterItem) * RECORDER_PARAMS_CNT);
-
-    int32_t itemNum = 0;
     int32_t value;
     if (format.GetIntValue(RCORDER_PRE_CACHE_DURATION, value)) {
         items[itemNum].key = KEY_TYPE_PRE_CACHE;

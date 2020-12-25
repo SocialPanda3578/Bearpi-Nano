@@ -221,7 +221,7 @@ AbilityConnectRecord *PageAbilityRecord::GetConnectRecord(const SvcIdentity &ser
     return nullptr;
 }
 
-void PageAbilityRecord::PushConnectRecord(AbilityConnectRecord *connectRecord)
+void PageAbilityRecord::pushConnectRecord(AbilityConnectRecord *connectRecord)
 {
     connectRecords_.emplace_back(connectRecord);
 }
@@ -278,7 +278,7 @@ AbilityMsStatus PageAbilityRecord::ActiveAbility()
         return AbilityMsStatus::LifeCycleStatus("current state is already active when active");
     }
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::AppTransanctStatus("app record not exist");
+        return AbilityMsStatus::AppTransanctStatus("app record not exsit");
     }
     TransactionState state = {token_, STATE_ACTIVE};
     auto status = appRecord_->AbilityTransaction(state, want_, abilityInfo_.abilityType);
@@ -292,7 +292,7 @@ AbilityMsStatus PageAbilityRecord::InactiveAbility() const
         return AbilityMsStatus::LifeCycleStatus("current state is not active when inactive");
     }
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::AppTransanctStatus("app record not exist");
+        return AbilityMsStatus::AppTransanctStatus("app record not exsit");
     }
     TransactionState state = {token_, STATE_INACTIVE};
     return appRecord_->AbilityTransaction(state, want_, abilityInfo_.abilityType);
@@ -304,7 +304,7 @@ AbilityMsStatus PageAbilityRecord::ToBackgroundAbility() const
         return AbilityMsStatus::LifeCycleStatus("current state is not inactive when background");
     }
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::AppTransanctStatus("app record not exist");
+        return AbilityMsStatus::AppTransanctStatus("app record not exsit");
     }
     TransactionState state = {token_, STATE_BACKGROUND};
     return appRecord_->AbilityTransaction(state, want_, abilityInfo_.abilityType);
@@ -316,7 +316,7 @@ AbilityMsStatus PageAbilityRecord::StopAbility() const
         return AbilityMsStatus::LifeCycleStatus("current state is not inactive when stop");
     }
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::AppTransanctStatus("app record not exist");
+        return AbilityMsStatus::AppTransanctStatus("app record not exsit");
     }
     TransactionState state = {token_, STATE_INITIAL};
     return appRecord_->AbilityTransaction(state, want_, abilityInfo_.abilityType);
@@ -325,7 +325,7 @@ AbilityMsStatus PageAbilityRecord::StopAbility() const
 AbilityMsStatus PageAbilityRecord::ExitApp()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::AppTransanctStatus("app record not exist");
+        return AbilityMsStatus::AppTransanctStatus("app record not exsit");
     }
     AbilityMsStatus status = appRecord_->AppExitTransaction();
     if (status.IsOk()) {
@@ -338,7 +338,7 @@ AbilityMsStatus PageAbilityRecord::ExitApp()
 AbilityMsStatus PageAbilityRecord::ConnectAbility()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("connectAbility, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("connectAbility, ", "app record not exsit");
     }
     return appRecord_->ConnectTransaction(want_, token_);
 }
@@ -346,7 +346,7 @@ AbilityMsStatus PageAbilityRecord::ConnectAbility()
 AbilityMsStatus PageAbilityRecord::DisconnectAbility(const SvcIdentity &connectSid)
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("disconnectAbility, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("disconnectAbility, ", "app record not exsit");
     }
     RemoveConnectRecord(connectSid);
 
@@ -368,7 +368,7 @@ AbilityMsStatus PageAbilityRecord::DisconnectAbility(const SvcIdentity &connectS
 AbilityMsStatus PageAbilityRecord::ConnectAbilityDone()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("connectAbilityDone, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("connectAbilityDone, ", "app record not exsit");
     }
     for (auto record : connectRecords_) {
         if (record != nullptr && record->GetStatus() == ConnectStatus::CONNECTING) {
@@ -382,7 +382,7 @@ AbilityMsStatus PageAbilityRecord::ConnectAbilityDone()
 AbilityMsStatus PageAbilityRecord::DisconnectAbilityDone()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("disconnectAbilityDone, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("disconnectAbilityDone, ", "app record not exsit");
     }
     if (startDone_) {
         SetConnectStatus(ConnectStatus::INIT);
@@ -400,7 +400,7 @@ AbilityMsStatus PageAbilityRecord::DisconnectAbilityDone()
 AbilityMsStatus PageAbilityRecord::ForceStopServiceAbility()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("terminateService, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("terminateService, ", "app record not exsit");
     }
     forceStop_ = true;
     if (IsPerformStop()) {
@@ -422,7 +422,7 @@ AbilityMsStatus PageAbilityRecord::ForceStopServiceAbility()
 AbilityMsStatus PageAbilityRecord::StopAbilityDone()
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("disconnectAbilityDone, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("disconnectAbilityDone, ", "app record not exsit");
     }
     SetConnectStatus(ConnectStatus::STOPPED);
     for (const auto record : connectRecords_) {
@@ -448,7 +448,7 @@ AbilityMsStatus PageAbilityRecord::DumpAbilityRecord() const
 AbilityMsStatus PageAbilityRecord::DumpAbilitySlice(const Want &want) const
 {
     if (appRecord_ == nullptr) {
-        return AbilityMsStatus::TaskStatus("DumpAbility, ", "app record not exist");
+        return AbilityMsStatus::TaskStatus("DumpAbility, ", "app record not exsit");
     }
     return appRecord_->DumpAbilityTransaction(want, token_);
 }

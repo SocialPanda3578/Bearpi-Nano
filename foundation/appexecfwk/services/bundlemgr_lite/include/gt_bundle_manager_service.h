@@ -21,8 +21,7 @@
 #include "bundle_map.h"
 #include "cJSON.h"
 #include "gt_bundle_installer.h"
-
-#include <stdint.h>
+#include "stdint.h"
 
 namespace OHOS {
 class GtManagerService {

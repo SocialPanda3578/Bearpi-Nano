@@ -268,14 +268,6 @@ def record_test_component_info(out_dir, version):
     with open(test_component_file, 'w') as out_file:
         json.dump(test_component_data, out_file)
 
-def get_target_modules(all_features):
-    feature_list = []
-    if all_features:
-        for feature in all_features.split(","):
-            if feature:
-                feature_list.append(feature)
-                print(feature)
-    return feature_list
 
 if __name__ == '__main__':
     sys.exit(main())

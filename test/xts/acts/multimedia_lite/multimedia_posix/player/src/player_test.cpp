@@ -222,7 +222,7 @@ const int HI_SUCCESS = 0;
 const int HI_FAILURE = -1;
 
 static TagTestSample g_tagTestSample;
-static const char *VIDEO_FILE_NAME = "0506_480p.mp4";
+static const char *VEDIO_FILE_NAME = "0506_480p.mp4";
 static const char *AUDIO_FILE_NAME = "AACLC_1channel_001.aac";
 class Demo : public testing::Test {
 protected:
@@ -295,12 +295,12 @@ static int32_t CreateAndSetSource(int32_t sourceType, const char *argv)
 }
 
 HWTEST_F(Demo, Test_SetSource01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
 }
 
 HWTEST_F(Demo, Test_Prepare01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -312,7 +312,7 @@ HWTEST_F(Demo, Test_Prepare02, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_Play01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -337,7 +337,7 @@ HWTEST_F(Demo, Test_Play03, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_IsPlaying01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -349,7 +349,7 @@ HWTEST_F(Demo, Test_IsPlaying01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_Stop01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -361,7 +361,7 @@ HWTEST_F(Demo, Test_Stop01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_Pause01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -374,7 +374,7 @@ HWTEST_F(Demo, Test_Pause01, TestSize.Level0){
 
 
 HWTEST_F(Demo, Test_SetVolume01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -385,7 +385,7 @@ HWTEST_F(Demo, Test_SetVolume01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_IsLooping01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -396,7 +396,7 @@ HWTEST_F(Demo, Test_IsLooping01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetPlayerState01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -406,7 +406,7 @@ HWTEST_F(Demo, Test_GetPlayerState01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetCurrentPosition01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -419,7 +419,7 @@ HWTEST_F(Demo, Test_GetCurrentPosition01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetDuration01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -429,7 +429,7 @@ HWTEST_F(Demo, Test_GetDuration01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetVideoWidth01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -439,7 +439,7 @@ HWTEST_F(Demo, Test_GetVideoWidth01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetVideoHeight01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -449,7 +449,7 @@ HWTEST_F(Demo, Test_GetVideoHeight01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_SetPlaybackSpeed01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -457,7 +457,7 @@ HWTEST_F(Demo, Test_SetPlaybackSpeed01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_GetPlaybackSpeed01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -466,7 +466,7 @@ HWTEST_F(Demo, Test_GetPlaybackSpeed01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_SetLoop01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -479,7 +479,7 @@ HWTEST_F(Demo, Test_SetLoop01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_Reset01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);
@@ -491,7 +491,7 @@ HWTEST_F(Demo, Test_Reset01, TestSize.Level0){
 }
 
 HWTEST_F(Demo, Test_Release01, TestSize.Level0){
-    int32_t ret = CreateAndSetSource(1, VIDEO_FILE_NAME);
+    int32_t ret = CreateAndSetSource(1, VEDIO_FILE_NAME);
     EXPECT_EQ(HI_SUCCESS, ret);
     ret = g_tagTestSample.adaptr->Prepare();
     EXPECT_EQ(HI_SUCCESS, ret);

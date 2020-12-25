@@ -36,7 +36,7 @@ private:
     void EnsureLatestUIAttached() const;
 
     Window *window_ { nullptr };
-    bool isWindowAttached_ { false };
+    bool isWindowAttached { false };
 };
 } // namespace OHOS
 

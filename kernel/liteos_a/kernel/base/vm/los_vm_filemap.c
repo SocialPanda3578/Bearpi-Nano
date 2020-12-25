@@ -751,7 +751,6 @@ VOID OsVmmFileRegionFree(struct file *filep, LosProcessCB *processCB)
 
     space = processCB->vmSpace;
     if (space != NULL) {
-        (VOID)LOS_MuxAcquire(&space->regionMux);
         /* free the regions associated with filep */
         RB_SCAN_SAFE(&space->regionRbTree, pstRbNode, pstRbNodeTmp)
             region = (LosVmMapRegion *)pstRbNode;
@@ -765,7 +764,6 @@ VOID OsVmmFileRegionFree(struct file *filep, LosProcessCB *processCB)
                 }
             }
         RB_SCAN_SAFE_END(&space->regionRbTree, pstRbNode, pstRbNodeTmp)
-        (VOID)LOS_MuxRelease(&space->regionMux);
     }
 }
 #endif

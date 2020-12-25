@@ -16,9 +16,9 @@
 #ifndef OHOS_BUNDLE_EXTRACTOR_UTIL_H
 #define OHOS_BUNDLE_EXTRACTOR_UTIL_H
 
+#include "stdint.h"
 #include "zip_file.h"
 
-#include <cstdint>
 #include <string>
 #include <vector>
 

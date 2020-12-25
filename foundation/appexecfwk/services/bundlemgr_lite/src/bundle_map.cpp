@@ -53,24 +53,19 @@ BundleMap::~BundleMap()
 
 void BundleMap::Add(BundleInfo *bundleInfo)
 {
-    if ((bundleInfo == nullptr) || (bundleInfo->bundleName == nullptr)) {
+    if (bundleInfo == nullptr) {
         return;
     }
+
+    if (Get(bundleInfo->bundleName) == nullptr) {
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
-    MutexAcquire(&g_bundleListMutex, 0);
+        MutexAcquire(&g_bundleListMutex, 0);
 #else
-    MutexAcquire(&g_bundleListMutex, BUNDLELIST_MUTEX_TIMEOUT);
+        MutexAcquire(&g_bundleListMutex, BUNDLELIST_MUTEX_TIMEOUT);
 #endif
-    for (auto node = bundleInfos_->Begin(); node != bundleInfos_->End(); node = node->next_) {
-        BundleInfo *info = node->value_;
-        if (info != nullptr && info->bundleName != nullptr && strcmp(info->bundleName, bundleInfo->bundleName) == 0) {
-            MutexRelease(&g_bundleListMutex);
-            return;
-        }
+        bundleInfos_->PushFront(bundleInfo);
+        MutexRelease(&g_bundleListMutex);
     }
-    bundleInfos_->PushFront(bundleInfo);
-    MutexRelease(&g_bundleListMutex);
-    return;
 }
 
 BundleInfo *BundleMap::Get(const char *bundleName) const
@@ -115,6 +110,7 @@ void BundleMap::GetCopyBundleInfo(uint32_t flags, const BundleInfo *bundleInfo, 
     newBundleInfo.numOfModule = bundleInfo->numOfModule;
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
     newBundleInfo.appId = bundleInfo->appId;
+    newBundleInfo.sharedLibPath = bundleInfo->sharedLibPath;
     newBundleInfo.isKeepAlive = bundleInfo->isKeepAlive;
     newBundleInfo.isNativeApp = bundleInfo->isNativeApp;
     newBundleInfo.uid = bundleInfo->uid;

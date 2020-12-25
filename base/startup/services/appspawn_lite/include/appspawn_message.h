@@ -23,7 +23,8 @@ extern "C" {
 
 typedef struct {
     char* bundleName;
-    char* identityID;
+    char* sharedLibPaths;
+    unsigned long long identityID;
     int uID;
     int gID;
 } MessageSt;

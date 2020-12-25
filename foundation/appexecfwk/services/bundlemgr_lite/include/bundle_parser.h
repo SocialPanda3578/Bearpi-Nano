@@ -19,8 +19,8 @@
 #include "adapter.h"
 #include "bundle_common.h"
 #include "bundle_info.h"
+#include "stdint.h"
 
-#include <cstdint>
 #include <string>
 
 #include "cJSON.h"
@@ -81,7 +81,7 @@ private:
 
 #define CHECK_IS_TRUE(result, errorCode)     \
     do {                                     \
-        if (!(result)) {                       \
+        if (!result) {                       \
             return errorCode;                \
         }                                    \
     } while (0)

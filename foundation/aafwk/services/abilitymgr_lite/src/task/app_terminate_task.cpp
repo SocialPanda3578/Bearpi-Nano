@@ -39,10 +39,7 @@ AbilityMsStatus AppTerminateTask::Execute()
     AbilityStackManager &stackManager = AbilityStackManager::GetInstance();
     stackManager.ClearAbilityStack(bundleName_, *abilityMgrContext_);
 
-    // Step3: Remove App Record
-    AppManager::GetInstance().RemoveAppRecord(bundleName_);
-
-    // Step4: Active top ability
+    // Step3: Active top ability
     auto topRecord = const_cast<PageAbilityRecord *>(stackManager.GetTopPageAbility(*abilityMgrContext_));
     if (topRecord != nullptr) {
         topRecord->ActiveAbility();

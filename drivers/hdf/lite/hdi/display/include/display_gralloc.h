@@ -50,9 +50,10 @@ typedef struct {
     /**
      * @brief Allocates memory based on the parameters passed by the GUI.
      *
-     * The allocated memory can be classified into shared memory, memory with cache, and memory without cache.
-     *
-     * @param buffer Indicates the pointer to the buffer of the memory to allocate.
+     * @param hdl Indicates the pointer to the handle of memory.
+     * @param type Indicates the type of memory to allocate. The value {@code 0} indicates memory without cache,
+     * {@code 1} indicates memory with cache, and {@code 2} indicates shared memory.
+     * @param size Indicates the size of memory to allocate, in bytes.
      *
      * @return Returns <b>0</b> if the operation is successful; returns an error code defined in {@link DispErrCode}
      * otherwise.
@@ -64,7 +65,7 @@ typedef struct {
     /**
      * @brief Releases memory.
      *
-     * @param buffer Indicates the pointer to the buffer of the memory to release.
+     * @param hdl Indicates the pointer to the handle of memory that has been applied for.
      *
      * @since 1.0
      * @version 1.0
@@ -72,9 +73,11 @@ typedef struct {
     void (*FreeMem)(GrallocBuffer *buffer);
 
     /**
-     * @brief Maps memory to memory without cache in the process's address space.
+     * @brief Maps memory with a specified physical address and size to memory without cache in the process's address
+     * space.
      *
-     * @param buffer Indicates the pointer to the buffer of the memory to map.
+     * @param phyAddr Indicates the physical address of memory to map.
+     * @param size Indicates the size of memory to map.
      *
      * @return Returns the pointer to a valid address if the operation is successful; returns <b>NULL</b> otherwise.
      * @since 1.0
@@ -83,9 +86,11 @@ typedef struct {
     void *(*Mmap)(GrallocBuffer *buffer);
 
     /**
-     * @brief Maps memory to memory with cache in the process's address space.
+     * @brief Maps memory with a specified physical address and size to memory with cache in the process's address
+     * space.
      *
-     * @param buffer Indicates the pointer to the buffer of the memory to map.
+     * @param phyAddr Indicates the physical address of memory to map.
+     * @param size Indicates the size of memory to map.
      *
      * @return Returns the pointer to a valid address if the operation is successful; returns <b>NULL</b> otherwise.
      * @since 1.0
@@ -95,7 +100,8 @@ typedef struct {
     /**
      * @brief Unmaps memory, that is, removes any mappings in the process's address space.
      *
-     * @param buffer Indicates the pointer to the buffer of the memory to unmap.
+     * @param virAddr Indicates the pointer to the virtual address of memory to unmap.
+     * @param size Indicates the size of memory to unmap.
      *
      * @return Returns <b>0</b> if the operation is successful; returns an error code defined in {@link DispErrCode}
      * otherwise.
@@ -107,7 +113,8 @@ typedef struct {
     /**
      * @brief Flushes data from the cache to memory and invalidates the data in the cache.
      *
-     * @param buffer Indicates the pointer to the buffer of the cache to flush.
+     * @param hdl Indicates the pointer to the handle of the cache.
+     * @param size Indicates the size of the cache from which data is to flush.
      *
      * @return Returns <b>0</b> if the operation is successful; returns an error code defined in {@link DispErrCode}
      * otherwise.
@@ -117,9 +124,10 @@ typedef struct {
     int32_t (*FlushCache)(GrallocBuffer *buffer);
 
     /**
-     * @brief Flushes data from the cache mapped via {@link Mmap} to memory and invalidates the data in the cache.
+     * @brief Flushes data from the cache mapping to {@link Mmap} to memory and invalidates the data in the cache.
      *
-     * @param buffer Indicates the pointer to the buffer of the cache to flush.
+     * @param hdl Indicates the pointer to the handle of the cache.
+     * @param size Indicates the size of the cache from which data is to flush.
      *
      * @return Returns <b>0</b> if the operation is successful; returns an error code defined in {@link DispErrCode}
      * otherwise.

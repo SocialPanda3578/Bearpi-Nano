@@ -27,6 +27,7 @@ WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/utils_lite/parameter_hal:Act
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/utils_lite/utilsfile_hal:ActsUtilsFileTest"
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/iot_hardware_lite/wifiiot_hal:ActsWifiIotTest"
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/kernel_lite/kernelcmsis_hal:ActsCMSISTest"
+WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/kernel_lite/kernelkal_hal:ActsKalTest"
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/hiviewdfx_lite/dfx_hal:ActsDfxFuncTest"
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/utils_lite/kvstore_hal:ActsKvStoreTest"
 WIFIIOT_MODULES="${WIFIIOT_MODULES},//test/xts/acts/security_lite/datahuks_hal:ActsSecurityDataTest"

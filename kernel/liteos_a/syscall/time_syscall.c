@@ -330,7 +330,7 @@ int SysClockNanoSleep(clockid_t clk, int flags, const struct timespec *req, stru
 {
     int ret;
     struct timespec sreq;
-    struct timespec srem = {0};
+    struct timespec srem;
 
     if (!req || LOS_ArchCopyFromUser(&sreq, req, sizeof(struct timespec))) {
         errno = EFAULT;
@@ -354,7 +354,7 @@ int SysNanoSleep(const struct timespec *rqtp, struct timespec *rmtp)
 {
     int ret;
     struct timespec srqtp;
-    struct timespec srmtp = {0};
+    struct timespec srmtp;
 
     if (!rqtp || LOS_ArchCopyFromUser(&srqtp, rqtp, sizeof(struct timespec))) {
         errno = EFAULT;
@@ -477,7 +477,7 @@ int SysClockNanoSleep64(clockid_t clk, int flags, const struct timespec64 *req, 
 {
     int ret;
     struct timespec rq;
-    struct timespec rm = {0};
+    struct timespec rm;
     struct timespec64 sreq;
     struct timespec64 srem;
 

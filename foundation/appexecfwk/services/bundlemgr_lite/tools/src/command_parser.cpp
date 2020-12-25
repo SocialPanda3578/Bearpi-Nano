@@ -47,18 +47,11 @@ const std::string CMD_INSTALL = "install";
 const std::string CMD_UNINSTALL = "uninstall";
 const std::string CMD_DUMP = "dump";
 const std::string CMD_ENABLE = "set";
-const std::string CMD_FINSTALL = "finstall";
-
 
 const std::string INSTALL_HELP_MESSAGE = "Usage: install hap-path [options]\n"
                                    "Description:\n"
                                    "\t--help|-h                   help menu\n"
                                    "\t--happath|-p           location of the hap to install\n";
-const std::string FINSTALL_HELP_MESSAGE = "Usage: finstall hap-path [options]\n"
-                                   "Description:\n"
-                                   "\t--help|-h                   help menu\n"
-                                   "\t--happath|-p           location of the hap to install\n";
-
 const std::string UNINSTALL_HELP_MESSAGE = "Usage: uninstall bundle-name [options]\n"
                                      "Description:\n"
                                      "\t--help|-h                   help menu\n"
@@ -75,7 +68,7 @@ const std::string ENABLE_HELP_MESSAGE = "Usage: set [options]\n"
                                         "\t--debugmode|-d  status      enable debugmode\n"
                                         "\t--signmode|-s  status      enable signmode\n";
 
-const std::string HELP_MESSAGE = INSTALL_HELP_MESSAGE + FINSTALL_HELP_MESSAGE + UNINSTALL_HELP_MESSAGE + DUMP_HELP_MESSAGE +
+const std::string HELP_MESSAGE = INSTALL_HELP_MESSAGE + UNINSTALL_HELP_MESSAGE + DUMP_HELP_MESSAGE +
     ENABLE_HELP_MESSAGE;
 const std::string ERROR_COMMAND = "error command!\n";
 const std::string ERROR_OPTION = "error option!\n";
@@ -131,8 +124,6 @@ void CommandParser::HandleCommands(int32_t argc, char *argv[]) const
     std::string cmd = argv[1];
     if (cmd == CMD_INSTALL) {
         RunAsInstallCommand(argc, argv);
-    } else if (cmd == CMD_FINSTALL) {
-        RunAsForceInstallCommand(argc, argv);
     } else if (cmd == CMD_UNINSTALL) {
         RunAsUninstallCommand(argc, argv);
     } else if (cmd == CMD_DUMP) {
@@ -191,7 +182,7 @@ void CommandParser::RunAsInstallCommand(int32_t argc, char *argv[]) const
                     printf("error message: %s\n", ERROR_INSTALL_PATH.c_str());
                     return;
                 }
-                if (RegisterDeathCallback(nullptr, sid, BmToolDeathNotify, nullptr, &cbId) != LITEIPC_OK) {
+                if (RegisteDeathCallback(nullptr, sid, BmToolDeathNotify, nullptr, &cbId) != LITEIPC_OK) {
                     printf("error message: %s\n", "death callback is registered unsuccessfully");
                     return;
                 }
@@ -200,55 +191,6 @@ void CommandParser::RunAsInstallCommand(int32_t argc, char *argv[]) const
                 break;
             default:
                 printf("%s\n", (ERROR_OPTION + INSTALL_HELP_MESSAGE).c_str());
-                break;
-        }
-    }
-}
-
-void CommandParser::RunAsForceInstallCommand(int32_t argc, char *argv[]) const
-{
-   	if (argc > MAX_ARGUMENT_NUMBER) {
-        printf("%s\n", (ERROR_EXTRA_PARAMETER + FINSTALL_HELP_MESSAGE).c_str());
-        return;
-    }
-
-    int32_t option;
-    char realPath[PATH_MAX + 1] = { 0 };
-    uint32_t cbId = INITIAL_CBID;
-    SvcIdentity sid = SAMGR_GetRemoteIdentity(BMS_SERVICE, BMS_INNER_FEATURE);
-   	while ((option = getopt_long_only(argc, argv, SHORT_OPTIONS.c_str(), LONG_OPTIONS, nullptr)) != -1) {
-        switch (option) {
-            case 'h':
-                printf("%s\n", FINSTALL_HELP_MESSAGE.c_str());
-                break;
-            case 'p':
-                if (sem_init(&g_sem, 0, 0)) {
-                    printf("error message: %s\n", ERROR_SEM_ERROR.c_str());
-                    return;
-                }
-                if (optarg == nullptr || strlen(optarg) > PATH_MAX) {
-                    printf("error message: %s\n", ERROR_INSTALL_PATH.c_str());
-                    return;
-                }
-                if (realpath(optarg, realPath) == nullptr) {
-                    printf("error message: %s\n", ERROR_INSTALL_PATH.c_str());
-                    return;
-                }
-                if (RegisterDeathCallback(nullptr, sid, BmToolDeathNotify, nullptr, &cbId) != LITEIPC_OK) {
-                    printf("error message: %s\n", "death callback is registered unsuccessfully");
-                    return;
-                }
-
-#ifdef OHOS_DEBUG
-                SetDebugMode("disable", SET_SIGN_MODE);
-                SetDebugMode("enable", SET_SIGN_DEBUG_MODE);
-#endif
-
-                Install(realPath, nullptr, ReceiveCallback);
-                sem_wait(&g_sem);
-                break;
-            default:
-                printf("%s\n", (ERROR_OPTION + FINSTALL_HELP_MESSAGE).c_str());
                 break;
         }
     }
@@ -274,7 +216,7 @@ void CommandParser::RunAsUninstallCommand(int32_t argc, char *argv[]) const
                     printf("error message: %s\n", ERROR_SEM_ERROR.c_str());
                     return;
                 }
-                if (RegisterDeathCallback(nullptr, sid, BmToolDeathNotify, nullptr, &cbId) != LITEIPC_OK) {
+                if (RegisteDeathCallback(nullptr, sid, BmToolDeathNotify, nullptr, &cbId) != LITEIPC_OK) {
                     printf("error message: %s\n", "death callback is registered unsuccessfully");
                     return;
                 }

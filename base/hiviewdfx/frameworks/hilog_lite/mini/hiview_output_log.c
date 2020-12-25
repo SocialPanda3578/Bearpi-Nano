@@ -93,29 +93,29 @@ void ClearLogOutput(void)
     CloseHiviewFile(&g_logFile);
 }
 
-void OutputLog(const uint8 *data, uint32 len)
+void OutputLog(const uint8 *content, uint32 len)
 {
-    if (data == NULL) {
+    if (content == NULL) {
         return;
     }
 
     /* When the init of kernel is not finished, data is cached in the cache. */
     if (g_hiviewConfig.hiviewInited == FALSE) {
-        if (WriteToCache(&g_logCache, data, len) != (int32)len) {
+        if (WriteToCache(&g_logCache, content, len) != (int32)len) {
             HILOG_INFO(HILOG_MODULE_HIVIEW, "Write log to cache failed.");
         }
         return;
     }
 
+    char tempOutStr[LOG_FMT_MAX_LEN] = {0};
     if (g_hiviewConfig.outputOption == OUTPUT_OPTION_DEBUG) {
-        char tempOutStr[LOG_FMT_MAX_LEN] = {0};
-        if (LogContentFmt(tempOutStr, sizeof(tempOutStr), data) > 0) {
+        if (LogContentFmt(tempOutStr, sizeof(tempOutStr), content) > 0) {
             HIVIEW_UartPrint(tempOutStr);
         }
         return;
     }
 
-    if (WriteToCache(&g_logCache, (uint8 *)data, len) == (int32)len) {
+    if (WriteToCache(&g_logCache, (uint8 *)content, len) == (int32)len) {
         if (g_logCache.usedSize >= HIVIEW_FILE_BUF_SIZE) {
             switch (g_hiviewConfig.outputOption) {
                 case OUTPUT_OPTION_TEXT_FILE:

@@ -54,7 +54,7 @@ typedef enum {
     HAL_WIFI_IOT_UART_IDX_2,
     /** Maximum value */
     HAL_WIFI_IOT_UART_IDX_MAX
-} HalWifiIotUartIdx;
+}HalWifiIotUartIdx;
 
 /**
  * @brief Enumerates the number of UART data bits.

@@ -12,48 +12,50 @@
 # limitations under the License.
 
 config("broadcast_public") {
-  include_dirs = [
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/communication/broadcast",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//foundation/distributedschedule/services/samgr_lite/samgr/adapter",
-    "//utils/native/lite/include",
-  ]
+    include_dirs = [
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/communication/broadcast",
+        "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
+        "//foundation/distributedschedule/services/samgr_lite/samgr/adapter",
+        "//utils/native/lite/include",
+    ]
 }
 
-if (ohos_kernel_type == "liteos_m") {
-  static_library("broadcast") {
-    sources = [
-      "source/broadcast_service.c",
-      "source/pub_sub_feature.c",
-      "source/pub_sub_implement.c",
-    ]
-    public_configs = [ ":broadcast_public" ]
-    cflags = [ "-Wall" ]
-    include_dirs = [ "//kernel/liteos_m/kal" ]
-  }
+if (ohos_kernel_type == "liteos_riscv" || ohos_kernel_type == "liteos_m") {
+    static_library("broadcast") {
+        sources = [
+            "source/pub_sub_implement.c",
+            "source/pub_sub_feature.c",
+            "source/broadcast_service.c",
+        ]
+        public_configs = [":broadcast_public"]
+        cflags = [ "-Wall" ]
+        include_dirs = [
+            "//kernel/liteos_m/components/cmsis",
+        ]
+    }
 }
 
 if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
-  shared_library("broadcast") {
-    sources = [
-      "source/broadcast_service.c",
-      "source/pub_sub_feature.c",
-      "source/pub_sub_implement.c",
-    ]
-    public_configs = [ ":broadcast_public" ]
-    configs -= [ "//build/lite/config:language_c" ]
-    cflags_c = [
-      "-std=c11",
-      "-Wall",
-    ]
-    include_dirs = [
-      "//kernel/liteos_a/kernel/include/",
-      "//third_party/bounds_checking_function/include",
-      "//kernel/liteos_a/kernel/common",
-    ]
-    public_deps = [
-      "//foundation/distributedschedule/services/samgr_lite/samgr:samgr",
-      "//third_party/bounds_checking_function:libsec_shared",
-    ]
-  }
+    shared_library("broadcast") {
+        sources = [
+            "source/pub_sub_implement.c",
+            "source/pub_sub_feature.c",
+            "source/broadcast_service.c",
+        ]
+        public_configs = [":broadcast_public"]
+        configs -= [ "//build/lite/config:language_c" ]
+        cflags_c = [
+            "-std=c11",
+            "-Wall"
+        ]
+        include_dirs = [
+            "//kernel/liteos_a/kernel/include/",
+            "//third_party/bounds_checking_function/include",
+            "//kernel/liteos_a/kernel/common",
+        ]
+        public_deps = [
+            "//third_party/bounds_checking_function:libsec_shared",
+            "//foundation/distributedschedule/services/samgr_lite/samgr:samgr",
+        ]
+    }
 }

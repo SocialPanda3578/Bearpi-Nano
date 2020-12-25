@@ -29,7 +29,7 @@ static boolean IsValidChar(const char ch)
 
 static boolean IsValidValue(const char* value, unsigned int len)
 {
-    if ((value == NULL) || (*value == '\0') || (strlen(value) >= len)) {
+    if ((value == NULL) || !strlen(value) || (strlen(value) >= len)) {
         return FALSE;
     }
     return TRUE;
@@ -65,13 +65,12 @@ int GetSysParam(const char* key, char* value, unsigned int len)
     if (fd < 0) {
         return EC_FAILURE;
     }
-    
-    int ret = UtilsFileRead(fd, value, valueLen);
-    UtilsFileClose(fd);
-    fd = -1;
-    if (ret < 0) {
+    if (UtilsFileRead(fd, value, valueLen) < 0) {
+        UtilsFileClose(fd);
         return EC_FAILURE;
     }
+    UtilsFileClose(fd);
+    fd = -1;
     value[valueLen] = '\0';
     return valueLen;
 }
@@ -85,11 +84,12 @@ int SetSysParam(const char* key, const char* value)
     if (fd < 0) {
         return EC_FAILURE;
     }
-
-    int ret = UtilsFileWrite(fd, value, strlen(value));
+    if (UtilsFileWrite(fd, value, strlen(value)) < 0) {
+        UtilsFileClose(fd);
+        return EC_FAILURE;
+    }
     UtilsFileClose(fd);
-    fd = -1;
-    return (ret < 0) ? EC_FAILURE : EC_SUCCESS;
+    return EC_SUCCESS;
 }
 
 boolean CheckPermission(void)

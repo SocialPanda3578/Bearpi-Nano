@@ -31,6 +31,12 @@
 #include "utils_list.h"
 #include "securec.h"
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+#endif /* __cplusplus */
+
 #define ENABLE_IPC_CB_TIMER YES
 
 static IpcContext* g_context = NULL;
@@ -190,18 +196,6 @@ IpcContext* OpenLiteIpc(size_t mmapSize)
         return NULL;
     }
     return (IpcContext*)(intptr_t)(GetLiteIpcContext(mmapSize, NULL) == LITEIPC_OK);
-}
-
-void ResetLiteIpc()
-{
-    if (g_context != NULL) {
-        free(g_context);
-        g_context = NULL;
-    }
-    pthread_mutex_init(&g_ipcContextMutex, NULL);
-    g_ipcCallbackCb.handleId = -1;
-    g_ipcCallbackCb.threadWorking = false;
-    pthread_mutex_init(&g_ipcCallbackCb.mutex, NULL);
 }
 
 void CloseLiteIpc(IpcContext* context)
@@ -412,20 +406,19 @@ int32_t Transact(const IpcContext* con, SvcIdentity sid, uint32_t code, IpcIo* d
 
     if ((flag > LITEIPC_FLAG_ONEWAY) || ((flag == LITEIPC_FLAG_DEFAULT) && (ptr == NULL))) {
         LOG(ERROR, "Invalid parameter, null pointer.");
-        ret = LITEIPC_EINVAL;
-        goto TRAN_EXIT;
+        return LITEIPC_EINVAL;
     }
 
     ret = CheckIpcIo(data);
     if (ret != LITEIPC_OK) {
         LOG(ERROR, "CheckIpcIo failed.");
-        goto TRAN_EXIT;
+        return ret;
     }
 
     ret = GetLiteIpcContext(0, &context);
     if (ret != LITEIPC_OK) {
         LOG(ERROR, "GetLiteIpcContext failed.");
-        goto TRAN_EXIT;
+        return ret;
     }
 
     IpcMsg msg = {
@@ -441,10 +434,10 @@ int32_t Transact(const IpcContext* con, SvcIdentity sid, uint32_t code, IpcIo* d
     IpcContent content = {.outMsg = &msg};
     content.flag = (flag == LITEIPC_FLAG_ONEWAY) ? SEND : (SEND | RECV);
     ret = ioctl(context.fd, IPC_SEND_RECV_MSG, &content);
+    IpcIoFreeDataBuff(data);
     if (ret < 0) {
         LOG_ERRNO("Liteipc driver ioctl failed.");
-        ret = (errno == ENOENT) ? LITEIPC_ENOENT : LITEIPC_EBADF;
-        goto TRAN_EXIT;
+        return (errno == ENOENT) ? LITEIPC_ENOENT : LITEIPC_EBADF;
     }
 
     if (flag != LITEIPC_FLAG_ONEWAY) {
@@ -453,11 +446,7 @@ int32_t Transact(const IpcContext* con, SvcIdentity sid, uint32_t code, IpcIo* d
         }
         *ptr = (uintptr_t)content.inMsg;
     }
-    ret = LITEIPC_OK;
-
-TRAN_EXIT:
-    IpcIoFreeDataBuff(data);
-    return ret;
+    return LITEIPC_OK;
 }
 
 int32_t SendReply(const IpcContext* con, void* ipcMsg, IpcIo* reply)
@@ -467,20 +456,19 @@ int32_t SendReply(const IpcContext* con, void* ipcMsg, IpcIo* reply)
 
     if (ipcMsg == NULL) {
         LOG(ERROR, "Invalid parameter, null pointer.");
-        ret = LITEIPC_EINVAL;
-        goto SEND_EXIT;
+        return LITEIPC_EINVAL;
     }
 
     ret = CheckIpcIo(reply);
     if (ret != LITEIPC_OK) {
         LOG(ERROR, "CheckIpcIo failed.");
-        goto SEND_EXIT;
+        return ret;
     }
 
     ret = GetLiteIpcContext(0, &context);
     if (ret != LITEIPC_OK) {
         LOG(ERROR, "GetLiteIpcContext failed.");
-        goto SEND_EXIT;
+        return ret;
     }
 
     IpcMsg* in = (IpcMsg*)ipcMsg;
@@ -502,13 +490,9 @@ int32_t SendReply(const IpcContext* con, void* ipcMsg, IpcIo* reply)
     };
 
     ret = ioctl(context.fd, IPC_SEND_RECV_MSG, &content);
-    if (ret < 0) {
-        LOG_ERRNO("Liteipc driver ioctl failed.");
-        ret = LITEIPC_EBADF;
-    }
-
-SEND_EXIT:
     IpcIoFreeDataBuff(reply);
+    RETURN_IF_IPC_IOCTL_FAILED(LITEIPC_EBADF);
+
     return ret;
 }
 
@@ -721,7 +705,6 @@ static void* CallbackDispatch(void* arg)
             continue;
         }
         LOG_ERRNO("Create handle thread failed.");
-
 ERROR_MSG:
         free(tArg);
 ERROR_MALLOC:
@@ -732,7 +715,6 @@ ERROR_MALLOC:
         }
     }
     g_ipcCallbackCb.threadWorking = false;
-    return NULL;
 }
 
 static int32_t StartCallbackDispatch()
@@ -770,7 +752,7 @@ static void TimeoutHandler(int signo, void *arg)
         .handle = g_ipcCallbackCb.handleId,
         .token = node->token
     };
-    UnregisterIpcCallback(sid);
+    UnRegisteIpcCallback(sid);
 }
 
 int32_t StartIpcCbTimer(uint32_t mode, uint32_t timeoutMs, AnonymousApi* node, timer_t* timerId)
@@ -813,7 +795,7 @@ int32_t StartIpcCbTimer(uint32_t mode, uint32_t timeoutMs, AnonymousApi* node, t
 }
 #endif
 
-int32_t RegisterIpcCallback(IpcMsgHandler func, uint32_t mode, uint32_t timeoutMs, SvcIdentity* sid, void* arg)
+int32_t RegisteIpcCallback(IpcMsgHandler func, uint32_t mode, uint32_t timeoutMs, SvcIdentity* sid, void* arg)
 {
 #if (ENABLE_IPC_CB_TIMER == YES)
     timer_t timerId = NULL;
@@ -864,13 +846,12 @@ int32_t RegisterIpcCallback(IpcMsgHandler func, uint32_t mode, uint32_t timeoutM
     UtilsListAdd(&g_ipcCallbackCb.apis, &node->list);
     sid->token = node->token;
     sid->handle = g_ipcCallbackCb.handleId;
-
 ERROR:
     pthread_mutex_unlock(&g_ipcCallbackCb.mutex);
     return ret;
 }
 
-int32_t UnregisterIpcCallback(SvcIdentity sid)
+int32_t UnRegisteIpcCallback(SvcIdentity sid)
 {
     if (pthread_mutex_lock(&g_ipcCallbackCb.mutex) != 0) {
         LOG_ERRNO("Get callback mutex failed.");
@@ -913,7 +894,7 @@ static inline uint32_t SetDeathHandlerPair(Testament* node, uint32_t index, IpcM
     return index;
 }
 
-int32_t RegisterDeathCallback(const IpcContext* context, SvcIdentity sid, IpcMsgHandler func, void* arg, uint32_t* cbId)
+int32_t RegisteDeathCallback(const IpcContext* context, SvcIdentity sid, IpcMsgHandler func, void* arg, uint32_t* cbId)
 {
     int i;
     int ret = LITEIPC_OK;
@@ -971,7 +952,7 @@ UNLOCK_RETURN:
     return ret;
 }
 
-int32_t UnregisterDeathCallback(SvcIdentity sid, uint32_t cbId)
+int32_t UnRegisteDeathCallback(SvcIdentity sid, uint32_t cbId)
 {
     Testament* node = NULL;
     Testament* next = NULL;
@@ -1023,3 +1004,9 @@ static void RemoveDeathCallback(uint32_t handle)
     }
     pthread_mutex_unlock(&g_ipcCallbackCb.mutex);
 }
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */

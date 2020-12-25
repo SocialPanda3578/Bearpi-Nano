@@ -27,23 +27,22 @@ extern "C" {
 #define PKG_NAME_LEN 64
 
 enum GrantTime {
-    INUSE = 0,
-    ALWAYS,
+    INUSE, ALWAYS
 };
 
 enum GrantType {
     USER_GRANT = 0,
-    SYSTEM_GRANT,
+    SYSTEM_GRANT = 1,
 };
 
 enum IsUpdate {
     FIRST_INSTALL = 0,
-    UPDATE,
+    UPDATE = 1,
 };
 
 enum IsRestricted {
     RESTRICTED = 0,
-    NOT_RESTRICTED,
+    NOT_RESTRICTED = 1,
 };
 
 typedef struct {

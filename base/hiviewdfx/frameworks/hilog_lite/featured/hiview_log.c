@@ -881,6 +881,8 @@ int HiLogSecOutputS(SecPrintfStream *stream, bool isDebugMode, const char *cform
                                 /* if buffer is alloced on heap, free it */
                                 SECUREC_FREE(fltFmtHeap);
                                 fltFmtHeap = NULL;
+                                /* to clear e438 last value assigned not used , the compiler will optimize this code */
+                                (void)fltFmtHeap;
                             }
                             if (textLen < 0) {
                                 /* bufferSize is large enough,just validation the return value */

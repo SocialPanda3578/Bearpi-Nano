@@ -18,9 +18,8 @@
 
 #include "bundle_info.h"
 #include "nocopyable.h"
+#include "stdint.h"
 #include "utils_list.h"
-
-#include <cstdint>
 
 namespace OHOS {
 class BundleMap {

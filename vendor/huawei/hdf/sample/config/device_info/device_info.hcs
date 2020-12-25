@@ -21,7 +21,7 @@ root {
                 device5 :: deviceNode {
                     policy = 2;
                     priority = 10;
-                    permission = 0660;
+                    permission = 0644;
                     moduleName = "UART_SAMPLE";
                     serviceName = "HDF_PLATFORM_UART_5";
                     deviceMatchAttr = "sample_uart_5";

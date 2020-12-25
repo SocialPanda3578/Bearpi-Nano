@@ -392,7 +392,7 @@ hi_void app_demo_task_release_mem(hi_void)
     return;
 }
 
-void __attribute__((weak)) OHOS_SystemInit(void)
+void __attribute__((weak)) HOS_SystemInit(void)
 {
     return;
 }
@@ -493,5 +493,6 @@ hi_void app_main(hi_void)
 #endif
 #endif
 
-    OHOS_SystemInit();
+    HOS_SystemInit();
 }
+

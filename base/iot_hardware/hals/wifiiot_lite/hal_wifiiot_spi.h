@@ -63,7 +63,7 @@ typedef enum {
     HAL_WIFI_IOT_SPI_CFG_CLOCK_CPOL_0,
     /** Polarity 1 */
     HAL_WIFI_IOT_SPI_CFG_CLOCK_CPOL_1,
-} HalWifiIotSpiCfgClockCpol;
+}HalWifiIotSpiCfgClockCpol;
 
 /**
  * @brief Enumerates communication phases.

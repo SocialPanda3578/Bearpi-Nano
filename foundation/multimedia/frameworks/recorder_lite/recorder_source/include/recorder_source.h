@@ -15,7 +15,6 @@
 
 #ifndef RECORDER_SOURCE_H
 #define RECORDER_SOURCE_H
-
 #include <memory>
 #include <map>
 #include <string>
@@ -98,7 +97,6 @@ public:
     {
         return sourceType_;
     }
-
     virtual int32_t Start() = 0;
 
     virtual int32_t AcquireBuffer(RecorderSourceBuffer &buffer, bool isBlocking) = 0;

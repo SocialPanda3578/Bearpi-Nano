@@ -1,7 +1,7 @@
 {
   "ohos_version": "OpenHarmony 1.0",
   "board": "hi3861v100",
-  "kernel": "liteos_m",
+  "kernel": "liteos_riscv",
   "compiler": "gcc",
   "subsystem": [
     {
@@ -56,12 +56,6 @@
       "component": [
         { "name": "kv_store", "dir": "//utils/native/lite/kv_store:kv_store", "features":[] },
         { "name": "file", "dir": "//utils/native/lite/file:file", "features":[] }
-      ]
-    },
-    {
-      "name": "iot",
-      "component": [
-        { "name": "iot_link", "dir": "//domains/iot/link", "features":[] }
       ]
     },
     {

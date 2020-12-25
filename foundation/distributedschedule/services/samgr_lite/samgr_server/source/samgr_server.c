@@ -187,15 +187,18 @@ static int ProcEndpoint(SamgrServer *server, int32 option, void *origin, IpcIo *
     int index = SASTORA_FindHandleByPid(&g_server.store, pid, &handle);
     if (index == INVALID_INDEX) {
         SvcIdentity identity = {(uint32)INVALID_INDEX, (uint32)INVALID_INDEX, (uint32)INVALID_INDEX};
-        (void)GenServiceHandle(&identity, GetCallingTid(origin));
+        identity.handle = IpcIoPopUint32(req);
+        if (identity.handle == (uint32)INVALID_INDEX) { // generate handle
+            (void)GenServiceHandle(&identity, GetCallingTid(origin));
+        }
 
         handle.pid = pid;
         handle.uid = GetCallingUid(origin);
         handle.handle = identity.handle;
         handle.deadId = INVALID_INDEX;
         (void)SASTORA_SaveHandleByPid(&server->store, handle);
-        (void)UnregisterDeathCallback(identity, handle.deadId);
-        (void)RegisterDeathCallback(server->endpoint->context, identity, OnEndpointExit, (void*)((uintptr_t)pid),
+        (void)UnRegisteDeathCallback(identity, handle.deadId);
+        (void)RegisteDeathCallback(server->endpoint->context, identity, OnEndpointExit, (void*)((uintptr_t)pid),
                                    &handle.deadId);
     }
     MUTEX_Unlock(server->mtx);

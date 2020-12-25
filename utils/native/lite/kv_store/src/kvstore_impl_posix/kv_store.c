@@ -86,12 +86,12 @@ static int GetValueByFile(const char* dataPath, const char* key, char* value, un
     if (fd < 0) {
         return EC_FAILURE;
     }
-    int ret = read(fd, value, info.st_size);
-    close(fd);
-    fd = -1;
-    if (ret < 0) {
+    if (read(fd, value, info.st_size) < 0) {
+        close(fd);
         return EC_FAILURE;
     }
+    close(fd);
+    fd = -1;
     value[info.st_size] = '\0';
     return info.st_size;
 }
@@ -112,10 +112,12 @@ static int SetValueToFile(const char* dataPath, const char* key, const char* val
     if (fd < 0) {
         return EC_FAILURE;
     }
-    int ret = write(fd, value, strlen(value));
+    if (write(fd, value, strlen(value)) < 0) {
+        close(fd);
+        return EC_FAILURE;
+    }
     close(fd);
-    fd = -1;
-    return (ret < 0) ? EC_FAILURE : EC_SUCCESS;
+    return EC_SUCCESS;
 }
 
 static int DeleteValueFromFile(const char* dataPath, const char* key)
@@ -164,11 +166,11 @@ static int GetCurrentItem(const char* dataPath)
     if (sprintf_s(kvPath, MAX_KEY_PATH + 1, "%s/%s", dataPath, KVSTORE_PATH) < 0) {
         return EC_FAILURE;
     }
-    DIR* fileDir = opendir(kvPath);
+    DIR *fileDir = opendir(kvPath);
     if (fileDir == NULL) {
         return EC_FAILURE;
     }
-    struct dirent* dir = readdir(fileDir);
+    struct dirent *dir = readdir(fileDir);
     int sum = 0;
     while (dir != NULL) {
         char fullPath[MAX_KEY_PATH + 1] = {0};
@@ -301,8 +303,9 @@ int UtilsDeleteValue(const char* key)
 #ifdef FEATURE_KV_CACHE
 int ClearKVCache(void)
 {
+    int ret;
     pthread_mutex_lock(&g_kvGlobalMutex);
-    int ret = ClearKVCacheInner();
+    ret = ClearKVCacheInner();
     pthread_mutex_unlock(&g_kvGlobalMutex);
     return ret;
 }
@@ -314,7 +317,10 @@ int UtilsSetEnv(const char* path)
         return EC_FAILURE;
     }
     pthread_mutex_lock(&g_kvGlobalMutex);
-    int ret = strcpy_s(g_dataPath, MAX_KEY_PATH + 1, path);
+    if (strcpy_s(g_dataPath, MAX_KEY_PATH + 1, path) != EOK) {
+        pthread_mutex_unlock(&g_kvGlobalMutex);
+        return EC_FAILURE;
+    }
     pthread_mutex_unlock(&g_kvGlobalMutex);
-    return (ret != EOK) ? EC_FAILURE : EC_SUCCESS;
+    return EC_SUCCESS;
 }

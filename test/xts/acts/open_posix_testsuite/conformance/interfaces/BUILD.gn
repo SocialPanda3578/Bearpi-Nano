@@ -17,7 +17,7 @@ open_source_suite("ActsOpenPosixTest") {
     compiler = ohos_build_compiler_dir + "/bin/" + ohos_build_compiler
     suite_name = "acts"
     exec_command_path = "//third_party/ltp/testcases/open_posix_testsuite/"
-    prebuild_command = "make clean && make distclean && ./scripts/generate-makefiles.sh $compiler ${ohos_root_path} && make -j -C conformance/interfaces"
+    prebuild_command = "make clean && make distclean && ./scripts/generate-makefiles.sh $compiler ${ohos_root_path} && make -C conformance/interfaces"
     exec_sub_dir = "conformance/interfaces"
     deps = [":install_patch"]
     build_args = [

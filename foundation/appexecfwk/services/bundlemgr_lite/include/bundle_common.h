@@ -26,8 +26,7 @@ extern "C" {
 
 #include "ability_info.h"
 #include "module_info.h"
-
-#include <cstdint>
+#include "stdint.h"
 
 namespace OHOS {
 const char PROFILE_NAME[] = "config.json";
@@ -121,8 +120,8 @@ const char GRANTTIME_ALWAYS[] = "always";
 const uint8_t VERSION_POINT_NUM = 2;
 const uint8_t USES_SDK_SEGMENT = 2;
 // shared lib path
-const char SHARED_LIB_NAME[] = "shared_libs";
-const char SHARED_LIB_PATH[] = "/storage/app/libs";
+const char SHARED_LIB_PATH[] = "shared_libs";
+const char SEPARATOR[] = ":";
 
 #ifdef OHOS_APPEXECFWK_BMS_BUNDLEMANAGER
 const char DEFAULT_DEVICE_TYPE[] = "smartVision";

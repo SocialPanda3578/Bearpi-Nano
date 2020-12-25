@@ -45,7 +45,7 @@ static sem_t g_sem;
 AbilityTool::~AbilityTool()
 {
     ClearElement(&elementName_);
-    UnregisterIpcCallback(identity_);
+    UnRegisteIpcCallback(identity_);
 }
 
 bool AbilityTool::SetBundleName(const char *bundleName)
@@ -110,7 +110,7 @@ bool AbilityTool::RunCommand()
         return false;
     }
 
-    if (RegisterIpcCallback(AbilityTool::AaCallback, 0, IPC_WAIT_FOREVER, &identity_, this) != 0) {
+    if (RegisteIpcCallback(AbilityTool::AaCallback, 0, IPC_WAIT_FOREVER, &identity_, this) != 0) {
         printf("registerIpcCallback failed\n");
         return false;
     }
