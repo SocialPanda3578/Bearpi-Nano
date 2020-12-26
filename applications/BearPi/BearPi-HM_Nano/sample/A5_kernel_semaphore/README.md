@@ -64,7 +64,7 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id,uint32_t timeout)
 
 **主要代码分析**
 
-在Semaphore_example函数中，通过osSemaphoreNew()函数创建了sem1信号量，Thread_Semaphore1()函数中通过osSemaphoreAcquire()函数释放两个信号量，Thread_Semaphore2()和Thread_Semaphore3()函数中，先开始阻塞等待sem1信号量。只有当Thread_Semaphore1()函数中增加两次信号量，Thread_Semaphore2()和Thread_Semaphore3()才能继续同步运行。若Thread_Semaphore1()函数中只增加一次信号量，那Thread_Semaphore2()和Thread_Semaphore3()只能轮流执行。
+在Semaphore_example函数中，通过osSemaphoreNew()函数创建了sem1信号量，Thread_Semaphore1()函数中通过osSemaphoreRelease()函数释放两个信号量，Thread_Semaphore2()和Thread_Semaphore3()函数中，先开始阻塞等待sem1信号量。只有当Thread_Semaphore1()函数中增加两次信号量，Thread_Semaphore2()和Thread_Semaphore3()才能继续同步运行。若Thread_Semaphore1()函数中只增加一次信号量，那Thread_Semaphore2()和Thread_Semaphore3()只能轮流执行。
 ```c
 void Thread_Semaphore1(void)
 {
