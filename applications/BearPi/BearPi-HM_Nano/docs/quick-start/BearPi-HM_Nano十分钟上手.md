@@ -7,6 +7,8 @@
 ## 二、开始下载
 - 下载官方提供镜像：
     - 下载地址（百度云）：https://pan.baidu.com/s/1T0Tcl3y48C1p5L6y-6HJNg  提取码：eusr
+- 下载HiBurn：
+    - 下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&t=downloads 提取码：1234
 
 - 下载虚拟机VMware Workstation：
     - VMware Workstation 12：版本12及以上，具体可以百度。
@@ -232,7 +234,7 @@
 2.  如果显示Unable to open...等字样，需要看一下Hiburn的链接状态是否为关闭（九-7）步骤。
 
 
-3. 复位开发板，此时COM打印出对应日志信心
+3. 复位开发板，此时COM打印出对应日志信息
 
     ![](figures/COM启动日志.png)
 
