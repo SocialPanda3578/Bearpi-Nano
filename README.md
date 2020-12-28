@@ -25,14 +25,13 @@
 
 1、视频系列（B站）[ 对应PPT地址 ]
 * [P1. BearPi-HM Nano开发板介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=1)
-* [P2. BearPi-HM Nano开发环境搭建（上）](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
-* [P3. BearPi-HM Nano开发环境搭建（下）](https://www.bilibili.com/video/BV1tv411b7SA?p=3)
-* [P4. BearPi-HM Nano开发板源码获取](https://www.bilibili.com/video/BV1tv411b7SA?p=4)
-* [P5. 开发工具Deveco_Decvice_Too介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=5)
-* [P6. HarmonyOS快速入门：Hello_World](https://www.bilibili.com/video/BV1tv411b7SA?p=6)
-* [P7. HarmonyOS快速入门：点亮LED](https://www.bilibili.com/video/BV1tv411b7SA?p=7)
-* [P8. Harmony编译构建介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=8)
-* [P9. HarmonyOS CMSIS接口简介](https://www.bilibili.com/video/BV1tv411b7SA?p=9)
+* [P2. BearPi-HM Nano开发环境搭建](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
+* [P3. BearPi-HM Nano开发板源码获取](https://www.bilibili.com/video/BV1tv411b7SA?p=3)
+* [P4. 在Windows上打开源码](https://www.bilibili.com/video/BV1tv411b7SA?p=4)
+* [P5. HarmonyOS快速入门：Hello_World](https://www.bilibili.com/video/BV1tv411b7SA?p=5)
+* [P6. HarmonyOS快速入门：点亮LED](https://www.bilibili.com/video/BV1tv411b7SA?p=6)
+* [P7. Harmony编译构建介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=7)
+* [P8. HarmonyOS CMSIS接口简介](https://www.bilibili.com/video/BV1tv411b7SA?p=8)
 * [更多: 陆续上传中...](https://www.bilibili.com/video/BV1tv411b7SA)
 
 2、文档系列（Gitee）
