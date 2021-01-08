@@ -30,18 +30,18 @@ static void LedTask(void)
     IoSetFunc(WIFI_IOT_IO_NAME_GPIO_2, WIFI_IOT_IO_FUNC_GPIO_2_GPIO);
 
     //设置GPIO_2为输出模式
-    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_2, WIFI_IOT_GPIO_DIR_OUT);
+    GpioSetDir(WIFI_IOT_GPIO_IDX_2, WIFI_IOT_GPIO_DIR_OUT);
 
     while (1)
     {
         //设置GPIO_2输出高电平点亮LED灯
-        GpioSetOutputVal(WIFI_IOT_IO_NAME_GPIO_2, 1);
+        GpioSetOutputVal(WIFI_IOT_GPIO_IDX_2, 1);
 
         //延时1s
         usleep(1000000);
 
         //设置GPIO_2输出低电平熄灭LED灯
-        GpioSetOutputVal(WIFI_IOT_IO_NAME_GPIO_2, 0);
+        GpioSetOutputVal(WIFI_IOT_GPIO_IDX_2, 0);
 
         //延时1s
         usleep(1000000);
