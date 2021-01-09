@@ -16,7 +16,7 @@
 
 
 1、文档（Gitee）
-* [VMare 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
+* [VMware 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
 
 ## 三、手把手教程系列
 
