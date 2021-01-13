@@ -35,7 +35,7 @@ lite_component("app") {
         #"C4_e53_sc2_axis:e53_sc2_example",
         #"C5_e53_is1_infrared:e53_is1_example",
 
-        #"D1_iot_wifi_sta:wifi_sta",
+        #"D1_iot_wifi_ap:wifi_ap",
         #"D2_iot_wifi_sta_connect:wifi_sta_connect",        
         #"D3_iot_udp_client:udp_client",
         #"D4_iot_tcp_server:tcp_server",

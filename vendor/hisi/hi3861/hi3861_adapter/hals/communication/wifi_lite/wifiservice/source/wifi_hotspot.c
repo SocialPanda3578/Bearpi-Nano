@@ -175,7 +175,7 @@ WifiErrorCode GetStationList(StationInfo* result, unsigned int* size)
     }
 
     hi_wifi_ap_sta_info staList[WIFI_MAX_STA_NUM] = {0};
-    unsigned int staNum = 0;
+    unsigned int staNum = WIFI_MAX_STA_NUM;
 
     int hiRet = hi_wifi_softap_get_connected_sta(staList, &staNum);
     if (hiRet != HISI_OK) {
