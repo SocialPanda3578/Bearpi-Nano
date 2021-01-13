@@ -16,7 +16,7 @@
 
 
 1、文档（Gitee）
-* [VMare 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
+* [VMware 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
 
 ## 三、手把手教程系列
 
@@ -74,7 +74,7 @@ BearPi-HM Nano提供多个案例，案例以A、B、C、D进行不同类别进�
 | C3   | E53传感器   | e53_sc1_example             |   [驱动光强传感器 BH1750](/applications/BearPi/BearPi-HM_Nano/sample/C3_e53_sc1_pls/README.md)|
 | C4   | E53传感器   | e53_sc2_example        |   [驱动 6 轴陀螺仪 MPU6050](/applications/BearPi/BearPi-HM_Nano/sample/C4_e53_sc2_axis/README.md)|
 | C5   | E53传感器   | e53_is1_example              |   [驱动人体红外传感器](/applications/BearPi/BearPi-HM_Nano/sample/C5_e53_is1_infrared/README.md)|
-| D1   | 物联网 | iot_wifi_sta        |   [Wifi扫描热点](/applications/BearPi/BearPi-HM_Nano/sample/D1_iot_wifi_sta/README.md)|
+| D1   | 物联网 | iot_wifi_ap        |   [Wifi热点创建](/applications/BearPi/BearPi-HM_Nano/sample/D1_iot_wifi_ap/README.md)|
 | D2   | 物联网 | iot_wifi_sta_connect    |   [Wifi联网](/applications/BearPi/BearPi-HM_Nano/sample/D2_iot_wifi_sta_connect/README.md)|
 | D3   | 物联网 | udp_client       |   [使用 Socket 实现 UDP 客户端](/applications/BearPi/BearPi-HM_Nano/sample/D3_iot_udp_client/README.md)|
 | D4   | 物联网 | tcp_server       |   [使用 Socket 实现 TCP 服务端](/applications/BearPi/BearPi-HM_Nano/sample/D4_iot_tcp_server/README.md)|

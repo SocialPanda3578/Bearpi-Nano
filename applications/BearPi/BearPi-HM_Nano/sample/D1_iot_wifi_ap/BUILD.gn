@@ -11,9 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("wifi_sta") {
+static_library("wifi_ap") {
     sources = [
-        "wifi_sta.c"
+        "wifi_ap.c"
     ]
     
     cflags = [ "-Wno-unused-variable" ]
