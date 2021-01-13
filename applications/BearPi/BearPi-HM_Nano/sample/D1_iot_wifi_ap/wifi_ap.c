@@ -32,7 +32,6 @@
 #define ONE_SECOND 1
 #define DEF_TIMEOUT 15
 
-static void WaitAPResult(void);
 static void OnHotspotStaJoinHandler(StationInfo *info);
 static void OnHotspotStateChangedHandler(int state);
 static void OnHotspotStaLeaveHandler(StationInfo *info);
@@ -92,9 +91,6 @@ static BOOL WifiAPTask(void)
     }
     printf("Wifi station is actived!\r\n");
 
-    //等待STA连接
-    g_apEnableSuccess = 0;
-    WaitAPResult();
     //启动dhcp
     g_lwip_netif = netifapi_netif_find("ap0");
     if (g_lwip_netif) 
@@ -239,28 +235,9 @@ static void OnHotspotStateChangedHandler(int state)
 {
     printf("HotspotStateChanged:state is %d.\r\n", state);
     if (state == WIFI_HOTSPOT_ACTIVE) {
-        g_apEnableSuccess = 1;
+        printf("wifi hotspot active.\r\n");
     } else {
-        g_apEnableSuccess = 0;
-    }
-}
-
-static void WaitAPResult(void)
-{
-    int timeout = DEF_TIMEOUT;
-    while (timeout > 0)
-    {
-        sleep(ONE_SECOND);
-        timeout--;
-        if (g_apEnableSuccess >= 1)
-        {
-            printf("WaitAPResult:wait success[%d]s.\r\n", (DEF_TIMEOUT - timeout));
-            break;
-        }
-    }
-    if (timeout <= 0)
-    {
-        printf("WaitAPResult:timeout!\r\n");
+        printf("wifi hotspot noactive.\r\n");
     }
 }
 
