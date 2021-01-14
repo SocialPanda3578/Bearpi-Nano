@@ -79,16 +79,13 @@ WifiErrorCode GetStationList(StationInfo* result, unsigned int* size)
 
         * state表示是否开启AP模式，取值为0和1，0表示已启用Wifi AP模式，1表示已禁用Wifi AP模式；
 
-        * 当已启用Wifi AP模式，该回调函数会将标志位 
-        `g_apEnableSuccess` 置 1；
     * `OnHotspotStaLeaveHandler` 用于绑定STA站点退出事件,当有STA站点退出，该回调函数会打印出退出站点的MAC地址；
     * `OnHotspotStaJoinHandler` 用于绑定STA站点加入事件，当有新的STA站点加入时，该回调函数会创建 `HotspotStaJoinTask`，在该任务中会调用 `GetStationList` 函数获取当前接入到该AP的所有STA站点信息，并打印出每个STA站点的MAC地址；
 2. 调用 `SetHotspotConfig` 接口，设置指定的热点配置；
 3. 调用 `EnableHotspot` 接口，使能 Wifi AP 模式；
 4. 调用 `IsHotspotActive` 接口，检查AP热点模式是否启用；
-5. 调用 `WaitAPResult` 接口等待，该函数中会有15s的时间去轮询扫描成功标志位 `g_apEnableSuccess`，当`g_apEnableSuccess` 为 1 时退出等待；
-6. 调用 `netifapi_netif_set_addr` 函数设置网卡信息；
-7. 调用 `netifapi_dhcps_start` 函数启动dhcp服务；
+5. 调用 `netifapi_netif_set_addr` 函数设置网卡信息；
+6. 调用 `netifapi_dhcps_start` 函数启动dhcp服务；
     
 ```c
 static BOOL WifiAPTask(void)
@@ -141,9 +138,6 @@ static BOOL WifiAPTask(void)
     }
     printf("Wifi station is actived!\r\n");
 
-    //等待STA连接
-    g_apEnableSuccess = 0;
-    WaitAPResult();
     //启动dhcp
     g_lwip_netif = netifapi_netif_find("ap0");
     if (g_lwip_netif) 
@@ -261,8 +255,6 @@ Wifi station is actived!
 +NOTICE:STA CONNECTED
 New Sta Join
 HotspotSta[0]: macAddress=EC:5C:68:5B:2D:3D.
-
-WaitAPResult:wait success[9]s.
 
 netifapi_netif_set_addr succeed!
 

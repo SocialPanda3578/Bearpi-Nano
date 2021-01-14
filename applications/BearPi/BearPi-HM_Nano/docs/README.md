@@ -175,7 +175,7 @@ BearPi-HM Nano提供多个案例，案例以A、B、C、D进行不同类别进�
 [![](/applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/BearPi-HM_Nano_Info.png)](https://item.taobao.com/item.htm?id=633296694816)
 
 
-## 八、联系我们
+## 七、联系我们
 
 
 

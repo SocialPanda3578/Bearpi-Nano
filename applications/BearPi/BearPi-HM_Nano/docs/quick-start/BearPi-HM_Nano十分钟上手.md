@@ -106,7 +106,7 @@
 
 3. 添加链接信息
 
-    * SFTP://______ （这个输入 四.9 获取到的地址）
+    * SFTP://______ （这个输入 三.9 获取到的地址）
     * 账户：账号和密码皆为 bearpi   
     * 其他默认
     * 点击`确定`
@@ -118,9 +118,9 @@
     ![](figures/RaiDrive本地映射.png)
 
 
-## 六，在ubuntu获取源码
+## 六、在ubuntu获取源码
 
-1. 鼠标焦点已到MobaXterm
+1. 鼠标焦点移到MobaXterm
 
 2. 在MobaXterm中输入：
     ```
@@ -166,9 +166,9 @@
 
     *注意，最前的磁盘在为`RaiDrive`映射的路径。
 
-## 八，连接开发板
+## 八、连接开发板
 
-1. 通过TypeC数据线，把电脑与BearPi-HM Nano链接。
+1. 通过TypeC数据线，把电脑与BearPi-HM Nano连接。
 
 2. 安装CH340驱动。
 
@@ -182,7 +182,7 @@
 
     ![](figures/获取到开发板串口号.png)
 
-## 九，下载程序
+## 九、下载程序
 
 1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第八-4`看到的COM号
 
@@ -216,7 +216,7 @@
 7. 下载完后，点击`Disconnect`按钮，便于后面调测使用。
 
 
-## 十，MobaXterm 查看串口打印日志
+## 十、MobaXterm 查看串口打印日志
 
 1. 打开MobaXterm，
     
