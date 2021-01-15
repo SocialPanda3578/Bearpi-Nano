@@ -1,7 +1,7 @@
 # BearPi-HM_Nano开发板如何烧录程序<a name="ZH-CN_TOPIC_0000001053302600"></a>
 
-## 一，连接开发板
-1. 通过TypeC数据线，把电脑与BearPi-HM Nano链接。
+## 一、连接开发板
+1. 通过TypeC数据线，把电脑与BearPi-HM Nano连接。
 
 2. 安装CH340驱动。
 
@@ -15,7 +15,7 @@
 
     ![](figures/获取到开发板串口号.png)
 
-## 二，烧录代码
+## 二、烧录代码
 1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第一-4`看到的COM号
 - Hiburn工具下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&amp;t=downloads 提取码：1234
 
