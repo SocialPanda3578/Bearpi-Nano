@@ -15,6 +15,12 @@
 下载后双击安装包，安装工具，安装完毕后，打开电脑设备管理器，在“服务”中开启mosquitto服务。
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/启动mosquitto服务.png "启动mosquitto服务")
 
+修改安装路径下的mosquitto.conf文件
+修改515行附近代码
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/添加allow.png "添加allow")
+修改216行附近代码，其中`192.168.0.173`为自己的电脑的IP地址
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/添加listener.png "添加listener")
+
 ### 下载Eclipse Paho MQTT 工具
 点击[下载](https://repo.eclipse.org/content/repositories/paho-releases/org/eclipse/paho/org.eclipse.paho.ui.app/1.1.1/)Eclipse Paho MQTT 工具
 

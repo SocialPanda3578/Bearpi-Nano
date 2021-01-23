@@ -23,126 +23,85 @@
 #include "cmsis_os2.h"
 
 #include "wifi_connect.h"
-#include "lwip/sockets.h"
-#include "MQTTPacket.h"
-#include "transport.h"
+#include "MQTTClient.h"
 
-/* This is in order to get an asynchronous signal to stop the sample,
-as the code loops waiting for msgs on the subscribed topic.
-Your actual code will depend on your hw and approach*/
-#include <signal.h>
 
-int toStop = 0;
+
+
+static unsigned char sendBuf[1000];
+static unsigned char readBuf[1000];
+
+Network network;
+
+void messageArrived(MessageData* data)
+{
+	printf("Message arrived on topic %.*s: %.*s\n", data->topicName->lenstring.len, data->topicName->lenstring.data,
+		data->message->payloadlen, data->message->payload);
+}
 
 /* */
 
-int mqtt_example(void)
+static void MQTT_DemoTask(void)
 {
+	WifiConnect("Hold","0987654321");
+	printf("Starting ...\n");
+	int rc, count = 0;
+	MQTTClient client;
+
+	NetworkInit(&network);
+	printf("NetworkConnect  ...\n");
+begin:	
+	NetworkConnect(&network, "192.168.0.173", 1883);
+	printf("MQTTClientInit  ...\n");
+	MQTTClientInit(&client, &network, 2000, sendBuf, sizeof(sendBuf), readBuf, sizeof(readBuf));
+
+	MQTTString clientId = MQTTString_initializer;
+	clientId.cstring = "bearpi";
+
 	MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-	int rc = 0;
-	int mysock = 0;
-	unsigned char buf[200];
-	int buflen = sizeof(buf);
-	int msgid = 1;
-	MQTTString topicString = MQTTString_initializer;
-	int req_qos = 0;
-	char* payload = "Hello BearPi-HM_Nano！";
-	int payloadlen = strlen(payload);
-	int len = 0;
-	char *host = "192.168.0.173";
-	int port = 1883;
+  	data.clientID          = clientId;
+	data.willFlag          = 0;
+	data.MQTTVersion       = 3;
+	data.keepAliveInterval = 0;
+	data.cleansession      = 1;
 
-	mysock = transport_open(host, port);
-	if(mysock < 0)
-		return mysock;
-
-	printf("Sending to hostname %s port %d\n", host, port);
-
-	data.clientID.cstring = "bearpi";
-	data.MQTTVersion = 3;
-
-	len = MQTTSerialize_connect(buf, buflen, &data);
-	rc = transport_sendPacketBuffer(mysock, buf, len);
-
-	/* wait for connack */
-	if (MQTTPacket_read(buf, buflen, transport_getdata) == CONNACK)
-	{
-		unsigned char sessionPresent, connack_rc;
-
-		if (MQTTDeserialize_connack(&sessionPresent, &connack_rc, buf, buflen) != 1 || connack_rc != 0)
-		{
-			printf("Unable to connect, return code %d\n", connack_rc);
-			goto exit;
-		}
-	}
-	else
-		goto exit;
-
-	/* subscribe */
-	topicString.cstring = "substopic";
-	len = MQTTSerialize_subscribe(buf, buflen, 0, msgid, 1, &topicString, &req_qos);
-
-	rc = transport_sendPacketBuffer(mysock, buf, len);
-	if (MQTTPacket_read(buf, buflen, transport_getdata) == SUBACK) 	/* wait for suback */
-	{
-		unsigned short submsgid;
-		int subcount;
-		int granted_qos;
-
-		rc = MQTTDeserialize_suback(&submsgid, 1, &subcount, &granted_qos, buf, buflen);
-		if (granted_qos != 0)
-		{
-			printf("granted qos != 0, %d\n", granted_qos);
-			goto exit;
-		}
-	}
-	else
-		goto exit;
-
-	/* loop getting msgs on subscribed topic */
-	topicString.cstring = "pubtopic";
-	while (!toStop)
-	{
-		/* transport_getdata() has a built-in 1 second timeout,
-		your mileage will vary */
-		if (MQTTPacket_read(buf, buflen, transport_getdata) == PUBLISH)
-		{
-			unsigned char dup;
-			int qos;
-			unsigned char retained;
-			unsigned short msgid;
-			int payloadlen_in;
-			unsigned char* payload_in;
-			int rc;
-			MQTTString receivedTopic;
-
-			rc = MQTTDeserialize_publish(&dup, &qos, &retained, &msgid, &receivedTopic,
-					&payload_in, &payloadlen_in, buf, buflen);
-			printf("message arrived %.*s\n", payloadlen_in, payload_in);
-		}
-
-		printf("publishing reading\n");
-		len = MQTTSerialize_publish(buf, buflen, 0, 0, 0, 0, topicString, (unsigned char*)payload, payloadlen);
-		rc = transport_sendPacketBuffer(mysock, buf, len);
+	printf("MQTTConnect  ...\n");
+	rc = MQTTConnect(&client, &data);
+	if (rc != 0) {
+		printf("MQTTConnect: %d\n", rc);
+		NetworkDisconnect(&network);
+		MQTTDisconnect(&client);
+		osDelay(200);
+		goto begin;
 	}
 
-	printf("disconnecting\n");
-	len = MQTTSerialize_disconnect(buf, buflen);
-	rc = transport_sendPacketBuffer(mysock, buf, len);
+	printf("MQTTSubscribe  ...\n");
+	rc = MQTTSubscribe(&client, "substopic", 2, messageArrived);
+	if (rc != 0) {
+		printf("MQTTSubscribe: %d\n", rc);
+		osDelay(200);
+		goto begin;
+	}
+	while (++count)
+	{
+		MQTTMessage message;
+		char payload[30];
 
-exit:
-	transport_close(mysock);
+		message.qos = 2;
+		message.retained = 0;
+		message.payload = payload;
+		sprintf(payload, "message number %d", count);
+		message.payloadlen = strlen(payload);
 
-	return rc;
+		if ((rc = MQTTPublish(&client, "pubtopic", &message)) != 0){
+			printf("Return code from MQTT publish is %d\n", rc);
+			NetworkDisconnect(&network);
+			MQTTDisconnect(&client);
+			goto begin;
+		}
+		osDelay(50);	
+	}
 }
-void MQTT_DemoTask(void)
-{
-
-    WifiConnect("TP-LINK_65A8","0987654321");
-    mqtt_example();
-
-}
-
 static void MQTT_Demo(void)
 {
     osThreadAttr_t attr;
