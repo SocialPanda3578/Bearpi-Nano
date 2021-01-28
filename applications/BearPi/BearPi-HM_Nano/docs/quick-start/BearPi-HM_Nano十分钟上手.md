@@ -172,6 +172,8 @@
 
 2. 安装CH340驱动。
 
+    下载地址：http://www.wch.cn/search?q=ch340g&t=downloads
+
 3. 关闭虚拟机捕获USB功能。（有很多开发者都是因为虚拟机捕获了USB设备，导致本机Windows电脑看不到串口）
 
     ![](figures/关闭虚拟机捕获USB.png)
