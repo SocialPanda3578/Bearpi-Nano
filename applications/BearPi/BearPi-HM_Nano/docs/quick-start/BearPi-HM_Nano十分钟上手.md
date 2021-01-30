@@ -5,12 +5,12 @@
     - 无具体要求，家用即可，Windows系统
 
 ## 二、开始下载
-- 下载官方提供镜像：
+- 下载官方提供镜像
     - 下载地址（百度云）：https://pan.baidu.com/s/1T0Tcl3y48C1p5L6y-6HJNg  提取码：eusr
-- 下载HiBurn：
+- 下载HiBurn
     - 下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&t=downloads 提取码：1234
 
-- 下载虚拟机VMware Workstation：
+- 下载虚拟机VMware Workstation
     - 下载地址：https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html
 
 - 下载MobaXterm工具
@@ -18,7 +18,8 @@
 
 - 下载RaiDrive工具
     - 下载地址：https://forspeed.rbread05.cn/down/newdown/5/28/RaiDrive.rar   
-
+- 下载开发板USB驱动
+    - 下载地址：http://www.wch.cn/search?q=ch340g&t=downloads
 ## 三、开始部署环境
 
 1. 解压百度云下载的鸿蒙`Ubuntu18.4镜像OVF.zip`文件到某个目录。
