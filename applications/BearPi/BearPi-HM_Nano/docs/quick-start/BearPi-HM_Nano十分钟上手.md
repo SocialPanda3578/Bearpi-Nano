@@ -11,13 +11,13 @@
     - 下载地址（百度云）：https://pan.baidu.com/s/1i6P_LuUzclS6hlQ3XHOobQ&t=downloads 提取码：1234
 
 - 下载虚拟机VMware Workstation：
-    - VMware Workstation 12：版本12及以上，具体可以百度。
+    - 下载地址：https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html
 
 - 下载MobaXterm工具
-    - 无具体要求，具体下载可以百度。
+    - 下载地址：https://en.softonic.com/download/moba/windows/post-download
 
 - 下载RaiDrive工具
-    - https://forspeed.rbread05.cn/down/newdown/5/28/RaiDrive.rar   
+    - 下载地址：https://forspeed.rbread05.cn/down/newdown/5/28/RaiDrive.rar   
 
 ## 三、开始部署环境
 
