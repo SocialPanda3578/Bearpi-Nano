@@ -17,7 +17,7 @@
 1、视频教程（B站）
 
 
-* [开放环境搭建(简单)—十分钟快速上手](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
+* [开发环境搭建(简单)—十分钟快速上手](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
 
 2、文档（Gitee）
 * [VMware 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
