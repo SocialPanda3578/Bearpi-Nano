@@ -14,8 +14,12 @@
 
 如果您想快速的体验一下HarmonyOS的源码`[获取]`、`[编译]`、`[烧录]`过程，强烈建议您学习以下教程，这能让您在环境安装环节省下不少时间。
 
+1、视频教程（B站）
 
-1、文档（Gitee）
+
+* [开放环境搭建(简单)—十分钟快速上手](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
+
+2、文档（Gitee）
 * [VMware 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
 
 ## 三、手把手教程系列
@@ -23,37 +27,37 @@
 如果您想学习鸿蒙系统的环境搭建，并想了解整个从0到1的过程，建议您跟着我们一步一步的学习。
 需要告诉您的是，鸿蒙系统的环境搭建所涉及的领域及组件会比较多，您需要严格按照我们的教程执行每一步，否则可能会出现不能预知的错误。
 
-1、视频系列（B站）[ 对应PPT地址 ]
+1、视频系列（B站）[ 对应PPT地址 ](/applications/BearPi/BearPi-HM_Nano/docs/board/课程配套PPT)
 * [P1. BearPi-HM Nano开发板介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=1)
-* [P2. BearPi-HM Nano开发环境搭建](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
-* [P3. BearPi-HM Nano开发板源码获取](https://www.bilibili.com/video/BV1tv411b7SA?p=3)
-* [P4. 在Windows上打开源码](https://www.bilibili.com/video/BV1tv411b7SA?p=4)
-* [P5. HarmonyOS快速入门：Hello_World](https://www.bilibili.com/video/BV1tv411b7SA?p=5)
-* [P6. HarmonyOS快速入门：点亮LED](https://www.bilibili.com/video/BV1tv411b7SA?p=6)
-* [P7. Harmony编译构建介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=7)
-* [P8. HarmonyOS CMSIS接口简介](https://www.bilibili.com/video/BV1tv411b7SA?p=8)
-* [P9. HarmonyOS内核开发—任务管理（上）](https://www.bilibili.com/video/BV1tv411b7SA?p=9)
-* [P10. HarmonyOS内核开发—任务管理（下）](https://www.bilibili.com/video/BV1tv411b7SA?p=10)
-* [P11. HarmonyOS内核开发—软件定时器](https://www.bilibili.com/video/BV1tv411b7SA?p=11)
-* [P12. HarmonyOS内核开发—信号量](https://www.bilibili.com/video/BV1tv411b7SA?p=12)v
-* [P13. HarmonyOS内核开发—事件管理](https://www.bilibili.com/video/BV1tv411b7SA?p=13)
-* [P14. HarmonyOS内核开发—互斥锁](https://www.bilibili.com/video/BV1tv411b7SA?p=14)
-* [P15. HarmonyOS内核开发—消息队列](https://www.bilibili.com/video/BV1tv411b7SA?p=15)
-* [P16. HarmonyOS驱动子系统开发—GPIO](https://www.bilibili.com/video/BV1tv411b7SA?p=16)
-* [P17. HarmonyOS驱动子系统开发—GPIO中断](https://www.bilibili.com/video/BV1tv411b7SA?p=17)
-* [P18. HarmonyOS驱动子系统开发—PWM](https://www.bilibili.com/video/BV1tv411b7SA?p=18)
-* [P19. HarmonyOS驱动子系统开发—ADC](https://www.bilibili.com/video/BV1tv411b7SA?p=19)
-* [P20. HarmonyOS驱动子系统开发—I2C](https://www.bilibili.com/video/BV1tv411b7SA?p=20)
-* [P21. HarmomyOS驱动子系统开发—UART](https://www.bilibili.com/video/BV1tv411b7SA?p=21)
-* [P22. HarmonyOS无线联网开发—WiFi AP热点](https://www.bilibili.com/video/BV1tv411b7SA?p=22)
-* [P23. HarmonyOS无线联网开发—WiFi STA联网](https://www.bilibili.com/video/BV1tv411b7SA?p=23)
-* [P24. HarmonyOS网络应用开发—UDP客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=24)
-* [P25. HarmonyOS网络应用开发—TCP服务端](https://www.bilibili.com/video/BV1tv411b7SA?p=25)
-* [P26. HarmonyOS网络应用开发—TCP客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=26)
-* [P27. HarmonyOS网络应用开发—UDP服务端](https://www.bilibili.com/video/BV1tv411b7SA?p=27)
-* [P28. HarmonyOS网络应用开发—MQTT客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=28)
-* [P29. HarmonyOS网络应用开发—对接华为IoT平台](https://www.bilibili.com/video/BV1tv411b7SA?p=29)
-* [P30. HarmonyOS网络应用开发—对接OneNET平台](https://www.bilibili.com/video/BV1tv411b7SA?p=30)
+* [P2. 开发环境搭建(复杂)—编译环境搭建](https://www.bilibili.com/video/BV1tv411b7SA?p=3)
+* [P3. 开发环境搭建(复杂)—源码获取](https://www.bilibili.com/video/BV1tv411b7SA?p=4)
+* [P4. 开发环境搭建(复杂)—在Windows上打开源码](https://www.bilibili.com/video/BV1tv411b7SA?p=5)
+* [P5. HarmonyOS快速入门：Hello_World](https://www.bilibili.com/video/BV1tv411b7SA?p=6)
+* [P6. HarmonyOS快速入门：点亮LED](https://www.bilibili.com/video/BV1tv411b7SA?p=7)
+* [P7. Harmony编译构建介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=8)
+* [P8. HarmonyOS CMSIS接口简介](https://www.bilibili.com/video/BV1tv411b7SA?p=9)
+* [P9. HarmonyOS内核开发—任务管理（上）](https://www.bilibili.com/video/BV1tv411b7SA?p=10)
+* [P10. HarmonyOS内核开发—任务管理（下）](https://www.bilibili.com/video/BV1tv411b7SA?p=11)
+* [P11. HarmonyOS内核开发—软件定时器](https://www.bilibili.com/video/BV1tv411b7SA?p=12)
+* [P12. HarmonyOS内核开发—信号量](https://www.bilibili.com/video/BV1tv411b7SA?p=13)
+* [P13. HarmonyOS内核开发—事件管理](https://www.bilibili.com/video/BV1tv411b7SA?p=14)
+* [P14. HarmonyOS内核开发—互斥锁](https://www.bilibili.com/video/BV1tv411b7SA?p=15)
+* [P15. HarmonyOS内核开发—消息队列](https://www.bilibili.com/video/BV1tv411b7SA?p=16)
+* [P16. HarmonyOS驱动子系统开发—GPIO](https://www.bilibili.com/video/BV1tv411b7SA?p=17)
+* [P17. HarmonyOS驱动子系统开发—GPIO中断](https://www.bilibili.com/video/BV1tv411b7SA?p=19)
+* [P18. HarmonyOS驱动子系统开发—PWM](https://www.bilibili.com/video/BV1tv411b7SA?p=19)
+* [P19. HarmonyOS驱动子系统开发—ADC](https://www.bilibili.com/video/BV1tv411b7SA?p=20)
+* [P20. HarmonyOS驱动子系统开发—I2C](https://www.bilibili.com/video/BV1tv411b7SA?p=21)
+* [P21. HarmomyOS驱动子系统开发—UART](https://www.bilibili.com/video/BV1tv411b7SA?p=22)
+* [P22. HarmonyOS无线联网开发—WiFi AP热点](https://www.bilibili.com/video/BV1tv411b7SA?p=23)
+* [P23. HarmonyOS无线联网开发—WiFi STA联网](https://www.bilibili.com/video/BV1tv411b7SA?p=24)
+* [P24. HarmonyOS网络应用开发—UDP客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=25)
+* [P25. HarmonyOS网络应用开发—TCP服务端](https://www.bilibili.com/video/BV1tv411b7SA?p=26)
+* [P26. HarmonyOS网络应用开发—TCP客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=27)
+* [P27. HarmonyOS网络应用开发—UDP服务端](https://www.bilibili.com/video/BV1tv411b7SA?p=28)
+* [P28. HarmonyOS网络应用开发—MQTT客户端](https://www.bilibili.com/video/BV1tv411b7SA?p=29)
+* [P29. HarmonyOS网络应用开发—对接华为IoT平台](https://www.bilibili.com/video/BV1tv411b7SA?p=30)
+* [P30. HarmonyOS网络应用开发—对接OneNET平台](https://www.bilibili.com/video/BV1tv411b7SA?p=31)
 * [更多: 陆续上传中...](https://www.bilibili.com/video/BV1tv411b7SA)
 
 2、文档系列（Gitee）
