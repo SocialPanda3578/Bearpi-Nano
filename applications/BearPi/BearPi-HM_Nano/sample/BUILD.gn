@@ -40,8 +40,12 @@ lite_component("app") {
         #"D3_iot_udp_client:udp_client",
         #"D4_iot_tcp_server:tcp_server",
         #"D5_iot_mqtt:iot_mqtt",        
-        #"D6_iot_cloud_oc:cloud_oc_mqtt",
+        #"D6_iot_cloud_oc_agriculture:cloud_oc_agriculture",
         #"D7_iot_cloud_onenet:onenet_mqtt",
+        #"D8_iot_cloud_oc_smoke:cloud_oc_smoke"
+        #"D9_iot_cloud_oc_light:cloud_oc_light"
+        #"D10_iot_cloud_oc_manhole_cover:cloud_oc_manhole_cover"
+        #"D11_iot_cloud_oc_infrared:cloud_oc_infrared"
     ]
 }
 
