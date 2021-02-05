@@ -11,12 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("oc_mqtt") {
+static_library("iot_cloud_oc") {
     sources = [
         "iot_cloud_oc_sample.c",
         "src/wifi_connect.c",
-        "src/oc_mqtt.c",
-        "src/oc_mqtt_profile_package.c",
         "src/E53_IA1.c"
         
     ]
@@ -30,14 +28,16 @@ static_library("oc_mqtt") {
         "//base/iot_hardware/interfaces/kits/wifiiot_lite",
         "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
         "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include/",
-        "//vendor/hisi/hi3861/hi3861/third_party/paho_mqtt",
         "//third_party/cJSON",
-        "//third_party/paho_mqtt/MQTTPacket/src",
-        "//third_party/paho_mqtt/MQTTClient-C/src",
-        "//third_party/paho_mqtt/MQTTClient-C/src/liteOS",
-        "//third_party/paho_mqtt/MQTTPacket/samples",
+        "//third_party/iot_link/oc_mqtt/oc_mqtt_al",
+        "//third_party/iot_link/oc_mqtt/oc_mqtt_profile_v5",
+        "//third_party/iot_link/inc",
+        "//third_party/iot_link/queue",
         "include"
     ]
 
+    deps = [ 
+             "//third_party/iot_link:iot_link",
+    ]
 
 }

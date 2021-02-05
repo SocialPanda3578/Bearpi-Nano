@@ -21,31 +21,38 @@
 #include "cmsis_os2.h"
 
 #include "wifi_connect.h"
-#include "lwip/sockets.h"
-
-#include "oc_mqtt.h"
+#include <queue.h>
+#include <oc_mqtt_al.h>
+#include <oc_mqtt_profile.h>
 #include "E53_IA1.h"
+#include <dtls_al.h>
+#include <mqtt_al.h>
+
+
+
+
+#define CONFIG_APP_SERVERIP       "121.36.42.100"
+
+#define CONFIG_APP_SERVERPORT     "1883"
+
+#define CONFIG_APP_DEVICEID       "600b8d8cb86d7b02dbb397ed_132132132132"       //替换为注册设备后生成的deviceid
+
+#define CONFIG_APP_DEVICEPWD      "123456789"                                   //替换为注册设备后生成的密钥
+
+#define CONFIG_APP_LIFETIME       60     ///< seconds
+
+#define CONFIG_QUEUE_TIMEOUT      (5*1000)
 
 #define MSGQUEUE_OBJECTS 16 // number of Message Queue Objects
 
-typedef struct
-{ // object data type
-    char *Buf;
-    uint8_t Idx;
-} MSGQUEUE_OBJ_t;
-
-MSGQUEUE_OBJ_t msg;
 osMessageQueueId_t mid_MsgQueue; // message queue id
-
-#define CLIENT_ID "5fc7152fb4ec2202e99df7bf_2020111409_0_0_2020120205"
-#define USERNAME "5fc7152fb4ec2202e99df7bf_2020111409"
-#define PASSWORD "9b501c0ce96e0d79a071703b870060d939e95715397c6cb5dee90a93a38dd288"
-
 typedef enum
 {
     en_msg_cmd = 0,
     en_msg_report,
-} en_msg_type_t;
+    en_msg_conn,
+    en_msg_disconn,
+}en_msg_type_t;
 
 typedef struct
 {
@@ -72,20 +79,25 @@ typedef struct
 
 typedef struct
 {
-    int connected;
-    int led;
-    int motor;
-} app_cb_t;
-static app_cb_t g_app_cb;
+    queue_t                     *app_msg;
+    int                          connected;
+    int                          led;
+    int                          motor;
+}app_cb_t;
+static app_cb_t  g_app_cb;
 
 static void deal_report_msg(report_t *report)
 {
-    oc_mqtt_profile_service_t service;
-    oc_mqtt_profile_kv_t temperature;
-    oc_mqtt_profile_kv_t humidity;
-    oc_mqtt_profile_kv_t luminance;
-    oc_mqtt_profile_kv_t led;
-    oc_mqtt_profile_kv_t motor;
+    oc_mqtt_profile_service_t    service;
+    oc_mqtt_profile_kv_t         temperature;
+    oc_mqtt_profile_kv_t         humidity;
+    oc_mqtt_profile_kv_t         luminance;
+    oc_mqtt_profile_kv_t         led;
+    oc_mqtt_profile_kv_t         motor;
+
+    if(g_app_cb.connected != 1){
+        return;
+    }
 
     service.event_time = NULL;
     service.service_id = "Agriculture";
@@ -108,36 +120,77 @@ static void deal_report_msg(report_t *report)
     luminance.nxt = &led;
 
     led.key = "LightStatus";
-    led.value = g_app_cb.led ? "ON" : "OFF";
+    led.value = g_app_cb.led?"ON":"OFF";
     led.type = EN_OC_MQTT_PROFILE_VALUE_STRING;
     led.nxt = &motor;
 
     motor.key = "MotorStatus";
-    motor.value = g_app_cb.motor ? "ON" : "OFF";
+    motor.value = g_app_cb.motor?"ON":"OFF";
     motor.type = EN_OC_MQTT_PROFILE_VALUE_STRING;
     motor.nxt = NULL;
 
-    oc_mqtt_profile_propertyreport(USERNAME, &service);
+    oc_mqtt_profile_propertyreport(NULL,&service);
     return;
 }
 
-void oc_cmd_rsp_cb(uint8_t *recv_data, size_t recv_size, uint8_t **resp_data, size_t *resp_size)
+// void oc_cmd_rsp_cb(uint8_t *recv_data, size_t recv_size, uint8_t **resp_data, size_t *resp_size)
+// {
+//     app_msg_t *app_msg;
+
+//     int ret = 0;
+//     app_msg = malloc(sizeof(app_msg_t));
+//     app_msg->msg_type = en_msg_cmd;
+//     app_msg->msg.cmd.payload = (char *)recv_data;
+
+//     printf("recv data is %.*s\n", recv_size, recv_data);
+//     ret = osMessageQueuePut(mid_MsgQueue, &app_msg, 0U, 0U);
+//     if (ret != 0)
+//     {
+//         free(recv_data);
+//     }
+//     *resp_data = NULL;
+//     *resp_size = 0;
+// }
+
+//use this function to push all the message to the buffer
+//use this function to push all the message to the buffer
+static int msg_rcv_callback(oc_mqtt_profile_msgrcv_t *msg)
 {
+    int    ret = 0;
+    char  *buf;
+    int    buf_len;
     app_msg_t *app_msg;
 
-    int ret = 0;
-    app_msg = malloc(sizeof(app_msg_t));
-    app_msg->msg_type = en_msg_cmd;
-    app_msg->msg.cmd.payload = (char *)recv_data;
-
-    printf("recv data is %.*s\n", recv_size, recv_data);
-    ret = osMessageQueuePut(mid_MsgQueue, &app_msg, 0U, 0U);
-    if (ret != 0)
-    {
-        free(recv_data);
+    if((NULL == msg)|| (msg->request_id == NULL) || (msg->type != EN_OC_MQTT_PROFILE_MSG_TYPE_DOWN_COMMANDS)){
+        return ret;
     }
-    *resp_data = NULL;
-    *resp_size = 0;
+
+    buf_len = sizeof(app_msg_t) + strlen(msg->request_id) + 1 + msg->msg_len + 1;
+    buf = malloc(buf_len);
+    if(NULL == buf){
+        return ret;
+    }
+    app_msg = (app_msg_t *)buf;
+    buf += sizeof(app_msg_t);
+
+    app_msg->msg_type = en_msg_cmd;
+    app_msg->msg.cmd.request_id = buf;
+    buf_len = strlen(msg->request_id);
+    buf += buf_len + 1;
+    memcpy(app_msg->msg.cmd.request_id, msg->request_id, buf_len);
+    app_msg->msg.cmd.request_id[buf_len] = '\0';
+
+    buf_len = msg->msg_len;
+    app_msg->msg.cmd.payload = buf;
+    memcpy(app_msg->msg.cmd.payload, msg->msg, buf_len);
+    app_msg->msg.cmd.payload[buf_len] = '\0';
+
+    ret = queue_push(g_app_cb.app_msg,app_msg,10);
+    if(ret != 0){
+        free(app_msg);
+    }
+
+    return ret;
 }
 
 ///< COMMAND DEAL
@@ -231,32 +284,57 @@ EXIT_JSONPARSE:
     return;
 }
 
+
 static int task_main_entry(void)
 {
     app_msg_t *app_msg;
-
-    uint32_t ret = WifiConnect("Hold", "0987654321");
-
-    device_info_init(CLIENT_ID, USERNAME, PASSWORD);
+    uint32_t ret ;
+    
+    WifiConnect("Hold", "0987654321");
+    dtls_al_init();
+    mqtt_al_init();
     oc_mqtt_init();
-    oc_set_cmd_rsp_cb(oc_cmd_rsp_cb);
+    
+    g_app_cb.app_msg = queue_create("queue_rcvmsg",10,1);
+    if(NULL ==  g_app_cb.app_msg){
+        printf("Create receive msg queue failed");
+        
+    }
+    oc_mqtt_profile_connect_t  connect_para;
+    (void) memset( &connect_para, 0, sizeof(connect_para));
 
+    connect_para.boostrap =      0;
+    connect_para.device_id =     CONFIG_APP_DEVICEID;
+    connect_para.device_passwd = CONFIG_APP_DEVICEPWD;
+    connect_para.server_addr =   CONFIG_APP_SERVERIP;
+    connect_para.server_port =   CONFIG_APP_SERVERPORT;
+    connect_para.life_time =     CONFIG_APP_LIFETIME;
+    connect_para.rcvfunc =       msg_rcv_callback;
+    connect_para.security.type = EN_DTLS_AL_SECURITY_TYPE_NONE;
+    ret = oc_mqtt_profile_connect(&connect_para);
+    if((ret == (int)en_oc_mqtt_err_ok)){
+        g_app_cb.connected = 1;
+        printf("oc_mqtt_profile_connect succed!\r\n");
+    }
+    else
+    {
+        printf("oc_mqtt_profile_connect faild!\r\n");
+    }
+    
     while (1)
     {
         app_msg = NULL;
-        (void)osMessageQueueGet(mid_MsgQueue, (void **)&app_msg, NULL, 0U);
-        if (NULL != app_msg)
-        {
-            switch (app_msg->msg_type)
-            {
-            case en_msg_cmd:
-                deal_cmd_msg(&app_msg->msg.cmd);
-                break;
-            case en_msg_report:
-                deal_report_msg(&app_msg->msg.report);
-                break;
-            default:
-                break;
+        (void)queue_pop(g_app_cb.app_msg,(void **)&app_msg,0xFFFFFFFF);
+        if(NULL != app_msg){
+            switch(app_msg->msg_type){
+                case en_msg_cmd:
+                    deal_cmd_msg(&app_msg->msg.cmd);
+                    break;
+                case en_msg_report:
+                    deal_report_msg(&app_msg->msg.report);
+                    break;
+                default:
+                    break;
             }
             free(app_msg);
         }
@@ -280,8 +358,7 @@ static int task_sensor_entry(void)
             app_msg->msg.report.hum = (int)data.Humidity;
             app_msg->msg.report.lum = (int)data.Lux;
             app_msg->msg.report.temp = (int)data.Temperature;
-            if (0 != osMessageQueuePut(mid_MsgQueue, &app_msg, 0U, 0U))
-            {
+            if(0 != queue_push(g_app_cb.app_msg,app_msg,CONFIG_QUEUE_TIMEOUT)){
                 free(app_msg);
             }
         }
@@ -292,11 +369,6 @@ static int task_sensor_entry(void)
 
 static void OC_Demo(void)
 {
-    mid_MsgQueue = osMessageQueueNew(MSGQUEUE_OBJECTS, 10, NULL);
-    if (mid_MsgQueue == NULL)
-    {
-        printf("Falied to create Message Queue!\n");
-    }
 
     osThreadAttr_t attr;
 

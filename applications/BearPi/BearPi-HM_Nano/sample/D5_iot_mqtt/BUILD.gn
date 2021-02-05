@@ -26,10 +26,9 @@ static_library("iot_mqtt") {
         "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
         "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include/",
         "//third_party/cJSON",
-        "//third_party/paho_mqtt/MQTTPacket/src",
-        "//third_party/paho_mqtt/MQTTPacket/samples",
         "include"
     ]
-
-
+    deps = [
+             "//third_party/paho_mqtt:pahomqtt_static",
+    ]
 }
