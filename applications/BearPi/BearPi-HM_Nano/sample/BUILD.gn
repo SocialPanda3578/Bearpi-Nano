@@ -40,7 +40,7 @@ lite_component("app") {
         #"D3_iot_udp_client:udp_client",
         #"D4_iot_tcp_server:tcp_server",
         #"D5_iot_mqtt:iot_mqtt",        
-        #"D6_iot_cloud_oc:oc_mqtt",
+        #"D6_iot_cloud_oc:cloud_oc_mqtt",
         #"D7_iot_cloud_onenet:onenet_mqtt",
     ]
 }
