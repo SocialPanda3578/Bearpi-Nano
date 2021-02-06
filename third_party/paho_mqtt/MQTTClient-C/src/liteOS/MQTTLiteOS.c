@@ -202,5 +202,5 @@ int NetworkConnect(Network* n, char* addr, int port)
 
 void NetworkDisconnect(Network* n)
 {
-	close(n->my_socket);
+	lwip_close(n->my_socket);
 }
