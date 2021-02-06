@@ -27,7 +27,7 @@ static_library("iot_mqtt") {
         "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include/",
         "//third_party/cJSON",
         "//third_party/paho_mqtt/MQTTPacket/src",
-        "//third_party/paho_mqtt/MQTTPacket/samples",
+        "//third_party/paho_mqtt/MQTTClient-C/src",
         "include"
     ]
 
