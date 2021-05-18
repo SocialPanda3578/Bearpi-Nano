@@ -2,9 +2,9 @@
 本示例将演示如何在BearPi-HM_Nano开发板上使用MQTT协议连接华为IoT平台，使用E53_IS1 智慧安防扩展板与 BearPi-HM_Nano 开发板实现智慧安防的案例。
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/E53_IS1安装.png "E53_IS1安装")
+
 # 华为IoT平台 API
 
-         | 无          |
 
 ## 数据上传
 
@@ -203,12 +203,7 @@ static void deal_report_msg(void)
 服务类型：`Senser`(可自定义)
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/创建产品03.png "创建产品")
 
-在“Infrared”的下拉菜单下点击“添加属性”填写“Infrared_Status”相关信息
-
-
-
-
-。
+在“Infrared”的下拉菜单下点击“添加属性”填写“Infrared_Status”相关信息。
 
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/创建产品04.png "创建产品")
