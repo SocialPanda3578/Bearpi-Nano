@@ -1,5 +1,5 @@
 # BearPi-HM_Nano开发板WiFi编程开发——MQTT连接华为IoT平台
-本示例将演示如何在BearPi-HM_Nano开发板上使用MQTT协议连接华为IoT平台,使用的是E53_IA1 智慧农业扩展板与 BearPi-HM_Nano 开发板
+本示例将演示如何在BearPi-HM_Nano开发板上使用MQTT协议连接华为IoT平台,使用的是E53_IA1 智慧农业扩展板与 BearPi-HM_Nano 开发板。
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D12_iot_cloud_oc_agriculture/E53_IA1安装.png "E53_IA1安装")
 # 华为IoT平台 API
