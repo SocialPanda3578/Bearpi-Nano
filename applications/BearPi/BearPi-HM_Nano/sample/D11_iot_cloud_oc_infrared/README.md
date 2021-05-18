@@ -4,49 +4,7 @@
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/E53_IS1安装.png "E53_IS1安装")
 # 华为IoT平台 API
 
-## 初始化
-### 设备信息
-> void device_info_init(char *client_id, char * username, char *password);
-
-设置设备信息，在调用oc_mqtt_init()前要先设置设备信息
-
-| **参数**  | **描述**  |
-| :-----   | :-----    |
-|无         | 无       |
-| **返回**  | **描述**  |
-|0         | 成功                |
-|-1        | 获得设备信息失败      |
-|-2        | mqtt 客户端初始化失败 |
-
-
-### 华为IoT平台 初始化
-
-> int oc_mqtt_init(void);
-
-华为IoT平台初始化函数，需要在使用 华为IoT平台 功能前调用。
-
-| **参数**  | **描述**  |
-| :-----   | :-----    |
-|无         | 无       |
-| **返回**  | **描述**  |
-|0         | 成功                |
-|-1        | 获得设备信息失败      |
-|-2        | mqtt 客户端初始化失败 |
-
-### 设置命令响应函数
-
-> void oc_set_cmd_rsp_cb(void(*cmd_rsp_cb)(uint8_t *recv_data, size_t recv_size, uint8_t **resp_data, size_t *resp_size));
-
-设置命令响应回调函数。
-
-| **参数**    | **描述**    |
-| :-----	 | :-----  	   |
-|recv_data   | 接收到的数据  |
-|recv_size   | 数据的长度    |
-|resp_data   | 响应数据      |
-|resp_size   | 响应数据的长度 |
-| **返回**    | **描述**     |
-|无           | 无          |
+         | 无          |
 
 ## 数据上传
 
@@ -140,12 +98,38 @@ int oc_mqtt_profile_propertysetresp(char *deviceid,oc_mqtt_profile_propertysetre
 
 
 ### 连接平台
-在连接平台前需要获取CLIENT_ID、USERNAME、PASSWORD，通过oc_mqtt_init()函数连接平台。
+在连接平台前需要设置获取CONFIG_APP_DEVICEID、CONFIG_APP_DEVICEPWD、CONFIG_APP_SERVERIP、CONFIG_APP_SERVERPORT，通过oc_mqtt_profile_connect()函数连接平台。
 ```c
-WifiConnect("TP-LINK_65A8","0987654321");
-device_info_init(CLIENT_ID,USERNAME,PASSWORD);
-oc_mqtt_init();
-oc_set_cmd_rsp_cb(oc_cmd_rsp_cb);
+    WifiConnect(CONFIG_WIFI_SSID, CONFIG_WIFI_PWD);
+    dtls_al_init();
+    mqtt_al_init();
+    oc_mqtt_init();
+    
+    g_app_cb.app_msg = queue_create("queue_rcvmsg",10,1);
+    if(NULL ==  g_app_cb.app_msg){
+        printf("Create receive msg queue failed");
+        
+    }
+    oc_mqtt_profile_connect_t  connect_para;
+    (void) memset( &connect_para, 0, sizeof(connect_para));
+
+    connect_para.boostrap =      0;
+    connect_para.device_id =     CONFIG_APP_DEVICEID;
+    connect_para.device_passwd = CONFIG_APP_DEVICEPWD;
+    connect_para.server_addr =   CONFIG_APP_SERVERIP;
+    connect_para.server_port =   CONFIG_APP_SERVERPORT;
+    connect_para.life_time =     CONFIG_APP_LIFETIME;
+    connect_para.rcvfunc =       msg_rcv_callback;
+    connect_para.security.type = EN_DTLS_AL_SECURITY_TYPE_NONE;
+    ret = oc_mqtt_profile_connect(&connect_para);
+    if((ret == (int)en_oc_mqtt_err_ok)){
+        g_app_cb.connected = 1;
+        printf("oc_mqtt_profile_connect succed!\r\n");
+    }
+    else
+    {
+        printf("oc_mqtt_profile_connect faild!\r\n");
+    }
 ```
 
 ### 推送数据
@@ -246,18 +230,23 @@ static void deal_report_msg(void)
 
 
 ### 修改代码中设备信息
-在连接平台前需要获取CLIENT_ID、USERNAME、PASSWORD，访问[这里](https://iot-tool.obs-website.cn-north-4.myhuaweicloud.com/)，填写注册设备时生成的设备ID和设备密钥生成连接信息（ClientId、Username、Password），并将修改代码对应位置。
-![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/修改设备信息01.png "修改设备信息")
+修改`iot_cloud_oc_sample.c`中第31行附近的wifi的ssid和pwd，以及设备的DEVICEID和DEVICEPWD（这两个参数是在平台注册设备时产生的），
 
-![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/修改设备信息02.png "修改设备信息")
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/修改设备信息.png "修改设备信息")
 
-修改wifi热点信息
+### 修改 BUILD.gn 文件
 
-![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/修改设备信息03.png "修改设备信息")
+修改 `applications\sample\BearPi\BearPi-HM_Nano`路径下 BUILD.gn 文件，指定 `cloud_oc_infrared` 参与编译。
 
+```r
+#"D8_iot_cloud_oc_smoke:cloud_oc_smoke"
+#"D9_iot_cloud_oc_light:cloud_oc_light"
+#"D10_iot_cloud_oc_manhole_cover:cloud_oc_manhole_cover"
+"D11_iot_cloud_oc_infrared:cloud_oc_infrared"
+#"D12_iot_cloud_oc_agriculture:cloud_oc_agriculture"
+```
 ### 编译调试
-
-示例代码编译烧录代码后，按下开发板的RESET按键，平台上的设备显示为在线状态
+示例代码编译烧录代码后，按下开发板的RESET按键，通过串口助手查看日志，平台上的设备显示为在线状态。
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/设备在线.png "设备在线")
     
