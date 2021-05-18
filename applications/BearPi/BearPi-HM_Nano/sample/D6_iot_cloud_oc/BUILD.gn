@@ -38,6 +38,8 @@ static_library("oc_mqtt") {
         "//third_party/paho_mqtt/MQTTPacket/samples",
         "include"
     ]
-
+    deps = [ 
+             "//third_party/paho_mqtt:pahomqtt_static",
+    ]
 
 }
