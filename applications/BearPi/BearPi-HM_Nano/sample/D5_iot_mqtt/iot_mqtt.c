@@ -51,7 +51,7 @@ static void MQTT_DemoTask(void)
 	NetworkInit(&network);
 	printf("NetworkConnect  ...\n");
 begin:	
-	NetworkConnect(&network, "192.168.0.173", 1883);
+	NetworkConnect(&network, "192.168.0.176", 1883);
 	printf("MQTTClientInit  ...\n");
 	MQTTClientInit(&client, &network, 2000, sendBuf, sizeof(sendBuf), readBuf, sizeof(readBuf));
 

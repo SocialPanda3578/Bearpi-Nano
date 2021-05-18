@@ -30,6 +30,7 @@ static_library("iot_mqtt") {
         "//third_party/paho_mqtt/MQTTClient-C/src",
         "include"
     ]
-
-
+    deps = [
+             "//third_party/paho_mqtt:pahomqtt_static",
+    ]
 }
