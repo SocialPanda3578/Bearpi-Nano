@@ -84,17 +84,17 @@ int TimerLeftMS(Timer* timer)
 
 void MutexInit(Mutex* mutex)
 {
-	mutex->sem = osSemaphoreNew(1, 1, NULL);
+	mutex->mutex = osMutexNew(NULL);
 }
 
 int MutexLock(Mutex* mutex)
 {
-	return osSemaphoreAcquire(mutex->sem, LOS_WAIT_FOREVER);
+	return osMutexAcquire(mutex->mutex, osWaitForever);
 }
 
 int MutexUnlock(Mutex* mutex)
 {
-	return osSemaphoreRelease(mutex->sem);
+	return osMutexRelease(mutex->mutex);
 }
 
 int linux_read(Network* n, unsigned char* buffer, int len, int timeout_ms)
@@ -202,5 +202,5 @@ int NetworkConnect(Network* n, char* addr, int port)
 
 void NetworkDisconnect(Network* n)
 {
-	close(n->my_socket);
+	lwip_close(n->my_socket);
 }
