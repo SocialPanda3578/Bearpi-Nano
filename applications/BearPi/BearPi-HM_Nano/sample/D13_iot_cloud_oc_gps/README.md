@@ -280,5 +280,5 @@ static void deal_report_msg(report_t *report)
     
 点击设备右侧的“查看”，进入设备详情页面，可看到上报的数据
 
-![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D11_iot_cloud_oc_infrared/查看设备数据.png "查看设备数据")
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D13_iot_cloud_oc_gps/查看设备数据.png "查看设备数据")
 
