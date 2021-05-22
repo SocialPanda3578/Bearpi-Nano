@@ -111,7 +111,8 @@ BearPi-HM Nano提供多个案例，案例以A、B、C、D进行不同类别进�
 | D9   | 物联网 | iot_cloud_oc_light         |   [基于华为IoT平台的智慧路灯案例](/applications/BearPi/BearPi-HM_Nano/sample/D9_iot_cloud_oc_light/README.md)|    
 | D10   | 物联网 | iot_cloud_oc_manhole_cover         |   [基于华为IoT平台的智慧井盖案例](/applications/BearPi/BearPi-HM_Nano/sample/D10_iot_cloud_oc_manhole_cover/README.md)|  
 | D11   | 物联网 | iot_cloud_oc_infrared         |   [基于华为IoT平台的智慧人体感应案例](/applications/BearPi/BearPi-HM_Nano/sample/D11_iot_cloud_oc_infrared/README.md)|  
-| D12   | 物联网 | iot_cloud_oc_agriculture         |   [基于华为IoT平台的智慧农业案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_agriculture/README.md)|  
+| D12   | 物联网 | iot_cloud_oc_agriculture         |   [基于华为IoT平台的智慧农业案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_agriculture/README.md)| 
+| D13   | 物联网 | iot_cloud_oc_gps         |   [基于华为IoT平台的智慧物流案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_gps/README.md)|   
 ||||
 
 

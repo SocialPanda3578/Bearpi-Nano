@@ -1,6 +1,6 @@
 # BearPi-HM_Nano案例开发
 
-BearPi-HM_Nano 提供的例程多达 29个，每个例程都有非常详细的注释，代码风格统一，按照基本例程到高级例程的方式编排，方便初学者由浅入深逐步学习。开发者拿到工程后经过简单的编译和下载即可看到实验现象。
+BearPi-HM_Nano 提供的例程多达 30个，每个例程都有非常详细的注释，代码风格统一，按照基本例程到高级例程的方式编排，方便初学者由浅入深逐步学习。开发者拿到工程后经过简单的编译和下载即可看到实验现象。
 
 这些例程包括四个类别：内核类、基本外设类、驱动类、物联网类。不仅包括了硬件资源的应用，更是提供了丰富的物联网领域的应用示例，帮助物联网开发者更好更快地进行开发。
 
@@ -36,5 +36,6 @@ BearPi-HM_Nano 提供的例程多达 29个，每个例程都有非常详细的�
 | D9   | 物联网 | iot_cloud_oc_light         |   [基于华为IoT平台的智慧路灯案例](/applications/BearPi/BearPi-HM_Nano/sample/D9_iot_cloud_oc_light/README.md)|    
 | D10   | 物联网 | iot_cloud_oc_manhole_cover         |   [基于华为IoT平台的智慧井盖案例](/applications/BearPi/BearPi-HM_Nano/sample/D10_iot_cloud_oc_manhole_cover/README.md)|  
 | D11   | 物联网 | iot_cloud_oc_infrared         |   [基于华为IoT平台的智慧人体感应案例](/applications/BearPi/BearPi-HM_Nano/sample/D11_iot_cloud_oc_infrared/README.md)|  
-| D12   | 物联网 | iot_cloud_oc_agriculture         |   [基于华为IoT平台的智慧农业案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_agriculture/README.md)|  
+| D12   | 物联网 | iot_cloud_oc_agriculture         |   [基于华为IoT平台的智慧农业案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_agriculture/README.md)| 
+| D13   | 物联网 | iot_cloud_oc_gps         |   [基于华为IoT平台的智慧物流案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_gps/README.md)|    
 ||||
