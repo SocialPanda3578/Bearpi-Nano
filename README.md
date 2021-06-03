@@ -1,12 +1,12 @@
-# 小熊派-鸿蒙·季(BearPi-HM Nano)
+# 小熊派-HarmonyOS·季(BearPi-HM Nano)
 
 ## 一、BearPi-HM Nano 开发板介绍
 
-小熊派-鸿蒙·季[（BearPi-HM Nano）](https://item.taobao.com/item.htm?id=633296694816)是一款由小熊派专为HarmonyOS系统打造的鸿蒙开发板。
+小熊派-HarmonyOS·季[（BearPi-HM Nano）](https://item.taobao.com/item.htm?id=633296694816)是一款由小熊派专为HarmonyOS系统打造的HarmonyOS开发板。
 
 * 采用IoTCluB的E53接口标准，可接入所有的[E53案例扩展板](https://shop336827451.taobao.com/category-1488778768.htm)。
 * 主控为WiFi SOC Hi3861，160MHz主频，SRAM 352KB、ROM 288KB、2M Flash。
-* 板载NFC Forum Type 2 Tag芯片及天线，可实现鸿蒙“碰一碰”功能。
+* 板载NFC Forum Type 2 Tag芯片及天线，可实现HarmonyOS“碰一碰”功能。
 * 一根TypeC USB线，即可实现供电、下载、调试等多种功能。
 
 
@@ -24,8 +24,8 @@
 
 ## 三、手把手教程系列
 
-如果您想学习鸿蒙系统的环境搭建，并想了解整个从0到1的过程，建议您跟着我们一步一步的学习。
-需要告诉您的是，鸿蒙系统的环境搭建所涉及的领域及组件会比较多，您需要严格按照我们的教程执行每一步，否则可能会出现不能预知的错误。
+如果您想学习HarmonyOS系统的环境搭建，并想了解整个从0到1的过程，建议您跟着我们一步一步的学习。
+需要告诉您的是，HarmonyOS系统的环境搭建所涉及的领域及组件会比较多，您需要严格按照我们的教程执行每一步，否则可能会出现不能预知的错误。
 
 1、视频系列（B站）[ 对应PPT地址 ](/applications/BearPi/BearPi-HM_Nano/docs/board/课程配套PPT)
 * [P1. BearPi-HM Nano开发板介绍](https://www.bilibili.com/video/BV1tv411b7SA?p=1)
