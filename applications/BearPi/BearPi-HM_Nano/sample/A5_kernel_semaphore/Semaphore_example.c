@@ -26,10 +26,10 @@ void Thread_Semaphore1(void)
 {
     while (1)
     {
-        //申请两次sem1信号量，使得Thread_Semaphore2和Thread_Semaphore3能同步执行
+        //释放两次sem1信号量，使得Thread_Semaphore2和Thread_Semaphore3能同步执行
         osSemaphoreRelease(sem1);
 
-        //此处若只申请一次信号量，则Thread_Semaphore2和Thread_Semaphore3会交替运行。
+        //此处若只释放一次信号量，则Thread_Semaphore2和Thread_Semaphore3会交替运行。
         osSemaphoreRelease(sem1);
 
         printf("Thread_Semaphore1 Release  Semap \n");
@@ -40,7 +40,7 @@ void Thread_Semaphore2(void)
 {
     while (1)
     {
-        //等待sem1信号量
+        //申请sem1信号量
         osSemaphoreAcquire(sem1, osWaitForever);
 
         printf("Thread_Semaphore2 get Semap \n");
@@ -52,7 +52,7 @@ void Thread_Semaphore3(void)
 {
     while (1)
     {
-        //等待sem1信号量
+        //申请sem1信号量
         osSemaphoreAcquire(sem1, osWaitForever);
 
         printf("Thread_Semaphore3 get Semap \n");

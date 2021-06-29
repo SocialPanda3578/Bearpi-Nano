@@ -64,14 +64,14 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id,uint32_t timeout)
 
 **主要代码分析**
 
-在Semaphore_example函数中，通过osSemaphoreNew()函数创建了sem1信号量，Thread_Semaphore1()函数中通过osSemaphoreAcquire()函数获取两个信号量，Thread_Semaphore2()和Thread_Semaphore3()函数中，先开始阻塞等待sem1信号量。只有当Thread_Semaphore1()函数中增加两次信号量，Thread_Semaphore2()和Thread_Semaphore3()才能继续同步运行。若Thread_Semaphore1()函数中只增加一次信号量，那Thread_Semaphore2()和Thread_Semaphore3()只能轮流执行。
+在Semaphore_example函数中，通过osSemaphoreNew()函数创建了sem1信号量，Thread_Semaphore1()函数中通过osSemaphoreRelease()函数释放两个信号量，Thread_Semaphore2()和Thread_Semaphore3()函数中，先开始阻塞等待sem1信号量。只有当Thread_Semaphore1()函数中增加两次信号量，Thread_Semaphore2()和Thread_Semaphore3()才能继续同步运行。若Thread_Semaphore1()函数中只增加一次信号量，那Thread_Semaphore2()和Thread_Semaphore3()只能轮流执行。
 ```c
 void Thread_Semaphore1(void)
 {
     while(1)
 	{
-		osSemaphoreRelease(sem1);  //申请两次sem1信号量，使得Thread_Semaphore2和Thread_Semaphore3能同步执行
-        osSemaphoreRelease(sem1);  //此处若只申请一次信号量，则Thread_Semaphore2和Thread_Semaphore3会交替运行。
+		osSemaphoreRelease(sem1);  //释放两次sem1信号量，使得Thread_Semaphore2和Thread_Semaphore3能同步执行
+        osSemaphoreRelease(sem1);  //此处若只释放一次信号量，则Thread_Semaphore2和Thread_Semaphore3会交替运行。
         printf("Thread_Semaphore1 Release  Semap \n");
         osDelay(100);
 	}
@@ -81,7 +81,7 @@ void Thread_Semaphore2(void)
 {    
     while(1)
 	{
-		osSemaphoreAcquire(sem1,osWaitForever);//等待sem1信号量
+		osSemaphoreAcquire(sem1,osWaitForever);//申请sem1信号量
         printf("Thread_Semaphore2 get Semap \n");
         osDelay(1);
 	}

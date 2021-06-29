@@ -31,6 +31,7 @@ bugfix和新增业务两种情况，涉及源码修改。下面以新增业务�
     ```
     #include "ohos_init.h"
     #include "ohos_types.h"
+    #include <stdio.h>
     
     void HelloWorld(void)
     {
