@@ -150,7 +150,7 @@ oc_set_cmd_rsp_cb(oc_cmd_rsp_cb);
 
 ### 推送数据
 
-当需要上传数据时，需要先拼装数据，让后通过oc_mqtt_profile_propertyreport上报数据。代码示例如下： 
+当需要上传数据时，需要先拼装数据，然后通过oc_mqtt_profile_propertyreport上报数据。代码示例如下： 
 
 ```c
 static void deal_report_msg(report_t *report)
