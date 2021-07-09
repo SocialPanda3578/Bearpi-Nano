@@ -7,7 +7,7 @@
 
 ## 资料导航
 
-| 编号 | 类别 | 路径  |
+| No | 类别 | 路径  |
 | ---- | ---- |  ------------------------------------------------------------ |
 | 1    | 开发板硬件资料 | [applications/BearPi/BearPi-HM_Nano/docs/board](/applications/BearPi/BearPi-HM_Nano/docs/board) |
 | 2    | 快速上手教程 |  [applications/BearPi/BearPi-HM_Nano/docs/quick-start/](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano%E5%8D%81%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B.md) |
