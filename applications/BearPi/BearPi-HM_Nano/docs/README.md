@@ -5,6 +5,16 @@
 | board   | [BearPi-HM_Nano开发板原理图](/applications/BearPi/BearPi-HM_Nano/docs/board)硬件资料、[视频课程配套PPT](/applications/BearPi/BearPi-HM_Nano/docs/board/课程配套PPT)  | 
 | figures  | 资料图库   |
 
+## 资料导航
+
+| 编号 | 类别 | 路径  |
+| ---- | ---- |  ------------------------------------------------------------ |
+| 1    | 开发板硬件资料 | [applications/BearPi/BearPi-HM_Nano/docs/board](/applications/BearPi/BearPi-HM_Nano/docs/board) |
+| 2    | 快速上手教程 |  [applications/BearPi/BearPi-HM_Nano/docs/quick-start/](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano%E5%8D%81%E5%88%86%E9%92%9F%E4%B8%8A%E6%89%8B.md) |
+| 3    | 案例代码列表 |  [applications/BearPi/BearPi-HM_Nano/sample/](/applications/BearPi/BearPi-HM_Nano/sample/README.md) |
+| 4    | 视频学习地址 |  [B站](https://www.bilibili.com/video/BV1tv411b7SA?p=1) |
+| 5    | 视频课程PPT |  [applications/BearPi/BearPi-HM_Nano/docs/board/课程配套PPT](/applications/BearPi/BearPi-HM_Nano/docs/board/%E8%AF%BE%E7%A8%8B%E9%85%8D%E5%A5%97PPT) |
+| 6    | 常见问题 | [ISSUES](https://gitee.com/bearpi/bearpi-hm_nano/issues) |
 
 ## 一、BearPi-HM Nano 开发板介绍
 
@@ -14,19 +24,7 @@
 * 主控为WiFi SOC Hi3861，160MHz主频，SRAM 352KB、ROM 288KB、2M Flash。
 * 板载NFC Forum Type 2 Tag芯片及天线，可实现HarmonyOS“碰一碰”功能。
 * 一根TypeC USB线，即可实现供电、下载、调试等多种功能。
-### 资料导航
 
-[1、开发板硬件资料](/applications/BearPi/BearPi-HM_Nano/docs/board)
-
-[2、快速上手教程](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
-
-[4、案例代码列表](/applications/BearPi/BearPi-HM_Nano/sample/README.md)
-
-[4、视频学习地址](https://www.bilibili.com/video/BV1tv411b7SA?p=1)
-
-[5、视频课程PPT](/applications/BearPi/BearPi-HM_Nano/docs/board/课程配套PPT)
-
-[6、常见问题](https://gitee.com/bearpi/bearpi-hm_nano/issues)
 
 ## 二、快速上手（十分钟上手）
 
