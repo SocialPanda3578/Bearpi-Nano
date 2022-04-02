@@ -21,7 +21,7 @@ osTimerId_t osTimerNew	(osTimerFunc_t func,osTimerType_t type,void *argument,con
 |名字|描述|
 |:--|:------| 
 | func | 函数指针指向回调函数.  |
-| type | 定时器类型，osTimerOnce表示单次定时器，ostimer周期表示周期性定时器.  |
+| type | 定时器类型，osTimerOnce表示单次定时器，osTimerPeriodic周期表示周期性定时器.  |
 | argument |定时器回调函数的参数|
 | attr |计时器属性|
 
