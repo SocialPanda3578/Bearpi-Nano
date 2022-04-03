@@ -12,7 +12,7 @@ osMutexId_t osMutexNew(const osMutexAttr_t *attr)
 ```
 **描述：**
 
-函数osMutexNew创建并初始化一个新的互斥锁对象，并返回指向互斥锁对象标识符的指针，如果出现错误则返回NULL可以在RTOS启动(调用 osKernelStart)之前安全地调用该函数，但不能在内核初始化 (调用 osKernelInitialize)之前调用该函数。
+函数osMutexNew创建并初始化一个新的互斥锁对象，并返回指向互斥锁对象标识符的指针，如果出现错误则返回NULL,可以在RTOS启动(调用 osKernelStart)之前安全地调用该函数，但不能在内核初始化 (调用 osKernelInitialize)之前调用该函数。
 > **注意** :不能在中断服务调用该函数
 
 

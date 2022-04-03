@@ -60,7 +60,6 @@ osEventFlagsWait函数挂起当前运行线程，直到设置了由参数ef_id�
 | options | 指定标记选项.  |
 | timeout | 超时时间，0表示不超时  |
 
-## 软件设计
 
 ## 软件设计
 

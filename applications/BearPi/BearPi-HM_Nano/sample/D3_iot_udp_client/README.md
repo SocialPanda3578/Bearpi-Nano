@@ -46,7 +46,7 @@ int recvfrom(int s, void *buf, int len, unsigned int flags, struct sockaddr *fro
 
 **主要代码分析**
 
-完成Wifi热点的连接需要以下几步
+完成Wifi热点的连接后还需要以下几步
 
 1. 通过 `socket` 接口创建一个socket,`AF_INT`表示ipv4,`SOCK_STREAM`表示使用tcp协议
 2. 调用 `sendto` 接口发送数据到服务端。
