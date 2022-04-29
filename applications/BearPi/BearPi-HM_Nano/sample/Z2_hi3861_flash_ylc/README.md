@@ -1,5 +1,5 @@
-# hi3861基础外设开发——UART数据读写（基于BearPi-HM_Nano开发板）
-本示例将演示如何进行hi3861内部flash读写
+# hi3861基础外设开发——内部flash读写（基于BearPi-HM_Nano开发板）
+本示例将演示如何进行hi3861内部flash数据读写
 
 ![BearPi-HM_Nano](/applications/BearPi/BearPi-HM_Nano/docs/figures/00_public/BearPi-HM_Nano.png)
 
