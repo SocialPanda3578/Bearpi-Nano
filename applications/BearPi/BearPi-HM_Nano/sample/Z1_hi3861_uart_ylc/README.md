@@ -120,7 +120,7 @@ uint16_t uart1_recv(uint8_t *buf,uint16_t len)
 ### 修改 BUILD.gn 文件
 
 
-修改 `applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `uart_example` 参与编译。
+修改 `applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `uart_hi3861` 参与编译。
 
 ```r
 #"D12_iot_cloud_oc_agriculture:cloud_oc_agriculture",
