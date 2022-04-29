@@ -133,5 +133,5 @@ uint16_t uart1_recv(uint8_t *buf,uint16_t len)
 
 ### 运行结果
 
-示例代码编译烧录代码后，按下开发板的RESET按键， `将开发板上E53接口的UART_TX和UART_RX用杜邦线接到TTL转USB模块（自备）` 通过串口助手查看数据，串口1实现接收回显。
+示例代码编译烧录代码后，按下开发板的RESET按键， `将开发板上E53接口的UART_TX、UART_RX和GND用杜邦线接到TTL转USB模块（自备）` 通过串口助手查看数据，串口1实现接收回显。
 
