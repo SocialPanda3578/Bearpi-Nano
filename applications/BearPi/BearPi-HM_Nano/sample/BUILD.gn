@@ -48,6 +48,8 @@ lite_component("app") {
         #"D11_iot_cloud_oc_infrared:cloud_oc_infrared",
         #"D12_iot_cloud_oc_agriculture:cloud_oc_agriculture",
         #"D13_iot_cloud_oc_gps:cloud_oc_gps",
+
+        #"Zx_Developer:zx_develop_sample"  ##不参与构建，为开发者贡献演示结构，其中Zx为 Z1，Z2...Z100
     ]
 }
 
