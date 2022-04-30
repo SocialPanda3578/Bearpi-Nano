@@ -38,4 +38,6 @@ BearPi-HM_Nano 提供的例程多达 30个，每个例程都有非常详细的�
 | D11   | 物联网 | iot_cloud_oc_infrared         |   [基于华为IoT平台的智慧人体感应案例](/applications/BearPi/BearPi-HM_Nano/sample/D11_iot_cloud_oc_infrared/README.md)|  
 | D12   | 物联网 | iot_cloud_oc_agriculture         |   [基于华为IoT平台的智慧农业案例](/applications/BearPi/BearPi-HM_Nano/sample/D12_iot_cloud_oc_agriculture/README.md)| 
 | D13   | 物联网 | iot_cloud_oc_gps         |   [基于华为IoT平台的智慧物流案例](/applications/BearPi/BearPi-HM_Nano/sample/D13_iot_cloud_oc_gps/README.md)|    
+| Z1   | 开发者贡献例程 | hi3861_uart         |   [Hi3861串口收发（带超时功能）@游乐场](/applications/BearPi/BearPi-HM_Nano/sample/Z1_hi3861_uart_ylc/README.md)|   
+| Z2   | 开发者贡献例程 | hi3861_flash         |   [Hi3861内部Flash读写 @游乐场](/applications/BearPi/BearPi-HM_Nano/sample/Z2_hi3861_flash_ylc/README.md)|   
 ||||
