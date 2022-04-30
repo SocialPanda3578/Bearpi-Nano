@@ -23,7 +23,7 @@ lite_component("app") {
         #"A6_kernel_message:message_example",
 
         #"B1_basic_led_blink:led_example",
-        "B2_basic_button:button_example",
+        #"B2_basic_button:button_example",
         #"B3_basic_pwm_led:pwm_example",
         #"B4_basic_adc:adc_example",
         #"B5_basic_i2c_nfc:i2c_example",
@@ -50,6 +50,8 @@ lite_component("app") {
         #"D13_iot_cloud_oc_gps:cloud_oc_gps",
 
         #"Zx_Developer:zx_develop_sample"  ##不参与构建，为开发者贡献演示结构，其中Zx为 Z1，Z2...Z100
+        #"Z1_hi3861_uart_ylc:uart_hi3861",
+        "Z2_hi3861_flash_ylc:flash_example",
     ]
 }
 
