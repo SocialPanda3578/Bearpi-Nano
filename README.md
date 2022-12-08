@@ -27,8 +27,10 @@
 
 * [开发环境搭建(简单)—十分钟快速上手](https://www.bilibili.com/video/BV1tv411b7SA?p=2)
 
-2、文档（Gitee）
-* [VMware 镜像版本：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
+2、文档（Gitee） `[二选一]`
+* [VMware 镜像版本Gitee：十分钟上手体验（推荐：gitee获取源码并编译）](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手-gitee方式.md)
+* [VMware 镜像版本HPM：十分钟上手体验](/applications/BearPi/BearPi-HM_Nano/docs/quick-start/BearPi-HM_Nano十分钟上手.md)
+
 
 ## 三、手把手教程系列
 
