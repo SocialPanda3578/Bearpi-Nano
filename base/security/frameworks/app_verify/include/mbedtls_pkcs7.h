@@ -68,7 +68,7 @@ typedef struct {
 } SignersResovedInfo;
 
 /*
- * The structure bellow used the mbedtls open source structure which definition is kernel-like style,
+ * The structure below used the mbedtls open source structure which definition is kernel-like style,
  * We do not redefine it to Camel style
  *
  * the PKCS7 signer's cert path header
