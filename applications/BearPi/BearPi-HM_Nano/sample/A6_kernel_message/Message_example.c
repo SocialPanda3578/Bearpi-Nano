@@ -32,7 +32,7 @@ typedef struct
   uint8_t Idx;
 } MSGQUEUE_OBJ_t;
 
-MSGQUEUE_OBJ_t msg;
+
 
 //message queue id
 osMessageQueueId_t mid_MsgQueue;   
@@ -40,7 +40,7 @@ osMessageQueueId_t mid_MsgQueue;
 void Thread_MsgQueue1(void *argument)
 {
   (void)argument;
-
+  MSGQUEUE_OBJ_t msg;
   //do some work...
   msg.Buf = "Hello BearPi-HM_Nano!";
   msg.Idx = 0U;
@@ -58,16 +58,16 @@ void Thread_MsgQueue2(void *argument)
 {
   (void)argument;
   osStatus_t status;
-
+  MSGQUEUE_OBJ_t msg;
   while (1)
   {
     //Insert thread code here...
 
     //wait for message
-    status = osMessageQueueGet(mid_MsgQueue, &msg, NULL, 0U);
+    status = osMessageQueueGet(mid_MsgQueue, &msg, NULL, osWaitForever);
     if (status == osOK)
     {
-      printf("Message Queue Get msg:%s\n", msg.Buf);
+       printf("Message Queue Get msg:%d-%s\n", msg.Idx,msg.Buf);
     }
   }
 }
@@ -75,7 +75,7 @@ void Thread_MsgQueue2(void *argument)
 static void Message_example(void)
 {
 
-  mid_MsgQueue = osMessageQueueNew(MSGQUEUE_OBJECTS, 100, NULL);
+  mid_MsgQueue = osMessageQueueNew(MSGQUEUE_OBJECTS, sizeof(MSGQUEUE_OBJ_t), NULL);
   if (mid_MsgQueue == NULL)
   {
     printf("Falied to create Message Queue!\n");
