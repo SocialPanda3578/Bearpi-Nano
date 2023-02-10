@@ -17,7 +17,7 @@
 
 修改安装路径下的mosquitto.conf文件
 修改515行附近代码
-![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/添加allow.png "添加allow")
+![](../../docs/figures/D5_iot_mqtt/%E6%B7%BB%E5%8A%A0allow.png "添加allow")
 修改216行附近代码，其中`192.168.0.173`为自己的电脑的IP地址
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D5_iot_mqtt/添加listener.png "添加listener")
 
