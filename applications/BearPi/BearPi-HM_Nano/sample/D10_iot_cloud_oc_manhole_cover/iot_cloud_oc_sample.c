@@ -32,7 +32,9 @@
 
 #define CONFIG_WIFI_PWD           "0987654321"                        //修改为自己的WiFi 热点密码
 
-#define CONFIG_APP_SERVERIP       "121.36.42.100"
+// #define CONFIG_APP_SERVERIP       "121.36.42.100"                       //基础版平台对接地址
+
+#define CONFIG_APP_SERVERIP       "117.78.5.125"                       //标准版平台对接地址
 
 #define CONFIG_APP_SERVERPORT     "1883"
 
