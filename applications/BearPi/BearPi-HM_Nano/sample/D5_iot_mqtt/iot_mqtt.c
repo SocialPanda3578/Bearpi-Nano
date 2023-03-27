@@ -62,7 +62,7 @@ begin:
   	data.clientID          = clientId;
 	data.willFlag          = 0;
 	data.MQTTVersion       = 3;
-	data.keepAliveInterval = 0;
+	data.keepAliveInterval = 60;
 	data.cleansession      = 1;
 
 	printf("MQTTConnect  ...\n");
