@@ -15,6 +15,7 @@
 
 - 下载并安装MobaXterm工具
     - 下载地址：https://en.softonic.com/download/moba/windows/post-download
+    - 或者通过以下下载：https://download.mobatek.net/2312023031823706/MobaXterm_Installer_v23.1.zip
 
 - 下载并安装RaiDrive工具
     - 下载地址：https://forspeed.rbread05.cn/down/newdown/5/28/RaiDrive.rar   
