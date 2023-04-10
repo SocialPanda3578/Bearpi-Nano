@@ -412,6 +412,15 @@ EXIT_JSONPARSE:
 修改`iot_cloud_oc_sample.c`中第31行附近的wifi的ssid和pwd，以及设备的DEVICEID和DEVICEPWD（这两个参数是在平台注册设备时产生的），
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D12_iot_cloud_oc_agriculture/修改设备信息.png "修改设备信息")
+
+### 修改代码中平台的对接地址
+根据自己使用的平台版本修改`iot_cloud_oc_sample.c`中第36行附近的平台对接地址。
+
+
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D12_iot_cloud_oc_agriculture/平台选择.png "平台选择")
+
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D12_iot_cloud_oc_agriculture/修改平台对接地址.png "修改平台对接地址")
+
 ### 修改 BUILD.gn 文件
 
 修改 `applications\sample\BearPi\BearPi-HM_Nano`路径下 BUILD.gn 文件，指定 `cloud_oc_agriculture` 参与编译。

@@ -261,6 +261,15 @@ static void deal_report_msg(report_t *report)
 
 ![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D13_iot_cloud_oc_gps/修改设备信息.png "修改设备信息")
 
+### 修改代码中平台的对接地址
+根据自己使用的平台版本修改`iot_cloud_oc_sample.c`中第36行附近的平台对接地址。
+
+
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D13_iot_cloud_oc_gps/平台选择.png "平台选择")
+
+![](/applications/BearPi/BearPi-HM_Nano/docs/figures/D13_iot_cloud_oc_gps/修改平台对接地址.png "修改平台对接地址")
+
+
 ### 修改 BUILD.gn 文件
 
 修改 `applications\sample\BearPi\BearPi-HM_Nano`路径下 BUILD.gn 文件，指定 `cloud_oc_gps` 参与编译。
