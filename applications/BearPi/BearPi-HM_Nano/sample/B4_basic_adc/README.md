@@ -57,15 +57,15 @@ static float GetVoltage(void)
 ### 修改 BUILD.gn 文件
 
 
-修改`applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `pwm_example` 参与编译。
+修改`applications\BearPi\BearPi-HM_Nano\sample` 路径下 BUILD.gn 文件，指定 `adc_example` 参与编译。
 
 ```r
 #"B1_basic_led_blink:led_example",
 #"B2_basic_button:button_example",
 #"B3_basic_pwm_led:pwm_example",
-#"B4_basic_adc:adc_example",
+"B4_basic_adc:adc_example",
 #"B5_basic_i2c_nfc:i2c_example",
-"B6_basic_uart:uart_example",
+#"B6_basic_uart:uart_example",
 ```   
 
     
