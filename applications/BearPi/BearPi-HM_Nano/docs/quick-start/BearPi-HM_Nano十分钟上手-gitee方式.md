@@ -8,7 +8,7 @@
 - 下载官方提供镜像
     - 下载地址（百度云）：https://pan.baidu.com/s/1T0Tcl3y48C1p5L6y-6HJNg  提取码：eusr
 - 下载HiBurn
-    - 下载地址（百度云）：https://pan.baidu.com/s/1bp2ypAfH2HaNPTY2KwEhEA 提取码：1234
+    - 下载地址（百度云）：https://pan.baidu.com/s/1vSpPWvIhL8wCVGnEOjXS7g?pwd=1234 提取码：1234
 
 - 下载并安装虚拟机VMware Workstation
     - 下载地址：https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html
