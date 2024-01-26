@@ -17,7 +17,7 @@
 
 ## 二、烧录代码
 1. 在Windows打开Hiburn工具，并点击`Refresh`，在`COM`中选择`第一-4`看到的COM号
-- Hiburn工具下载地址（百度云）：https://pan.baidu.com/s/1bp2ypAfH2HaNPTY2KwEhEA 提取码：1234
+- Hiburn工具下载地址（百度云）：https://pan.baidu.com/s/1vSpPWvIhL8wCVGnEOjXS7g?pwd=1234 提取码：1234
 
 
 
