@@ -282,6 +282,11 @@ static void deal_report_msg(report_t *report)
 #"D12_iot_cloud_oc_agriculture:cloud_oc_agriculture",
 "D13_iot_cloud_oc_gps:cloud_oc_gps",
 ```
+### 连接GPS扩展板的使能脚
+
+用一根杜邦线将IO04脚与GND连接，IO04脚是GPS芯片的工作使能脚
+
+![Alt text](/applications/BearPi/BearPi-HM_Nano/docs/figures/D13_iot_cloud_oc_gps/image.png)
 ### 编译调试
 示例代码编译烧录代码后，按下开发板的RESET按键，通过串口助手查看日志，平台上的设备显示为在线状态。
 

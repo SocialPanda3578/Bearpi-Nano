@@ -72,13 +72,17 @@ void GPS_Init(void)
 void Init_E53_ST1(void)
 {
     GpioInit();                                                           //初始化GPIO
-    IoSetFunc(WIFI_IOT_IO_NAME_GPIO_8, WIFI_IOT_IO_FUNC_GPIO_8_PWM1_OUT); //设置GPIO_3引脚复用功能为PWM
-    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_8, WIFI_IOT_GPIO_DIR_OUT);           //设置GPIO_3引脚为输出模式
-    PwmInit(WIFI_IOT_PWM_PORT_PWM1);                                      //初始化PWM5端口
+    IoSetFunc(WIFI_IOT_IO_NAME_GPIO_8, WIFI_IOT_IO_FUNC_GPIO_8_PWM1_OUT); //设置GPIO_8引脚复用功能为PWM
+    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_8, WIFI_IOT_GPIO_DIR_OUT);           //设置GPIO_8引脚为输出模式
+    PwmInit(WIFI_IOT_PWM_PORT_PWM1);                                      //初始化PWM1端口
 
-    IoSetFunc(WIFI_IOT_IO_NAME_GPIO_4, WIFI_IOT_IO_FUNC_GPIO_8_GPIO);     //设置GPIO_4引脚复用功能为GPIO
-    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_4, WIFI_IOT_GPIO_DIR_OUT);           //设置GPIO_3引脚为输出模式
+    IoSetFunc(WIFI_IOT_IO_NAME_GPIO_4, WIFI_IOT_IO_FUNC_GPIO_4_GPIO);     //设置GPIO_4引脚复用功能为GPIO
+    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_4, WIFI_IOT_GPIO_DIR_OUT);           //设置GPIO_4引脚为输出模式
     GpioSetOutputVal(WIFI_IOT_IO_NAME_GPIO_4, 0);
+
+    IoSetFunc(WIFI_IOT_IO_NAME_GPIO_2, WIFI_IOT_IO_FUNC_GPIO_2_GPIO);     //设置GPIO_2引脚复用功能为GPIO
+    GpioSetDir(WIFI_IOT_IO_NAME_GPIO_2, WIFI_IOT_GPIO_DIR_OUT);           //设置GPIO_2引脚为输出模式
+    GpioSetOutputVal(WIFI_IOT_IO_NAME_GPIO_2, 0);
 
 	GPS_Init();
 }
