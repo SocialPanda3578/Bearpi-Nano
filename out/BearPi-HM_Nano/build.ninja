@@ -1,12 +1,20 @@
 ninja_required_version = 1.7.2
 
 rule gn
-  command = ../../../../../gn/gn --root=../.. -q --dotfile=../../build/lite/.gn gen .
+  command = ../../../../../../../usr/bin/gn --root=../.. -q --dotfile=../../build/lite/.gn --regeneration gen .
+  pool = console
   description = Regenerating ninja files
 
-build build.ninja: gn
+# The 'gn' rule also writes build.ninja, unbeknownst to ninja. The
+# build.ninja edge is separate to prevent ninja from deleting it
+# (due to depfile usage) if interrupted. gn uses atomic writes to
+# ensure that build.ninja is always valid even if interrupted.
+build build.ninja.stamp: gn
   generator = 1
   depfile = build.ninja.d
+
+build build.ninja: phony build.ninja.stamp
+  generator = 1
 
 subninja toolchain.ninja
 
@@ -16,7 +24,6 @@ build app: phony obj/applications/BearPi/BearPi-HM_Nano/sample/app.stamp
 build authmanager: phony ./libs/libauthmanager.a
 build bootstrap: phony ./libs/libbootstrap.a
 build broadcast: phony ./libs/libbroadcast.a
-build button_example: phony ./libs/libbutton_example.a
 build cjson_ndk: phony obj/third_party/cJSON/cjson_ndk.stamp
 build cjson_shared: phony obj/third_party/cJSON/cjson_shared.stamp
 build cjson_static: phony ./libs/libcjson_static.a
@@ -25,6 +32,7 @@ build common_lite: phony ./libs/libcommon_lite.a
 build discovery: phony ./libs/libdiscovery.a
 build discovery_ndk: phony obj/foundation/communication/services/softbus_lite/discovery_ndk.stamp
 build file: phony obj/utils/native/lite/file/file.stamp
+build flash_example: phony ./libs/libflash_example.a
 build gen_rootfs: phony obj/build/lite/gen_rootfs.stamp
 build hal_file_static: phony ./libs/libhal_file_static.a
 build hal_iothardware: phony ./libs/libhal_iothardware.a
@@ -33,20 +41,15 @@ build hal_token_static: phony ./libs/libhal_token_static.a
 build hilog_lite: phony ./libs/libhilog_lite.a
 build hilog_lite_ndk: phony obj/base/hiviewdfx/frameworks/hilog_lite/mini/hilog_lite_ndk.stamp
 build hiview_lite: phony ./libs/libhiview_lite.a
-build iot: phony obj/domains/iot/link/iot.stamp
+build hx711: phony ./libs/libhx711.a
 build iothardware_ndk: phony obj/base/iot_hardware/frameworks/wifiiot_lite/src/iothardware_ndk.stamp
-build kal: phony obj/kernel/liteos_m/kal/kal.stamp
+build kal: phony ./libs/libkal.a
 build kv_store: phony obj/utils/native/lite/kv_store/kv_store.stamp
-build link: phony obj/domains/iot/link/link.stamp
 build native_file: phony ./libs/libnative_file.a
 build ndk: phony obj/build/lite/ndk.stamp
 build ohos: phony obj/build/lite/ohos.stamp
-build pahomqtt_ndk: phony obj/third_party/paho_mqtt/pahomqtt_ndk.stamp
-build pahomqtt_shared: phony obj/third_party/paho_mqtt/pahomqtt_shared.stamp
-build pahomqtt_static: phony ./libs/libpahomqtt_static.a
 build parameter: phony obj/base/startup/frameworks/syspara_lite/parameter/parameter.stamp
 build parameter_notes: phony obj/base/startup/frameworks/syspara_lite/parameter/parameter_notes.stamp
-build posix: phony ./libs/libposix.a
 build run_wifiiot_scons: phony obj/vendor/hisi/hi3861/hi3861/run_wifiiot_scons.stamp
 build samgr_adapter: phony ./libs/libsamgr_adapter.a
 build samgr_lite_ndk: phony obj/foundation/distributedschedule/services/samgr_lite/samgr_lite_ndk.stamp
@@ -68,7 +71,8 @@ build wifiservice: phony ./libs/libwifiservice.a
 build wifiservice_ndk: phony obj/vendor/hisi/hi3861/hi3861_adapter/hals/communication/wifi_lite/wifiservice/wifiservice_ndk.stamp
 build xdevice: phony obj/test/xdevice/xdevice.stamp
 build applications/BearPi/BearPi-HM_Nano/sample$:app: phony obj/applications/BearPi/BearPi-HM_Nano/sample/app.stamp
-build applications/BearPi/BearPi-HM_Nano/sample/B2_basic_button$:button_example: phony ./libs/libbutton_example.a
+build applications/BearPi/BearPi-HM_Nano/sample/Hx711$:hx711: phony ./libs/libhx711.a
+build applications/BearPi/BearPi-HM_Nano/sample/Z2_hi3861_flash_ylc$:flash_example: phony ./libs/libflash_example.a
 build base/hiviewdfx/frameworks/hilog_lite/mini$:hilog_lite: phony ./libs/libhilog_lite.a
 build base/hiviewdfx/frameworks/hilog_lite/mini$:hilog_lite_ndk: phony obj/base/hiviewdfx/frameworks/hilog_lite/mini/hilog_lite_ndk.stamp
 build base/hiviewdfx/services/hiview_lite$:hiview_lite: phony ./libs/libhiview_lite.a
@@ -91,9 +95,6 @@ build base/startup/services/bootstrap_lite/source$:bootstrap: phony ./libs/libbo
 build build/lite$:gen_rootfs: phony obj/build/lite/gen_rootfs.stamp
 build build/lite$:ndk: phony obj/build/lite/ndk.stamp
 build build/lite$:ohos: phony obj/build/lite/ohos.stamp
-build domains/iot/link$:iot: phony obj/domains/iot/link/iot.stamp
-build domains/iot/link$:link: phony obj/domains/iot/link/link.stamp
-build domains/iot/link: phony obj/domains/iot/link/link.stamp
 build foundation/communication/frameworks/wifi_lite$:wifi: phony obj/foundation/communication/frameworks/wifi_lite/wifi.stamp
 build foundation/communication/services/softbus_lite$:discovery_ndk: phony obj/foundation/communication/services/softbus_lite/discovery_ndk.stamp
 build foundation/communication/services/softbus_lite$:softbus: phony obj/foundation/communication/services/softbus_lite/softbus.stamp
@@ -113,12 +114,10 @@ build foundation/distributedschedule/services/samgr_lite/samgr$:samgr: phony ./l
 build foundation/distributedschedule/services/samgr_lite/samgr: phony ./libs/libsamgr.a
 build foundation/distributedschedule/services/samgr_lite/samgr/adapter$:samgr_adapter: phony ./libs/libsamgr_adapter.a
 build foundation/distributedschedule/services/samgr_lite/samgr/source$:samgr_source: phony ./libs/libsamgr_source.a
-build kernel/liteos_m/kal$:kal: phony obj/kernel/liteos_m/kal/kal.stamp
-build kernel/liteos_m/kal: phony obj/kernel/liteos_m/kal/kal.stamp
-build kernel/liteos_m/kal/cmsis$:cmsis: phony ./libs/libcmsis.a
-build kernel/liteos_m/kal/cmsis: phony ./libs/libcmsis.a
-build kernel/liteos_m/kal/posix$:posix: phony ./libs/libposix.a
-build kernel/liteos_m/kal/posix: phony ./libs/libposix.a
+build kernel/liteos_m/components/cmsis$:cmsis: phony ./libs/libcmsis.a
+build kernel/liteos_m/components/cmsis: phony ./libs/libcmsis.a
+build kernel/liteos_m/components/kal$:kal: phony ./libs/libkal.a
+build kernel/liteos_m/components/kal: phony ./libs/libkal.a
 build test/xdevice$:xdevice: phony obj/test/xdevice/xdevice.stamp
 build test/xdevice: phony obj/test/xdevice/xdevice.stamp
 build test/xts/acts$:acts: phony obj/test/xts/acts/acts.stamp
@@ -129,9 +128,6 @@ build test/xts/tools: phony obj/test/xts/tools/tools.stamp
 build third_party/cJSON$:cjson_ndk: phony obj/third_party/cJSON/cjson_ndk.stamp
 build third_party/cJSON$:cjson_shared: phony obj/third_party/cJSON/cjson_shared.stamp
 build third_party/cJSON$:cjson_static: phony ./libs/libcjson_static.a
-build third_party/paho_mqtt$:pahomqtt_ndk: phony obj/third_party/paho_mqtt/pahomqtt_ndk.stamp
-build third_party/paho_mqtt$:pahomqtt_shared: phony obj/third_party/paho_mqtt/pahomqtt_shared.stamp
-build third_party/paho_mqtt$:pahomqtt_static: phony ./libs/libpahomqtt_static.a
 build utils/native/lite/file$:file: phony obj/utils/native/lite/file/file.stamp
 build utils/native/lite/file: phony obj/utils/native/lite/file/file.stamp
 build utils/native/lite/file$:native_file: phony ./libs/libnative_file.a
@@ -151,7 +147,8 @@ build vendor/huawei/wifi-iot/hals/utils/token$:hal_token_static: phony ./libs/li
 
 build all: phony $
     obj/applications/BearPi/BearPi-HM_Nano/sample/app.stamp $
-    ./libs/libbutton_example.a $
+    ./libs/libhx711.a $
+    ./libs/libflash_example.a $
     ./libs/libhilog_lite.a $
     obj/base/hiviewdfx/frameworks/hilog_lite/mini/hilog_lite_ndk.stamp $
     ./libs/libhiview_lite.a $
@@ -171,8 +168,6 @@ build all: phony $
     obj/build/lite/gen_rootfs.stamp $
     obj/build/lite/ndk.stamp $
     obj/build/lite/ohos.stamp $
-    obj/domains/iot/link/iot.stamp $
-    obj/domains/iot/link/link.stamp $
     obj/foundation/communication/frameworks/wifi_lite/wifi.stamp $
     obj/foundation/communication/services/softbus_lite/discovery_ndk.stamp $
     obj/foundation/communication/services/softbus_lite/softbus.stamp $
@@ -187,9 +182,8 @@ build all: phony $
     ./libs/libsamgr.a $
     ./libs/libsamgr_adapter.a $
     ./libs/libsamgr_source.a $
-    obj/kernel/liteos_m/kal/kal.stamp $
     ./libs/libcmsis.a $
-    ./libs/libposix.a $
+    ./libs/libkal.a $
     obj/test/xdevice/xdevice.stamp $
     obj/test/xts/acts/acts.stamp $
     obj/test/xts/acts/acts_compoment.stamp $
@@ -197,9 +191,6 @@ build all: phony $
     obj/third_party/cJSON/cjson_ndk.stamp $
     obj/third_party/cJSON/cjson_shared.stamp $
     ./libs/libcjson_static.a $
-    obj/third_party/paho_mqtt/pahomqtt_ndk.stamp $
-    obj/third_party/paho_mqtt/pahomqtt_shared.stamp $
-    ./libs/libpahomqtt_static.a $
     obj/utils/native/lite/file/file.stamp $
     ./libs/libnative_file.a $
     obj/utils/native/lite/kv_store/kv_store.stamp $

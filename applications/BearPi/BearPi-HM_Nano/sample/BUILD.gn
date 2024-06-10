@@ -52,6 +52,11 @@ lite_component("app") {
         #"Zx_Developer:zx_develop_sample"  ##不参与构建，为开发者贡献演示结构，其中Zx为 Z1，Z2...Z100
         #"Z1_hi3861_uart_ylc:uart_hi3861",
         "Z2_hi3861_flash_ylc:flash_example",
+
+        #"Mq2:mq2",
+        #"Mq7:mq7",
+        #"Dht11:dht11",
+        "Hx711:hx711",
     ]
 }
 

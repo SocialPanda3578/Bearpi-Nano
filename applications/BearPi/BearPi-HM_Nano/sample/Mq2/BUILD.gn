@@ -1,0 +1,13 @@
+static_library("mq2") {
+    sources = [
+        "src/mq2.c",
+        "mq2_run.c",
+    ]
+
+    include_dirs = [
+        "//utils/native/lite/include",
+        "//kernel/liteos_m/components/cmsis/2.0",
+        "//base/iot_hardware/interfaces/kits/wifiiot_lite",
+        "include"
+    ]
+}

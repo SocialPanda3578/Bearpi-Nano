@@ -1,0 +1,10 @@
+{
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "hi_flashboot_gpio.h": "c",
+        "wifiiot_gpio.h": "c",
+        "hi_boot_err.h": "c"
+    }
+}

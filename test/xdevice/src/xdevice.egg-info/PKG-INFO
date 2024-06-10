@@ -1,10 +1,6 @@
-Metadata-Version: 1.0
+Metadata-Version: 2.1
 Name: xdevice
 Version: 0.0.0
 Summary: xdevice test framework
-Home-page: UNKNOWN
-Author: UNKNOWN
-Author-email: UNKNOWN
-License: UNKNOWN
-Description: UNKNOWN
-Platform: UNKNOWN
+Home-page: 
+License-File: LICENSE
