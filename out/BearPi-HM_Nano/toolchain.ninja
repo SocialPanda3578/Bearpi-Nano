@@ -79,7 +79,7 @@ subninja obj/foundation/distributedschedule/services/samgr_lite/samgr/source/sam
 subninja obj/kernel/liteos_m/components/cmsis/cmsis.ninja
 subninja obj/kernel/liteos_m/components/kal/kal.ninja
 rule __test_xdevice_xdevice___build_lite_toolchain_linux_x86_64_riscv32_gcc__rule
-  command = python ../../test/xts/tools/build/suite.py build_xdevice --project_dir /home/asus/Documents/Code/bearpi-hm_nano/test/xdevice --output_dirs /home/asus/Documents/Code/bearpi-hm_nano/out/BearPi-HM_Nano/suites/acts/tools,
+  command = python ../../test/xts/tools/build/suite.py build_xdevice --project_dir /home/asus/Documents/Code/Bearpi-Nano/test/xdevice --output_dirs /home/asus/Documents/Code/Bearpi-Nano/out/BearPi-HM_Nano/suites/acts/tools,
   description = ACTION //test/xdevice:xdevice(//build/lite/toolchain:linux_x86_64_riscv32_gcc)
   restat = 1
 
@@ -87,7 +87,7 @@ build suites/acts/tools: __test_xdevice_xdevice___build_lite_toolchain_linux_x86
 
 build obj/test/xdevice/xdevice.stamp: stamp suites/acts/tools
 rule __test_xts_acts_acts___build_lite_toolchain_linux_x86_64_riscv32_gcc__rule
-  command = python ../../test/xts/tools/build/suite.py archive_suite --suite_path /home/asus/Documents/Code/bearpi-hm_nano/out/BearPi-HM_Nano/suites/acts --testcases_name testcases --prebuilts_resource , --build_enabled true
+  command = python ../../test/xts/tools/build/suite.py archive_suite --suite_path /home/asus/Documents/Code/Bearpi-Nano/out/BearPi-HM_Nano/suites/acts --testcases_name testcases --prebuilts_resource , --build_enabled true
   description = ACTION //test/xts/acts:acts(//build/lite/toolchain:linux_x86_64_riscv32_gcc)
   restat = 1
 

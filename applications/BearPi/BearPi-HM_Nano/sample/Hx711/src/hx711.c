@@ -1,5 +1,5 @@
 #include "hx711.h"
-#include "hi_flashboot_gpio.h"
+#include "hi_gpio.h"
 #include "wifiiot_gpio.h"
 #include "wifiiot_gpio_ex.h"
 #include "wifiiot_adc.h"
@@ -64,28 +64,28 @@ int32_t HX711_Read(void)
     while(GetHX711_DT());
  
     // 发送一个脉冲以开始转换
-    hi_gpio_set_output_val(HX711_SCK_PIN, LOW);
+    hi_gpio_set_ouput_val(HX711_SCK_PIN, LOW);
     usleep(1);
-    hi_gpio_set_output_val(HX711_SCK_PIN, HIGH);
+    hi_gpio_set_ouput_val(HX711_SCK_PIN, HIGH);
     usleep(1);
-    hi_gpio_set_output_val(HX711_SCK_PIN, LOW);
+    hi_gpio_set_ouput_val(HX711_SCK_PIN, LOW);
  
     // 读取24位数据
     for(i = 0; i < 24; i++) {
-        hi_gpio_set_output_val(HX711_SCK_PIN, HIGH);
+        hi_gpio_set_ouput_val(HX711_SCK_PIN, HIGH);
         usleep(1);
         data <<= 1;
         if(GetHX711_DT()) {
             data++;
         }
-        hi_gpio_set_output_val(HX711_SCK_PIN, LOW);
+        hi_gpio_set_ouput_val(HX711_SCK_PIN, LOW);
         usleep(1);
     }
  
     // 恢复到默认状态
-    hi_gpio_set_output_val(HX711_SCK_PIN, HIGH);
+    hi_gpio_set_ouput_val(HX711_SCK_PIN, HIGH);
     usleep(1);
-    hi_gpio_set_output_val(HX711_SCK_PIN, LOW);
+    hi_gpio_set_ouput_val(HX711_SCK_PIN, LOW);
  
     // 判断读数是否为负数
     if(data & 0x800000) {
