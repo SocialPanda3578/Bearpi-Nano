@@ -5,6 +5,8 @@
         "cstdint": "cpp",
         "hi_flashboot_gpio.h": "c",
         "wifiiot_gpio.h": "c",
-        "hi_boot_err.h": "c"
+        "hi_boot_err.h": "c",
+        "wifiiot_adc.h": "c",
+        "wifiiot_gpio_ex.h": "c"
     }
 }
